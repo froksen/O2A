@@ -45,12 +45,12 @@ class EventManager:
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
             event_url = event_to_remove["aula_event_url"]
+            event_id = event_url.split("/")[7] #Should be regexp instead!
             #event_GlobalAppointmentID = event_to_remove["appointmentitem"].GlobalAppointmentID
             
             #Removing event
             self.logger.info("Attempting to REMOVE event: %s " %(event_title))
-            #self.aulamanager.removeCalendarEvent(event_url=event_url)
-            #time.sleep(1)
+            self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
 

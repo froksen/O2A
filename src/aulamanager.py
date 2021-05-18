@@ -30,10 +30,28 @@ class AulaManager:
     def getAulaApiUrl(self):
         return 'https://www.aula.dk/api/v11/'
 
+    def deleteEvent(self, eventId):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        params = {
+            'method': 'calendar.deleteEvent'
+            }
+
+        data = {
+            "id":eventId
+        }
+
+        response  = session.post(url, params=params, json=data).json()
+        print(json.dumps(response, indent=4))
+
+        if(response["status"]["message"] == "OK"):
+            print("Begivenheden blev fjernet korrekt")
+        else:
+            print("Noget gik galt ved fjernelse af begivenheden")
+
     def createEvent(self, title, description, startDateTime, endDateTime, allDay = False, isPrivate = False):
         #EventArray
-        event = {
-        }
 
         session = self.getSession()
 
