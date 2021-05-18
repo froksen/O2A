@@ -23,6 +23,7 @@ class EventManager:
 
     def update_aula_calendar(self, changes):
 
+
         #If no changes, then do nothing
         if len(changes['events_to_create'] or changes['events_to_remove']) <= 0:
             self.logger.info("No changes. Process completed")
@@ -50,7 +51,7 @@ class EventManager:
             
             #Removing event
             self.logger.info("Attempting to REMOVE event: %s " %(event_title))
-            self.aulamanager.deleteEvent(event_id)
+            #self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
 
@@ -68,6 +69,7 @@ class EventManager:
             description = "%s\no2a_outlook_GlobalAppointmentID=%s\n\no2a_outlook_LastModificationTime=%s" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
             allDay = event_to_create["appointmentitem"].AllDayEvent
             attendees = []
+            attendee_ids = []
             isPrivate = False
 
             #Sensitivity == 2 means private
@@ -80,8 +82,13 @@ class EventManager:
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
             
+                for attendee in attendees:
+                    if not self.aulamanager.findRecipient(attendee) == None:
+                        attendee_ids.append(self.aulamanager.findRecipient(attendee))
+
+
             #Creating new event
-            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,allDay=allDay,isPrivate=isPrivate)
+            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids,allDay=allDay,isPrivate=isPrivate)
 
 
 

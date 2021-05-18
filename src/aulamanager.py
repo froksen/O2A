@@ -34,6 +34,41 @@ class AulaManager:
     def getAulaApiUrl(self):
         return 'https://www.aula.dk/api/v11/'
 
+    def findRecipient(self,recipient):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        params = {
+            'method': 'search.findRecipients',
+            "text": recipient,
+            "query": recipient,
+            "id": str(self.getProfileId()),
+            "typeahead": "true",
+            "limit": "100",
+            "scopeEmployeesToInstitution" : "true",
+            "instCode": str(self.getProfileinstitutionCode()),
+            "fromModule":"event",
+            "docTypes[]":"Profile",
+            "docTypes[]":"Group"
+            }
+
+        #url = " https://www.aula.dk/api/v11/?method=search.findRecipients&text=Stefan&query=Stefan&id=779467&typeahead=true&limit=100&scopeEmployeesToInstitution=false&fromModule=event&instCode=537007&docTypes[]=Profile&docTypes[]=Group"
+        url = " https://www.aula.dk/api/v11/?method=search.findRecipients&text="+recipient+"&query="+recipient+"&id="+str(self.getProfileId())+"&typeahead=true&limit=100&scopeEmployeesToInstitution=false&fromModule=event&instCode="+str(self.getProfileinstitutionCode())+"&docTypes[]=Profile&docTypes[]=Group"
+        
+        response  = session.get(url, params=params).json()
+        #response = session.get(url).json()
+        print(json.dumps(response, indent=4))
+
+        try:
+            recipient_profileid = response["data"]["results"][0]["docId"] #Appearenly its docId and not profileId
+            print(recipient_profileid)
+
+            return int(recipient_profileid)
+
+        except:
+            return None
+
+
     def deleteEvent(self, eventId):
         session = self.getSession()
         url = self.getAulaApiUrl()
@@ -55,8 +90,11 @@ class AulaManager:
         else:
             self.logger.warning("Event was not removed!")
 
-    def createEvent(self, title, description, startDateTime, endDateTime, allDay = False, isPrivate = False):
+    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], allDay = False, isPrivate = False):
         #EventArray
+
+        print("IDDD")
+        print(attendee_ids)
 
         session = self.getSession()
 
@@ -100,7 +138,7 @@ class AulaManager:
             'isEditEvent': False,
             'addToInstitutionCalendar': False,
             'hideInOwnCalendar': False,
-            'inviteeIds': [],
+            'inviteeIds': attendee_ids,
             'additionalResources': [],
             'pattern': 'never',
             'occurenceLimit': 0,
