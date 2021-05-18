@@ -1,0 +1,6 @@
+o2a.log
+dist/*
+*.ini
+build/*
+src/__pycache__/*
+webdrivers/*

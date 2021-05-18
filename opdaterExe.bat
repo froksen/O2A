@@ -1,0 +1,1 @@
+pyinstaller --hiddenimport win32timezone --name O2A -F src\main.py
