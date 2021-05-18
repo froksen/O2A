@@ -3,6 +3,7 @@ from sys import getprofile
 import requests                 # Perform http/https requests
 from bs4 import BeautifulSoup   # Parse HTML pages
 import json                     # Needed to print JSON API data
+import logging
 
 #THIS CODE IS LARGELY INSPIRED BY CODE FROM https://helmstedt.dk/2020/05/et-lille-kig-paa-aulas-api/
 
@@ -11,6 +12,9 @@ class AulaManager:
         # Start requests session
         self.session = requests.Session()
         self.__profilesByLogin = ""
+        
+        #Sets logger
+        self.logger = logging.getLogger('O2A')
 
     def setProfilesByLogin(self,profile):
         self.__profilesByLogin = profile
@@ -46,9 +50,10 @@ class AulaManager:
         print(json.dumps(response, indent=4))
 
         if(response["status"]["message"] == "OK"):
-            print("Begivenheden blev fjernet korrekt")
+            self.logger.info("Event was removed!")
+
         else:
-            print("Noget gik galt ved fjernelse af begivenheden")
+            self.logger.warning("Event was not removed!")
 
     def createEvent(self, title, description, startDateTime, endDateTime, allDay = False, isPrivate = False):
         #EventArray
@@ -125,9 +130,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            print("Begivenheden blev oprettet korrekt")
+            self.logger.info("Event was created!")
         else:
-            print("Noget gik galt ved oprettelse af begivenheden")
+            self.logger.warning("Event was not created!")
 
     def getProfile(self):
                 # All API requests go to the below url
@@ -225,7 +230,8 @@ class AulaManager:
         
         # Login succeeded without an HTTP error code and API requests can begin 
         if success == True and response.status_code == 200:
-            print("Login lykkedes")
+            self.logger.info("Log in was successful")
+
 
             # All API requests go to the below url
             # Each request has a number of parameters, of which method is always included
@@ -315,6 +321,6 @@ class AulaManager:
 
         # Login failed for some unknown reason
         else:
-            print("Noget gik galt med login")
+            self.logger.critical("Log in was unsuccessful")
 
             return False
