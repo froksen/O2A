@@ -81,7 +81,7 @@ class EventManager:
             #print("Organizer: %s " %(event_to_create["appointmentitem"].Organizer))
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
-            
+                 
                 for attendee in attendees:
                     if not self.aulamanager.findRecipient(attendee) == None:
                         attendee_ids.append(self.aulamanager.findRecipient(attendee))

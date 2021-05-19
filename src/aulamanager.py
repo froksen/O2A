@@ -362,3 +362,23 @@ class AulaManager:
             self.logger.critical("Log in was unsuccessful")
 
             return False
+
+    def test_run(self):
+        from setupmanager import SetupManager
+        #Gets AULA password and username from keyring
+        self.setupmanager = SetupManager()
+        aula_usr = self.setupmanager.get_aula_username()
+        aula_pwd = self.setupmanager.get_aula_password()
+        
+        self.login(aula_usr,aula_pwd)
+
+        
+        
+        invites = []
+        invites.append(aulagmr.findRecipient("Jesper Qvist"))
+
+        self.createEvent("TEST BEGIVENHED","BESKRIVELSEN AF BEGIVENHEDEN","2021-05-19T20:00:00+02:00","2021-05-19T23:00:00+02:00",invites,False,False)
+
+
+#aulagmr = AulaManager()
+#aulagmr.test_run()
