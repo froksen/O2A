@@ -36,31 +36,22 @@ class OutlookManager:
         for event in events: #Loops through
             categories = event.categories.split(";") #If event has multiple categories, then split
 
-            for category in categories: #Loops through categories
-                category = category.strip()
+            # If has category "AULA" then it should be added to AULA
+            if "AULA" in categories:
+                addToInstitutionCalendar = False
 
-                if(category == "AULA"): #If category is AULA
-                    #print("Subject")
-                    #print(event.Subject)
-                    #print("CurrentUser")
-                    #print(self.get_personal_calendar_username())
-                    #print("RequiredAttendees")
-                    #print(event.RequiredAttendees)
-                    
-                    #attendeesList =event.RequiredAttendees.split(";")
-                    addToInstitutionCalendar = False
-                    for category2 in categories: #Loops through categories
-                        category2 = category2.strip()
-                        if category2 == "AULA: Institutionskalender":
-                            addToInstitutionCalendar = True
+                #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
+                if "AULA: Institutionskalender" in categories: #Loops through categories
+                    addToInstitutionCalendar = True
 
-                    aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
-                        "aula_startdate": format_as_aula_date(event.start),
-                        "aula_enddate": format_as_aula_date(event.end),
-                        "aula_starttime": format_as_aula_time(event.start),
-                        "aula_endtime": format_as_aula_time(event.end),
-                        "addToInstitutionCalendar" : addToInstitutionCalendar
-                    }
+                #Array containing event information
+                aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
+                    "aula_startdate": format_as_aula_date(event.start),
+                    "aula_enddate": format_as_aula_date(event.end),
+                    "aula_starttime": format_as_aula_time(event.start),
+                    "aula_endtime": format_as_aula_time(event.end),
+                    "addToInstitutionCalendar" : addToInstitutionCalendar
+                }
 
         return aulaEvents
 
