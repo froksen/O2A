@@ -110,7 +110,9 @@ class EventManager:
         aulaevents_from_outlook = self.outlookmanager.get_aulaevents_from_outlook(begin, end)
 
         #Finds AULA events from ICal-calendar
-        outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
+        #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
+        outlookevents_from_aula = self.aulamanager.getEvents(None,None)
+        #events = self.getEvents(None, None)
         
 
         events_to_create = []

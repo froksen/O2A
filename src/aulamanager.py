@@ -4,6 +4,7 @@ import requests                 # Perform http/https requests
 from bs4 import BeautifulSoup   # Parse HTML pages
 import json                     # Needed to print JSON API data
 import logging
+import re
 
 #THIS CODE IS LARGELY INSPIRED BY CODE FROM https://helmstedt.dk/2020/05/et-lille-kig-paa-aulas-api/
 
@@ -33,6 +34,48 @@ class AulaManager:
 
     def getAulaApiUrl(self):
         return 'https://www.aula.dk/api/v11/'
+
+    def getEventsByProfileIdsAndResourceIds(self,profileId):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        params = {
+            'method': 'calendar.getEventsByProfileIdsAndResourceIds',
+            }
+
+        data = {"instProfileIds":[profileId],"resourceIds":[],"start":"2021-05-17 08:00:00.0000+02:00","end":"2021-05-20 00:00:00.0000+02:00"}
+
+        response = session.post(url, params=params, json=data).json()
+        #response = session.get(url).json()
+        #print(json.dumps(response, indent=4))
+
+        events = []
+        for event in response["data"]:
+            if(event["type"] == "event"):
+                events.append(event)
+
+        return events
+
+    def getEventById(self,event_id):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        params = {
+            'method': 'calendar.getEventById',
+            "eventId": event_id,
+            }
+
+        response  = session.get(url, params=params).json()
+        #print(json.dumps(response, indent=4))
+        return response
+        try:
+            recipient_profileid = response["data"]["results"][0]["docId"] #Appearenly its docId and not profileId
+            print(recipient_profileid)
+
+            return int(recipient_profileid)
+
+        except:
+            return None
 
     def findRecipient(self,recipient):
         session = self.getSession()
@@ -363,6 +406,69 @@ class AulaManager:
 
             return False
 
+    def getEvents(self, startDatetime, endDatetime):
+        from setupmanager import SetupManager
+        #Gets AULA password and username from keyring
+        self.setupmanager = SetupManager()
+        aula_usr = self.setupmanager.get_aula_username()
+        aula_pwd = self.setupmanager.get_aula_password()
+        
+        #self.login(aula_usr,aula_pwd)
+
+        events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
+        class appointmentitem(object):
+            pass
+
+        aula_events = {}
+
+        for event in events:
+            response = self.getEventById(event["id"])
+
+            #print(response)
+            #print(response["title"])
+            #time.sleep(10)
+
+
+            appointmentitem.subject = response["data"]["title"]
+            appointmentitem.body = response["data"]["description"]["html"]
+            appointmentitem.start = response["data"]["startDateTime"]
+            appointmentitem.end = response["data"]["endDateTime"]
+            appointmentitem.location = response["data"]["primaryResourceText"] 
+
+
+            description = response["data"]["description"]["html"]
+            #Finds AULA-Url for event
+            #m = re.search('(?P<url>https?://[^\s]+)', description)
+            #if m:
+            #    aula_calendar_url = m.group("url").replace(",","")
+
+            #Find GAID in description
+            m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
+            if m1:
+                outlook_GlobalAppointmentID = m1.group(0)
+                outlook_GlobalAppointmentID = outlook_GlobalAppointmentID.split("=")[1].replace("</p>","").strip()
+
+            #FINDS LMT in description
+            m2 = re.search('o2a_outlook_LastModificationTime=\S* \S*\S\S:\S\S', description)
+            if m2:
+                outlook_LastModificationTime = m2.group(0)
+                outlook_LastModificationTime = outlook_LastModificationTime.split("=")[1].strip()
+
+            #if both GAID and LMT exists then add item to dict. 
+            if m1 and m2:
+                aula_events[outlook_GlobalAppointmentID]={
+                    "appointmentitem":appointmentitem,
+                    #"aula_event_url":aula_calendar_url,
+                    "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
+                    "outlook_LastModificationTime":outlook_LastModificationTime
+                }
+
+                print( aula_events[outlook_GlobalAppointmentID]["outlook_GlobalAppointmentID"])
+
+
+
+        return aula_events
+
     def test_run(self):
         from setupmanager import SetupManager
         #Gets AULA password and username from keyring
@@ -372,13 +478,26 @@ class AulaManager:
         
         self.login(aula_usr,aula_pwd)
 
+        events = self.getEvents(None, None)
+
+       # for event in events:
+            #print(event["outlook_GlobalAppointmentID"])
+
+        #events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
+
+        #for event in events:
+        #    self.getEventById(event["id"])
+
+
+    
         
-        
-        invites = []
-        invites.append(aulagmr.findRecipient("Jesper Qvist"))
+        #invites = []
+        #invites.append(aulagmr.findRecipient("Jesper Qvist"))
 
-        self.createEvent("TEST BEGIVENHED","BESKRIVELSEN AF BEGIVENHEDEN","2021-05-19T20:00:00+02:00","2021-05-19T23:00:00+02:00",invites,False,False)
+       # self.createEvent("TEST BEGIVENHED","BESKRIVELSEN AF BEGIVENHEDEN","2021-05-19T20:00:00+02:00","2021-05-19T23:00:00+02:00",invites,False,False)
+
+       
 
 
-#aulagmr = AulaManager()
-#aulagmr.test_run()
+aulagmr = AulaManager()
+aulagmr.test_run()
