@@ -48,13 +48,18 @@ class OutlookManager:
                     #print(event.RequiredAttendees)
                     
                     #attendeesList =event.RequiredAttendees.split(";")
-
+                    addToInstitutionCalendar = False
+                    for category2 in categories: #Loops through categories
+                        category2 = category2.strip()
+                        if category2 == "AULA: Institutionskalender":
+                            addToInstitutionCalendar = True
 
                     aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
                         "aula_startdate": format_as_aula_date(event.start),
                         "aula_enddate": format_as_aula_date(event.end),
                         "aula_starttime": format_as_aula_time(event.start),
                         "aula_endtime": format_as_aula_time(event.end),
+                        "addToInstitutionCalendar" : addToInstitutionCalendar
                     }
 
         return aulaEvents

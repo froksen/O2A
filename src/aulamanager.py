@@ -90,7 +90,7 @@ class AulaManager:
         else:
             self.logger.warning("Event was not removed!")
 
-    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], allDay = False, isPrivate = False):
+    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False):
         #EventArray
 
         print("IDDD")
@@ -136,7 +136,7 @@ class AulaManager:
             'oldStartDateTime': '',
             'oldEndDateTime': '',
             'isEditEvent': False,
-            'addToInstitutionCalendar': False,
+            'addToInstitutionCalendar': addToInstitutionCalendar,
             'hideInOwnCalendar': False,
             'inviteeIds': attendee_ids,
             'additionalResources': [],
