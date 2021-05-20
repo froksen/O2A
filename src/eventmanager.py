@@ -21,17 +21,9 @@ class EventManager:
         #Sets logger
         self.logger = logging.getLogger('O2A')
 
-    def update_aula_calendar(self, changes):
+        self.login_to_aula()
 
-
-        #If no changes, then do nothing
-        if len(changes['events_to_create'] or changes['events_to_remove']) <= 0:
-            self.logger.info("No changes. Process completed")
-            return
-
-        # Create a browser
-        #self.aulamanager.setBrowser(self.aulamanager.createBrowser(headless=True))
-
+    def login_to_aula(self):
         #Gets AULA password and username from keyring
         aula_usr = self.setupmanager.get_aula_username()
         aula_pwd = self.setupmanager.get_aula_password()
@@ -43,15 +35,26 @@ class EventManager:
             sys.exit()
             return
 
+    def update_aula_calendar(self, changes):
+
+
+        #If no changes, then do nothing
+        if len(changes['events_to_create'] or changes['events_to_remove']) <= 0:
+            self.logger.info("No changes. Process completed")
+            return
+
+        # Create a browser
+        #self.aulamanager.setBrowser(self.aulamanager.createBrowser(headless=True))
+
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
-            event_url = event_to_remove["aula_event_url"]
-            event_id = event_url.split("/")[7] #Should be regexp instead!
+            #event_url = event_to_remove["aula_event_url"]
+            event_id = event_to_remove["appointmentitem"].aula_id #Should be regexp instead!
             #event_GlobalAppointmentID = event_to_remove["appointmentitem"].GlobalAppointmentID
             
             #Removing event
             self.logger.info("Attempting to REMOVE event: %s " %(event_title))
-            #self.aulamanager.deleteEvent(event_id)
+            self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
 
@@ -63,7 +66,7 @@ class EventManager:
             start_time = event_to_create["aula_starttime"]
             end_time = event_to_create["aula_endtime"]
             start_dateTime = str(start_date).replace("/","-") + "T" + start_time + "+02:00"  # FORMAT: 2021-05-18T15:00:00+02:00
-            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00
+            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
             location = event_to_create["appointmentitem"].location 
             sensitivity = event_to_create["appointmentitem"].Sensitivity 
             description = "%s\no2a_outlook_GlobalAppointmentID=%s\n\no2a_outlook_LastModificationTime=%s" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
@@ -111,7 +114,9 @@ class EventManager:
 
         #Finds AULA events from ICal-calendar
         #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
-        outlookevents_from_aula = self.aulamanager.getEvents(None,None)
+        startTimeFormattet = begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
+        endTimeFormattet = end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
+        outlookevents_from_aula = self.aulamanager.getEvents(startTimeFormattet,endTimeFormattet)
         #events = self.getEvents(None, None)
         
 
@@ -137,7 +142,7 @@ class EventManager:
         for key in aulaevents_from_outlook:
             if not key in outlookevents_from_aula:
                 events_to_create.append(aulaevents_from_outlook[key])
-                self.logger.info("Event \"%s\" width start date %s does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key]["appointmentitem"].subject,aulaevents_from_outlook[key]["appointmentitem"].start))
+                self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key]["appointmentitem"].subject,aulaevents_from_outlook[key]["appointmentitem"].start))
                 #self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime))
                 #self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key]["appointmentitem"].GlobalAppointmentID))
 
@@ -146,7 +151,7 @@ class EventManager:
             if not key in aulaevents_from_outlook:
                 if not key in events_to_remove:
                     events_to_remove.append(outlookevents_from_aula[key])
-                    self.logger.info("Event \"%s\"  only exists in AULA. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
+                    self.logger.info("Event \"%s\" that begins at \"%s\" only exists in AULA. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
                     #self.logger.info(" - Appointment URL: %s" %(outlookevents_from_aula[key]["aula_event_url"]))
                     #self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
                     #self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
@@ -157,6 +162,8 @@ class EventManager:
         self.logger.info("Events to be created: %s" %(len(events_to_create)))
         self.logger.info("Events to be removed: %s" %(len(events_to_remove)))
         self.logger.info(" ")
+
+        #time.sleep(10)
 
         return {
                 'events_to_create': events_to_create,

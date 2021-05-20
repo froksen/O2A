@@ -2,6 +2,7 @@
 from setupmanager import SetupManager
 from eventmanager import EventManager as eventmanager
 import datetime as dt
+from datetime import timedelta
 import logging
 import sys, getopt
 
@@ -35,7 +36,7 @@ def main(argv):
       eman = eventmanager()
       
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
-      comp = eman.compare_calendars(today,dt.datetime(today.year +1 ,today.month,today.day)) #Start dato er nu altid dags dato :) 
+      comp = eman.compare_calendars(today,dt.datetime(today.year ,today.month,today.day)+timedelta(days=30)) #Start dato er nu altid dags dato :) 
       eman.update_aula_calendar(comp)
 
   #If any argument is passed
@@ -59,7 +60,7 @@ def main(argv):
       eman = eventmanager()
       
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
-      comp = eman.compare_calendars(today,dt.datetime(today.year +1 ,today.month,today.day)) #Start dato er nu altid dags dato :) 
+      comp = eman.compare_calendars(today,dt.datetime(today.year,today.month,today.day+30)) #Start dato er nu altid dags dato :) 
       eman.update_aula_calendar(comp)
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()

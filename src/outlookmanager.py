@@ -34,14 +34,20 @@ class OutlookManager:
         events = self.get_personal_calendar(begin,end) #Finds all events
         
         for event in events: #Loops through
-            categories = event.categories.split(";") #If event has multiple categories, then split
+            categories_org = event.categories.split(";") #If event has multiple categories, then split
+
+            #Makes sure that there are no whitespaces before or after
+            categories = []
+            for category in categories_org:
+                #print(category)
+                categories.append(str(category).strip())
 
             # If has category "AULA" then it should be added to AULA
-            if "AULA" in categories:
+            if 'AULA' in categories:
                 addToInstitutionCalendar = False
 
                 #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
-                if "AULA: Institutionskalender" in categories: #Loops through categories
+                if 'AULA Institutionskalender' in categories: #Loops through categories
                     addToInstitutionCalendar = True
 
                 #Array containing event information

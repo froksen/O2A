@@ -35,15 +35,15 @@ class AulaManager:
     def getAulaApiUrl(self):
         return 'https://www.aula.dk/api/v11/'
 
-    def getEventsByProfileIdsAndResourceIds(self,profileId):
+    def getEventsByProfileIdsAndResourceIds(self,profileId, startDateTime, endDateTime):
         session = self.getSession()
         url = self.getAulaApiUrl()
 
         params = {
             'method': 'calendar.getEventsByProfileIdsAndResourceIds',
             }
-
-        data = {"instProfileIds":[profileId],"resourceIds":[],"start":"2021-05-17 08:00:00.0000+02:00","end":"2021-05-20 00:00:00.0000+02:00"}
+        #FORMAT:"2021-05-17 08:00:00.0000+02:00"
+        data = {"instProfileIds":[profileId],"resourceIds":[],"start":startDateTime,"end":endDateTime}
 
         response = session.post(url, params=params, json=data).json()
         #response = session.get(url).json()
@@ -100,11 +100,11 @@ class AulaManager:
         
         response  = session.get(url, params=params).json()
         #response = session.get(url).json()
-        print(json.dumps(response, indent=4))
+        #print(json.dumps(response, indent=4))
 
         try:
             recipient_profileid = response["data"]["results"][0]["docId"] #Appearenly its docId and not profileId
-            print(recipient_profileid)
+           # print(recipient_profileid)
 
             return int(recipient_profileid)
 
@@ -125,7 +125,7 @@ class AulaManager:
         }
 
         response  = session.post(url, params=params, json=data).json()
-        print(json.dumps(response, indent=4))
+        #print(json.dumps(response, indent=4))
 
         if(response["status"]["message"] == "OK"):
             self.logger.info("Event was removed!")
@@ -136,8 +136,8 @@ class AulaManager:
     def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False):
         #EventArray
 
-        print("IDDD")
-        print(attendee_ids)
+       # print("IDDD")
+        #print(attendee_ids)
 
         session = self.getSession()
 
@@ -415,7 +415,7 @@ class AulaManager:
         
         #self.login(aula_usr,aula_pwd)
 
-        events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
+        events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startDatetime, endDatetime)
         class appointmentitem(object):
             pass
 
@@ -423,7 +423,7 @@ class AulaManager:
 
         for event in events:
             response = self.getEventById(event["id"])
-
+            self.logger.info("Reading information about event %s" %(response["data"]["title"]))
             #print(response)
             #print(response["title"])
             #time.sleep(10)
@@ -431,6 +431,7 @@ class AulaManager:
 
             appointmentitem.subject = response["data"]["title"]
             appointmentitem.body = response["data"]["description"]["html"]
+            appointmentitem.aula_id = response["data"]["id"]
             appointmentitem.start = response["data"]["startDateTime"]
             appointmentitem.end = response["data"]["endDateTime"]
             appointmentitem.location = response["data"]["primaryResourceText"] 
@@ -463,7 +464,7 @@ class AulaManager:
                     "outlook_LastModificationTime":outlook_LastModificationTime
                 }
 
-                print( aula_events[outlook_GlobalAppointmentID]["outlook_GlobalAppointmentID"])
+                #print( aula_events[outlook_GlobalAppointmentID]["outlook_GlobalAppointmentID"])
 
 
 
@@ -480,8 +481,8 @@ class AulaManager:
 
         events = self.getEvents(None, None)
 
-       # for event in events:
-            #print(event["outlook_GlobalAppointmentID"])
+        for event in events:
+            print(event["outlook_GlobalAppointmentID"])
 
         #events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
 
@@ -499,5 +500,5 @@ class AulaManager:
        
 
 
-aulagmr = AulaManager()
-aulagmr.test_run()
+#aulagmr = AulaManager()
+#aulagmr.test_run()
