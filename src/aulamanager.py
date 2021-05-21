@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup   # Parse HTML pages
 import json                     # Needed to print JSON API data
 import logging
 import re
+from dateutil.relativedelta import relativedelta
+import datetime
 
 #THIS CODE IS LARGELY INSPIRED BY CODE FROM https://helmstedt.dk/2020/05/et-lille-kig-paa-aulas-api/
 
@@ -26,8 +28,14 @@ class AulaManager:
     def getProfileinstitutionCode(self):
         return self.getProfilesByLogin()['data']['profiles'][0]['institutionProfiles'][0]['institutionCode']
 
-    def getProfileId(self):
-        return self.getProfilesByLogin()['data']['profiles'][0]['institutionProfiles'][0]['id']
+        def getProfileId(self):
+            profiles = self.getProfilesByLogin()['data']['profiles']
+
+            for profile in profiles:
+                if profile['institutionProfiles'][0]['role'] == "employee":
+                    return profile['institutionProfiles'][0]['id']
+
+        #return self.getProfilesByLogin()['data']['profiles'][0]['institutionProfiles'][0]['id']
 
     def getSession(self):
         return self.session
@@ -42,6 +50,8 @@ class AulaManager:
         params = {
             'method': 'calendar.getEventsByProfileIdsAndResourceIds',
             }
+
+        events = []        
         #FORMAT:"2021-05-17 08:00:00.0000+02:00"
         data = {"instProfileIds":[profileId],"resourceIds":[],"start":startDateTime,"end":endDateTime}
 
@@ -49,12 +59,20 @@ class AulaManager:
         #response = session.get(url).json()
         #print(json.dumps(response, indent=4))
 
-        events = []
         for event in response["data"]:
             if(event["type"] == "event"):
                 events.append(event)
 
         return events
+
+    def getProfileId(self):
+        # print(self.getProfilesByLogin()['data']['profiles'][0]['institutionProfiles'])
+
+            profiles = self.getProfilesByLogin()['data']['profiles']
+
+            for profile in profiles:
+                if profile['institutionProfiles'][0]['role'] == "employee":
+                    return profile['institutionProfiles'][0]['id']
 
     def getEventById(self,event_id):
         session = self.getSession()
@@ -211,9 +229,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event was created!")
+            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(title,startDateTime))
         else:
-            self.logger.warning("Event was not created!")
+            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
 
     def getProfile(self):
                 # All API requests go to the below url
@@ -407,23 +425,30 @@ class AulaManager:
             return False
 
     def getEvents(self, startDatetime, endDatetime):
-        from setupmanager import SetupManager
-        #Gets AULA password and username from keyring
-        self.setupmanager = SetupManager()
-        aula_usr = self.setupmanager.get_aula_username()
-        aula_pwd = self.setupmanager.get_aula_password()
-        
-        #self.login(aula_usr,aula_pwd)
+       
+        #Calculates the diffence between the dates.
+        monthsDiff = abs(startDatetime.month - endDatetime.month)
 
-        events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startDatetime, endDatetime)
+        events = []
+        for months in range(monthsDiff):
+            lookUp_begin = startDatetime + relativedelta(months=months)
+            lookUp_end = startDatetime + relativedelta(months=months+1)
+
+            #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
+            startTimeFormattet = lookUp_begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
+            endTimeFormattet = lookUp_end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
+
+            events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
+
         class appointmentitem(object):
             pass
 
         aula_events = {}
-
+        self.logger.info("Reading AULA events:")
         for event in events:
             response = self.getEventById(event["id"])
-            self.logger.info("Reading information about event %s" %(response["data"]["title"]))
+            #print(response["data"])
+            self.logger.info("  Event %s with start date %s" %(response["data"]["title"],response["data"]["startDateTime"]))
             #print(response)
             #print(response["title"])
             #time.sleep(10)

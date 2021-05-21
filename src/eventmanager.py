@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 from outlookmanager import OutlookManager
 from aulamanager import AulaManager
 import datetime as dt
@@ -113,10 +114,8 @@ class EventManager:
         aulaevents_from_outlook = self.outlookmanager.get_aulaevents_from_outlook(begin, end)
 
         #Finds AULA events from ICal-calendar
-        #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
-        startTimeFormattet = begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
-        endTimeFormattet = end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
-        outlookevents_from_aula = self.aulamanager.getEvents(startTimeFormattet,endTimeFormattet)
+
+        outlookevents_from_aula = self.aulamanager.getEvents(begin,end)
         #events = self.getEvents(None, None)
         
 
