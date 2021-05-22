@@ -7,7 +7,6 @@ import logging
 import sys
 import win32com.client
 import keyring
-from icalmananger import IcalManager
 from setupmanager import SetupManager
 
 
@@ -16,7 +15,6 @@ class EventManager:
         #Managers are init.
         self.aulamanager = AulaManager()
         self.outlookmanager = OutlookManager()
-        self.icalmanager = IcalManager()
         self.setupmanager = SetupManager()
 
         #Sets logger
