@@ -6,7 +6,6 @@ class SetupManager:
     def __init__(self):
         print("INIT")
         self.config = configparser.ConfigParser()
-
         self.__read_config_file()
 
 
@@ -32,30 +31,19 @@ class SetupManager:
         print("The following information is used to operate and login to AULA. Please enter information for UNI-login")
         usr = self.__ask_for_username()
         passwd = self.__ask_for_password()
+        
+        try:
+            self.config.add_section("AULA")
+        except configparser.DuplicateSectionError:
+            pass #If section already exists, then skip
 
-        keyring.set_password("o2a", "aula_username", usr)
+        self.config['AULA']['username'] = usr
         keyring.set_password("o2a", "aula_password", passwd)
 
-        print("Username and password stored!")
-
-        print("The following information is used get events in your AULA calendar.")
-        aula_calendar_week = input("Please enter the url for AULA week calendar: ")
-        aula_calendar_year= input("Please enter the url for AULA year calendar: ")
-
-
-        self.config['AULA'] = {}
-        self.config['AULA']['username'] = usr
-        self.config['AULA']['calendar_week'] = aula_calendar_week
-        self.config['AULA']['calendar_year'] = aula_calendar_year
         self.__write_config_file()
 
+        print("Username and password stored!")
         print("AULA setup completed!")
-
-    def get_aula_week_calendar_url(self):
-        return str(self.config['AULA']['calendar_week'])
-
-    def get_aula_year_calendar_url(self):
-        return str(self.config['AULA']['calendar_year'])
 
     def get_aula_username(self):
         return self.config['AULA']['username']
@@ -68,7 +56,6 @@ class SetupManager:
             self.config.read('configuration.ini')
         except Exception:
             pass
-
 
     def __write_config_file(self):
         with open('configuration.ini', 'w') as configfile:
