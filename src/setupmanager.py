@@ -4,7 +4,6 @@ import configparser
 
 class SetupManager:
     def __init__(self):
-        print("INIT")
         self.config = configparser.ConfigParser()
         self.__read_config_file()
 

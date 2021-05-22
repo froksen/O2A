@@ -29,16 +29,19 @@ logger.addHandler(ch)
 logger.info('O2A startet')
 today = dt.datetime.today()
 
+
+def run_script():
+      #Startdate is today, enddate is today next year - Tenical limit from AULA.
+      eman = eventmanager()
+      comp = eman.compare_calendars(today,today+relativedelta(days=+200)) #Start dato er nu altid dags dato :) 
+      eman.update_aula_calendar(comp)
+
 #The main function
 def main(argv):
 
   #If no argument is passed
   if len(sys.argv) <= 1:
-      eman = eventmanager()
-      
-      #Startdate is today, enddate is today next year - Tenical limit from AULA.
-      comp = eman.compare_calendars(today,today+relativedelta(days=+200)) #Start dato er nu altid dags dato :) 
-      eman.update_aula_calendar(comp)
+      run_script()
 
   #If any argument is passed
   try:
@@ -58,11 +61,7 @@ def main(argv):
       print(' -r --run    : To run script')
       print(' -h --help   : To show help')
     elif opt in ("-r", "--run"): 
-      eman = eventmanager()
-      
-      #Startdate is today, enddate is today next year - Tenical limit from AULA.
-      comp = eman.compare_calendars(today,today+relativedelta(days=+200)) #Start dato er nu altid dags dato :) 
-      eman.update_aula_calendar(comp)
+      run_script()
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
       setupmgr.do_setup()
