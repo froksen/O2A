@@ -57,7 +57,8 @@ class OutlookManager:
                     endDateTime_fix = event.end - timedelta(days=1)
                     event.end = endDateTime_fix
 
-
+                    startDateTime_fix = event.start + timedelta(days=1)
+                    event.start = startDateTime_fix
 
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
