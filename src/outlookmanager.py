@@ -1,5 +1,6 @@
 import win32com.client
 import datetime as dt
+from datetime import timedelta
 import re
 import sys
 import logging
@@ -50,6 +51,14 @@ class OutlookManager:
                 if 'AULA Institutionskalender' in categories: #Loops through categories
                     addToInstitutionCalendar = True
 
+                #Fixes issue, where end in Allday events are pushed one day forward.
+                #TODO: Make a better fix. 
+                if event.AllDayEvent == True:
+                    endDateTime_fix = event.end - timedelta(days=1)
+                    event.end = endDateTime_fix
+
+
+
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
                     "aula_startdate": format_as_aula_date(event.start),
@@ -58,6 +67,12 @@ class OutlookManager:
                     "aula_endtime": format_as_aula_time(event.end),
                     "addToInstitutionCalendar" : addToInstitutionCalendar
                 }
+
+                #print("ENDDATE")
+                #print(aulaEvents[event.GlobalAppointmentID]["appointmentitem"].subject)
+                #print(aulaEvents[event.GlobalAppointmentID]["aula_enddate"])
+                #print(event.end)
+                #time.sleep(2)
 
         return aulaEvents
 

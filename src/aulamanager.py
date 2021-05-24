@@ -147,17 +147,15 @@ class AulaManager:
 
         if(response["status"]["message"] == "OK"):
             self.logger.info("Event was removed!")
-
         else:
             self.logger.warning("Event was not removed!")
 
     def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False):
-        #EventArray
-
-       # print("IDDD")
-        #print(attendee_ids)
-
         session = self.getSession()
+        
+        #print("START: %s" %(startDateTime))
+        #print("END: %s" %(endDateTime))
+        #return
 
         # All API requests go to the below url
         # Each request has a number of parameters, of which method is always included
@@ -444,7 +442,7 @@ class AulaManager:
             pass
 
         aula_events = {}
-        self.logger.info("Reading AULA events:")
+        self.logger.info("Reading current AULA calendar events:")
         for event in events:
             response = self.getEventById(event["id"])
             #print(response["data"])
