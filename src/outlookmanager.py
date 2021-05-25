@@ -54,11 +54,14 @@ class OutlookManager:
                 #Fixes issue, where end in Allday events are pushed one day forward.
                 #TODO: Make a better fix. 
                 if event.AllDayEvent == True:
-                    endDateTime_fix = event.end - timedelta(days=1)
-                    event.end = endDateTime_fix
+                    try:
+                        endDateTime_fix = event.end - timedelta(days=1)
+                        event.end = endDateTime_fix
 
-                    startDateTime_fix = event.start + timedelta(days=1)
-                    event.start = startDateTime_fix
+                        startDateTime_fix = event.start + timedelta(days=1)
+                        event.start = startDateTime_fix
+                    except: 
+                        print("SKIPPED")
 
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
