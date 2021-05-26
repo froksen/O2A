@@ -427,10 +427,18 @@ class AulaManager:
         #Calculates the diffence between the dates.
         monthsDiff = abs(startDatetime.month - endDatetime.month)
 
+        #Makes sure that even if only one event in same month, the loop will be run
+        if monthsDiff <= 0:
+            monthsDiff = 1
+
         events = []
         for months in range(monthsDiff):
             lookUp_begin = startDatetime + relativedelta(months=months)
             lookUp_end = startDatetime + relativedelta(months=months+1)
+
+            #End date can not be later than end date specified.
+            if lookUp_end >= endDatetime:
+                lookUp_end = endDatetime
 
             #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
             startTimeFormattet = lookUp_begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
