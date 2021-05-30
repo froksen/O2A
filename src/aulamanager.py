@@ -459,13 +459,13 @@ class AulaManager:
             #print(response["title"])
             #time.sleep(10)
 
-
-            appointmentitem.subject = response["data"]["title"]
-            appointmentitem.body = response["data"]["description"]["html"]
-            appointmentitem.aula_id = response["data"]["id"]
-            appointmentitem.start = response["data"]["startDateTime"]
-            appointmentitem.end = response["data"]["endDateTime"]
-            appointmentitem.location = response["data"]["primaryResourceText"] 
+            mAppointmentitem = appointmentitem()
+            mAppointmentitem.subject = response["data"]["title"]
+            mAppointmentitem.body = response["data"]["description"]["html"]
+            mAppointmentitem.aula_id = response["data"]["id"]
+            mAppointmentitem.start = response["data"]["startDateTime"]
+            mAppointmentitem.end = response["data"]["endDateTime"]
+            mAppointmentitem.location = response["data"]["primaryResourceText"] 
 
 
             description = response["data"]["description"]["html"]
@@ -489,7 +489,7 @@ class AulaManager:
             #if both GAID and LMT exists then add item to dict. 
             if m1 and m2:
                 aula_events[outlook_GlobalAppointmentID]={
-                    "appointmentitem":appointmentitem,
+                    "appointmentitem":mAppointmentitem,
                     #"aula_event_url":aula_calendar_url,
                     "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
                     "outlook_LastModificationTime":outlook_LastModificationTime
