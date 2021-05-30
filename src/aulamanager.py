@@ -425,7 +425,8 @@ class AulaManager:
     def getEvents(self, startDatetime, endDatetime):
        
         #Calculates the diffence between the dates.
-        monthsDiff = abs(startDatetime.month - endDatetime.month)
+        monthsDiff = abs((endDatetime.year - startDatetime.year) * 12 + endDatetime.month - startDatetime.month)
+        #print(monthsDiff)
 
         #Makes sure that even if only one event in same month, the loop will be run
         if monthsDiff <= 0:
@@ -451,10 +452,11 @@ class AulaManager:
 
         aula_events = {}
         self.logger.info("Reading current AULA calendar events:")
+        index = 1
         for event in events:
             response = self.getEventById(event["id"])
             #print(response["data"])
-            self.logger.info("  Event %s with start date %s" %(response["data"]["title"],response["data"]["startDateTime"]))
+            self.logger.info("     (%s/%s) Event %s with start date %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
             #print(response)
             #print(response["title"])
             #time.sleep(10)
@@ -494,6 +496,8 @@ class AulaManager:
                     "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
                     "outlook_LastModificationTime":outlook_LastModificationTime
                 }
+
+            index = index +1
 
                 #print( aula_events[outlook_GlobalAppointmentID]["outlook_GlobalAppointmentID"])
 
