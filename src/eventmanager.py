@@ -122,6 +122,13 @@ class EventManager:
 
         self.logger.info("..:: CHANGES :: ...")
 
+        #Checking for dublicate entryes to be removed
+        for key in outlookevents_from_aula:
+            if outlookevents_from_aula[key]["isDuplicate"] == True:
+                events_to_remove.append(outlookevents_from_aula[key])
+                self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+
+
         #Checking for events that has been updated, and exists both places
         for key in aulaevents_from_outlook:
             if  key in outlookevents_from_aula:

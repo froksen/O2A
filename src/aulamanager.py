@@ -490,9 +490,15 @@ class AulaManager:
 
             #if both GAID and LMT exists then add item to dict. 
             if m1 and m2:
+                isDuplicate = False 
+                if outlook_GlobalAppointmentID in aula_events.keys():
+                    outlook_GlobalAppointmentID = str(index) + "_" + outlook_GlobalAppointmentID
+                    isDuplicate = True
+
+
                 aula_events[outlook_GlobalAppointmentID]={
                     "appointmentitem":mAppointmentitem,
-                    #"aula_event_url":aula_calendar_url,
+                    "isDuplicate" : isDuplicate,
                     "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
                     "outlook_LastModificationTime":outlook_LastModificationTime
                 }
