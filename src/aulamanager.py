@@ -425,7 +425,7 @@ class AulaManager:
     def getEvents(self, startDatetime, endDatetime):
        
         #Calculates the diffence between the dates.
-        monthsDiff = abs((endDatetime.year - startDatetime.year) * 12 + endDatetime.month - startDatetime.month)
+        monthsDiff = abs((endDatetime.year - startDatetime.year)) * 12 + abs(endDatetime.month - startDatetime.month)
         #print(monthsDiff)
 
         #Makes sure that even if only one event in same month, the loop will be run
