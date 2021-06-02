@@ -6,6 +6,7 @@ import time
 
 class SetupManager:
     def __init__(self):
+        self.create_task()
         self.config = configparser.ConfigParser()
         self.__read_config_file()
 
@@ -63,6 +64,12 @@ class SetupManager:
                     return False
             except IndexError:
                 return False
+
+    def create_task(self):
+        import os
+
+        os.system("schtasks /CREATE /F /TN MINOPGAVE /XML task_template.xml")
+
 
     def create_outlook_categories(self):
         outlook = win32com.client.Dispatch("Outlook.Application")
