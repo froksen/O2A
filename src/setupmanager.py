@@ -1,6 +1,8 @@
 import getpass
 import keyring
 import configparser
+import win32com.client
+import time
 
 class SetupManager:
     def __init__(self):
@@ -42,7 +44,54 @@ class SetupManager:
         self.__write_config_file()
 
         print("Username and password stored!")
+
+        print()
+        print()
+        self.yes_or_no("Do you want to create necessary categories in Outlook?")
+
         print("AULA setup completed!")
+
+    def yes_or_no(self, question):
+        while "the answer is invalid":
+            reply = str(input(question+' (y/n): ')).lower().strip()
+
+            try:
+                if reply[:1] == 'y':
+                    self.create_outlook_categories()
+                    return True
+                if reply[:1] == 'n':
+                    return False
+            except IndexError:
+                return False
+
+    def create_outlook_categories(self):
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        ns = outlook.GetNamespace("MAPI")
+
+        print("Checking if Outlook has necessary categories")
+        hasAula = False
+        hasAULAInstitutionskalender = False
+        for category in ns.Categories:
+            if(category.name == "AULA"):
+                hasAula = True
+
+            if category.name == "AULA Institutionskalender":
+                hasAULAInstitutionskalender = True
+
+        if not hasAula:
+            print("Missing category 'AULA'. Will be created")
+            ns.Categories.Add("AULA")
+            time.sleep(1) #needed because otherwise outlook can keep up.
+
+        if not hasAULAInstitutionskalender:
+            print("Missing category 'AULA Institutionskalender'. Will be created")
+            ns.Categories.Add("AULA Institutionskalender")
+            time.sleep(1) #needed because otherwise outlook can keep up.
+
+        if hasAULAInstitutionskalender and hasAula:
+            print("All necessary categories was found.")
+            #print(category.name)
+            #print(category.CategoryID)
 
     def get_aula_username(self):
         return self.config['AULA']['username']

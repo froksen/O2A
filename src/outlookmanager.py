@@ -79,7 +79,7 @@ class OutlookManager:
                 #time.sleep(2)
 
         return aulaEvents
-
+        
     def get_personal_calendar_username(self):
         outlook = win32com.client.Dispatch("Outlook.Application")
         ns = outlook.GetNamespace("MAPI")
