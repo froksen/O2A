@@ -6,7 +6,6 @@ import time
 
 class SetupManager:
     def __init__(self):
-        self.create_task()
         self.config = configparser.ConfigParser()
         self.__read_config_file()
 
