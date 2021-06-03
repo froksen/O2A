@@ -109,11 +109,12 @@ class EventManager:
             sys.exit()
 
         #Finds all events from Outlook
+        from datetime import timedelta
         aulaevents_from_outlook = self.outlookmanager.get_aulaevents_from_outlook(begin, end)
 
         #Finds AULA events from ICal-calendar
 
-        outlookevents_from_aula = self.aulamanager.getEvents(begin,end)
+        outlookevents_from_aula = self.aulamanager.getEvents(begin-timedelta(days=1),end)
         #events = self.getEvents(None, None)
         
 
