@@ -103,7 +103,7 @@ class SetupManager:
         return self.config['AULA']['username']
 
     def get_aula_password(self):
-        return keyring.get_password("o2a",self.get_aula_username())
+        return keyring.get_password("o2a","aula_password")
 
     def __read_config_file(self):
         try:
