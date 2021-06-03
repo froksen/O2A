@@ -68,6 +68,7 @@ def main(argv):
       setupmgr.do_setup()
     else:
       print('OPTIONS')
+      print (' <empty>    : Same as -r')
       print(' -s --setup  : To setup script')
       print(' -r --run    : To run script')
       print(' -h --help   : To show help')
