@@ -114,7 +114,7 @@ class EventManager:
 
         #Finds AULA events from ICal-calendar
 
-        outlookevents_from_aula = self.aulamanager.getEvents(begin-timedelta(days=1),end)
+        outlookevents_from_aula = self.aulamanager.getEvents(begin-timedelta(hours=10),end)
         #events = self.getEvents(None, None)
         
 
