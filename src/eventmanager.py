@@ -68,7 +68,7 @@ class EventManager:
             end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
             location = event_to_create["appointmentitem"].location 
             sensitivity = event_to_create["appointmentitem"].Sensitivity 
-            description = "<p>%s</p> \n<p>&nbsp;</p> <p>---------------------------------</p><p>o2a_outlook_GlobalAppointmentID=%s</p> <p> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
+            description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p>o2a_outlook_GlobalAppointmentID=%s</p> <p> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
             allDay = event_to_create["appointmentitem"].AllDayEvent
             attendees = []
             attendee_ids = []
