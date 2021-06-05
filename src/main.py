@@ -33,8 +33,8 @@ today = dt.datetime.today()
 def run_script():
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       eman = eventmanager()
-      comp = eman.compare_calendars(today,today+relativedelta(days=+1)) #Start dato er nu altid dags dato :) 
-      #comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,00,00,00,00),dt.datetime(today.year+1,7,1))
+      #comp = eman.compare_calendars(today,today+relativedelta(days=+1)) #Start dato er nu altid dags dato :) 
+      comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,00,00,00,00),dt.datetime(today.year+1,7,1))
       eman.update_aula_calendar(comp)
 
 #The main function
