@@ -71,7 +71,7 @@ class OutlookManager:
                     "aula_endtime": format_as_aula_time(event.end),
                     "addToInstitutionCalendar" : addToInstitutionCalendar
                 }
-
+                
                 #print("ENDDATE")
                 #print(aulaEvents[event.GlobalAppointmentID]["appointmentitem"].subject)
                 #print(aulaEvents[event.GlobalAppointmentID]["aula_enddate"])

@@ -150,6 +150,33 @@ class AulaManager:
         else:
             self.logger.warning("Event was not removed!")
 
+    def url_fixer(self,text):
+        pattern_teams = "https:\/\/teams.microsoft.com\/l\/meetup-join"
+        found = re.search(pattern_teams,text)
+
+        if found:
+            text = re.sub("<","",text)
+            text = re.sub(">","",text)
+
+        #print(text)
+
+       # return
+        #return text
+        pattern = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+
+        urls_found = re.findall(pattern, text)
+
+        #print(urls_found)
+        if urls_found:
+            for url in urls_found:
+                #print("URL")
+                #print(url)
+                #print ("/URL")
+
+                text = re.sub(re.escape(url),'<a href=\"%s" target=\"_blank\" rel=\"noopener\">%s</a>'%(url,url),text)
+        return text
+            #foundText = m1.group(0)
+
     def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False):
         session = self.getSession()
         
@@ -166,6 +193,9 @@ class AulaManager:
         params = {
             'method': 'calendar.createSimpleEvent'
             }
+
+        description = self.url_fixer(description)
+        print(description)
 
         data = {
             'title': title,
