@@ -44,7 +44,7 @@ class OutlookManager:
                 categories.append(str(category).strip())
 
             # If has category "AULA" then it should be added to AULA
-            if 'AULA' or 'AULA Institutionskalender' in categories:
+            if 'AULA' in categories or 'AULA Institutionskalender' in categories:
                 addToInstitutionCalendar = False
 
                 #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
