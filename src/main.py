@@ -31,6 +31,10 @@ today = dt.datetime.today()
 
 
 def run_script():
+      print ("***********************************************************")
+      print("                   OUTLOOK TO AULA")
+      print(" Jesper Qvist, Kløver-Skolen & Ole Frandsen, Dybbøl-Skolen")
+      print ("***********************************************************")
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       eman = eventmanager()
       #comp = eman.compare_calendars(today,today+relativedelta(days=+7)) #Start dato er nu altid dags dato :) 
