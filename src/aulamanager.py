@@ -119,12 +119,14 @@ class AulaManager:
         response  = session.get(url, params=params).json()
         #response = session.get(url).json()
         #print(json.dumps(response, indent=4))
-
+        recipient_profileid = -1
         try:
-            recipient_profileid = response["data"]["results"][0]["docId"] #Appearenly its docId and not profileId
-           # print(recipient_profileid)
+            for result in response["data"]["results"]:
+                if result["portalRole"] == "employee":
+                    recipient_profileid = result["docId"] #Appearenly its docId and not profileId
 
-            return int(recipient_profileid)
+                    return int(recipient_profileid)
+           
 
         except:
             return None
