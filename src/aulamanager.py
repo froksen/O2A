@@ -13,6 +13,7 @@ import datetime
 class AulaManager:
     def __init__(self):
         # Start requests session
+        print("AULA Manager Initialized")
         self.session = requests.Session()
         self.__profilesByLogin = ""
         
@@ -332,6 +333,7 @@ class AulaManager:
         # with the Aula login.
         counter = 0
         success = False
+        self.logger.info("Attempting to login to AULA")
         while success == False and counter < 10:
             try:
                 # Parse response using BeautifulSoup
@@ -388,7 +390,7 @@ class AulaManager:
         
         # Login succeeded without an HTTP error code and API requests can begin 
         if success == True and response.status_code == 200:
-            self.logger.info("Log in was successful")
+            self.logger.info("Login was successful")
 
 
             # All API requests go to the below url
