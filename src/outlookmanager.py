@@ -44,7 +44,7 @@ class OutlookManager:
                 categories.append(str(category).strip())
 
             # If has category "AULA" then it should be added to AULA
-            if 'AULA' in categories:
+            if 'AULA' or 'AULA Institutionskalender' in categories:
                 addToInstitutionCalendar = False
 
                 #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
@@ -61,7 +61,8 @@ class OutlookManager:
                         startDateTime_fix = event.start + timedelta(days=1)
                         event.start = startDateTime_fix
                     except: 
-                        print("SKIPPED")
+                        pass
+                        #print("SKIPPED")
 
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
