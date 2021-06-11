@@ -50,12 +50,13 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsr",["setup","help","run"])
+    opts, args = getopt.getopt(argv,"hsrd",["setup","help","run","days="])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
     print(' -s --setup  : To setup script')
     print(' -r --run    : To run script')
+    print(' -d --days    : To run script')
     print(' -h --help   : To show help')
     sys.exit(2)
   for opt, arg in opts:
@@ -64,7 +65,12 @@ def main(argv):
       print(' without parameter  : same as -r')
       print(' -s --setup  : To setup script')
       print(' -r --run    : To run script')
+      print(' -d --days    : To run script')
       print(' -h --help   : To show help')
+    elif opt in ("-d", "--days"): 
+      print("days")
+      print(str(arg))
+
     elif opt in ("-r", "--run"): 
       run_script()
     elif opt in ("-s", "--setup"):
