@@ -210,7 +210,7 @@ class AulaManager:
         return text
             #foundText = m1.group(0)
 
-    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False):
+    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         
         #print("START: %s" %(startDateTime))
@@ -258,7 +258,7 @@ class AulaManager:
             'oldEndDateTime': '',
             'isEditEvent': False,
             'addToInstitutionCalendar': addToInstitutionCalendar,
-            'hideInOwnCalendar': False,
+            'hideInOwnCalendar': hideInOwnCalendar,
             'inviteeIds': attendee_ids,
             'additionalResources': [],
             'pattern': 'never',

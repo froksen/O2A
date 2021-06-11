@@ -46,6 +46,11 @@ class OutlookManager:
             # If has category "AULA" then it should be added to AULA
             if 'AULA' in categories or 'AULA Institutionskalender' in categories:
                 addToInstitutionCalendar = False
+                hideInOwnCalendar = False
+
+                if not 'AULA' in categories and 'AULA Institutionskalender' in categories:
+                    pass
+                    #hideInOwnCalendar = True
 
                 #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
                 if 'AULA Institutionskalender' in categories: #Loops through categories
@@ -70,6 +75,7 @@ class OutlookManager:
                     "aula_enddate": format_as_aula_date(event.end),
                     "aula_starttime": format_as_aula_time(event.start),
                     "aula_endtime": format_as_aula_time(event.end),
+                    "hideInOwnCalendar" : hideInOwnCalendar,
                     "addToInstitutionCalendar" : addToInstitutionCalendar
                 }
                 

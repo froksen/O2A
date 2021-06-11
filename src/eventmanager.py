@@ -74,6 +74,7 @@ class EventManager:
             attendee_ids = []
             isPrivate = False
             addToInstitutionCalendar = event_to_create["addToInstitutionCalendar"]
+            hideInOwnCalendar = event_to_create["hideInOwnCalendar"]
 
             #Sensitivity == 2 means private
             if sensitivity == 2:
@@ -91,7 +92,7 @@ class EventManager:
 
 
             #Creating new event
-            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate)
+            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
 
 
