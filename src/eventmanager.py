@@ -89,6 +89,10 @@ class EventManager:
                 print("Recipients")
                 print(event_to_create["appointmentitem"].Recipients)
 
+                for Recipient in event_to_create["appointmentitem"].Recipients:
+                    attendees.append(Recipient.name)
+                    #print(Recipient.name)
+
                 for attendee in attendees:
                     if not self.aulamanager.findRecipient(attendee) == None:
                         attendee_ids.append(self.aulamanager.findRecipient(attendee))

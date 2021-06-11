@@ -87,7 +87,7 @@ class AulaManager:
         #print(json.dumps(response, indent=4))
 
         for event in response["data"]:
-            if(event["type"] == "event"):
+            if(event["type"] == "event" and profileId == event["creatorInstProfileId"]):
                 events.append(event)
 
         return events
@@ -538,13 +538,14 @@ class AulaManager:
 
             step = step +1
             self.logger.info("  (%i of %i) Events from %s to %s"%(step,monthsDiff, startTimeFormattet,endTimeFormattet))
-            #Gets own events
-            self.logger.info("      In AULA personal calendar")
-            events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
 
             #Includes institution
             self.logger.info("      In AULA institution calendar")
             events = events + self.getEventsForInstitutions(self.getProfileId(),self.getProfileinstitutionCode(),startTimeFormattet,endTimeFormattet)
+
+            #Gets own events
+            self.logger.info("      In AULA personal calendar")
+            events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
 
             #Seems to be god with a simple cooldown time here. 
             time.sleep(0.1)
