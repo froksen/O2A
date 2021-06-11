@@ -85,7 +85,10 @@ class EventManager:
             #print("Organizer: %s " %(event_to_create["appointmentitem"].Organizer))
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
-                 
+                attendees = attendees + event_to_create["appointmentitem"].OptionalAttendees.split(";") 
+                print("Recipients")
+                print(event_to_create["appointmentitem"].Recipients)
+
                 for attendee in attendees:
                     if not self.aulamanager.findRecipient(attendee) == None:
                         attendee_ids.append(self.aulamanager.findRecipient(attendee))
@@ -107,7 +110,7 @@ class EventManager:
 
         if(begin.strftime('%Y-%m-%d') < dt.datetime.today().strftime('%Y-%m-%d')):
             self.logger.critical("Begin date must be today or in the future! Exitting.")
-            sys.exit()
+           # sys.exit()
 
         #Finds all events from Outlook
         from datetime import timedelta
@@ -127,9 +130,9 @@ class EventManager:
         #Checking for dublicate entryes to be removed
         for key in outlookevents_from_aula:
             if outlookevents_from_aula[key]["isDuplicate"] == True:
-                events_to_remove.append(outlookevents_from_aula[key])
-                self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
-
+                pass
+                #events_to_remove.append(outlookevents_from_aula[key])
+                #self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
 
         #Checking for events that has been updated, and exists both places
         for key in aulaevents_from_outlook:

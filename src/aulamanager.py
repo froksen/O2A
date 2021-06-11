@@ -63,7 +63,7 @@ class AulaManager:
         response = session.get(url).json()
         #response = session.get(url).json()
         #print(json.dumps(response, indent=4))
-
+        #print(response)
         for event in response["data"]:
             if(event["type"] == "event" and profileId == event["creatorInstProfileId"]):
                 events.append(event)
