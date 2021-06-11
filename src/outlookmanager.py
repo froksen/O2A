@@ -49,8 +49,7 @@ class OutlookManager:
                 hideInOwnCalendar = False
 
                 if not 'AULA' in categories and 'AULA Institutionskalender' in categories:
-                    pass
-                    #hideInOwnCalendar = True
+                    hideInOwnCalendar = True
 
                 #If it also has category "AULA: Institutionskalender" then the event should be added to the instituionCalendar
                 if 'AULA Institutionskalender' in categories: #Loops through categories

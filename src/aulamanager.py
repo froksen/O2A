@@ -7,6 +7,7 @@ import logging
 import re
 from dateutil.relativedelta import relativedelta
 import datetime
+import time
 
 #THIS CODE IS LARGELY INSPIRED BY CODE FROM https://helmstedt.dk/2020/05/et-lille-kig-paa-aulas-api/
 
@@ -43,6 +44,31 @@ class AulaManager:
 
     def getAulaApiUrl(self):
         return 'https://www.aula.dk/api/v11/'
+
+    def getEventsForInstitutions(self,profileId,instCodes, startDateTime, endDateTime):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        params = {
+            'method': 'calendar.getEventsForInstitutions',
+            "instCodes":[instCodes],
+            "start":startDateTime,"end":endDateTime
+            }
+
+        events = []        
+        #FORMAT:"2021-05-17 08:00:00.0000+02:00"
+
+        url = url+"?method=calendar.getEventsForInstitutions&instCodes[]="+str(instCodes)+"&start="+startDateTime.replace("T+","%2B")+"&end="+endDateTime.replace("T+","%2B")
+
+        response = session.get(url).json()
+        #response = session.get(url).json()
+        #print(json.dumps(response, indent=4))
+
+        for event in response["data"]:
+            if(event["type"] == "event" and profileId == event["creatorInstProfileId"]):
+                events.append(event)
+
+        return events
 
     def getEventsByProfileIdsAndResourceIds(self,profileId, startDateTime, endDateTime):
         session = self.getSession()
@@ -115,7 +141,7 @@ class AulaManager:
             }
 
         #url = " https://www.aula.dk/api/v11/?method=search.findRecipients&text=Stefan&query=Stefan&id=779467&typeahead=true&limit=100&scopeEmployeesToInstitution=false&fromModule=event&instCode=537007&docTypes[]=Profile&docTypes[]=Group"
-        url = " https://www.aula.dk/api/v11/?method=search.findRecipients&text="+recipient+"&query="+recipient+"&id="+str(self.getProfileId())+"&typeahead=true&limit=100&scopeEmployeesToInstitution=false&fromModule=event&instCode="+str(self.getProfileinstitutionCode())+"&docTypes[]=Profile&docTypes[]=Group"
+        url = url+"?method=search.findRecipients&text="+recipient+"&query="+recipient+"&id="+str(self.getProfileId())+"&typeahead=true&limit=100&scopeEmployeesToInstitution=false&fromModule=event&instCode="+str(self.getProfileinstitutionCode())+"&docTypes[]=Profile&docTypes[]=Group"
         
         response  = session.get(url, params=params).json()
         #response = session.get(url).json()
@@ -496,6 +522,8 @@ class AulaManager:
             monthsDiff = 1
 
         events = []
+        self.logger.info("Locating events in calendars")
+        step = 0
         for months in range(monthsDiff):
             lookUp_begin = startDatetime + relativedelta(months=months)
             lookUp_end = startDatetime + relativedelta(months=months+1)
@@ -508,7 +536,18 @@ class AulaManager:
             startTimeFormattet = lookUp_begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
             endTimeFormattet = lookUp_end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
 
+            step = step +1
+            self.logger.info("  (%i of %i) Events from %s to %s"%(step,monthsDiff, startTimeFormattet,endTimeFormattet))
+            #Gets own events
+            self.logger.info("      In AULA personal calendar")
             events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
+
+            #Includes institution
+            self.logger.info("      In AULA institution calendar")
+            events = events + self.getEventsForInstitutions(self.getProfileId(),self.getProfileinstitutionCode(),startTimeFormattet,endTimeFormattet)
+
+            #Seems to be god with a simple cooldown time here. 
+            time.sleep(0.1)
 
         class appointmentitem(object):
             pass
