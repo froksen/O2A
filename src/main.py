@@ -37,8 +37,8 @@ def run_script():
       print ("***********************************************************")
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       eman = eventmanager()
-      #comp = eman.compare_calendars(today,today+relativedelta(days=+10)) #Start dato er nu altid dags dato :) 
-      comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00))
+      comp = eman.compare_calendars(today,today+relativedelta(days=+2)) #Start dato er nu altid dags dato :) 
+      #comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00))
       eman.update_aula_calendar(comp)
 
 #The main function

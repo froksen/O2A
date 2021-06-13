@@ -86,8 +86,8 @@ class EventManager:
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
                 attendees = attendees + event_to_create["appointmentitem"].OptionalAttendees.split(";") 
-                print("Recipients")
-                print(event_to_create["appointmentitem"].Recipients)
+                #print("Recipients")
+                #print(event_to_create["appointmentitem"].Recipients)
 
                 for Recipient in event_to_create["appointmentitem"].Recipients:
                     attendees.append(Recipient.name)
@@ -114,15 +114,16 @@ class EventManager:
 
         if(begin.strftime('%Y-%m-%d') < dt.datetime.today().strftime('%Y-%m-%d')):
             self.logger.critical("Begin date must be today or in the future! Exitting.")
-           # sys.exit()
+            sys.exit()
 
         #Finds all events from Outlook
         from datetime import timedelta
         aulaevents_from_outlook = self.outlookmanager.get_aulaevents_from_outlook(begin, end)
 
         #Finds AULA events from ICal-calendar
-       #aulabegin = dt.datetime(year=begin.year,month=begin.month,day=begin.day,hour=2,minute=00)
-        outlookevents_from_aula = self.aulamanager.getEvents(begin,end)
+        aulabegin = dt.datetime(year=begin.year,month=begin.month,day=begin.day-1)
+        aulaend = dt.datetime(year=end.year,month=end.month,day=end.day-1)
+        outlookevents_from_aula = self.aulamanager.getEvents(aulabegin,end)
         #events = self.getEvents(None, None)
         
 
@@ -131,12 +132,44 @@ class EventManager:
 
         self.logger.info("..:: CHANGES :: ...")
 
+
+        aulaevents_from_outlook_keep = {}
+        import pytz
+
+        #Removing events that are from the past
+        events_to_keep = {}
+        for key in aulaevents_from_outlook:
+            dateobj = aulaevents_from_outlook[key]["appointmentitem"].start.replace(tzinfo=pytz.UTC)
+
+            if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
+                self.logger.info("Outlook event \"%s\" that begins at \"%s\" is in the past. Skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
+                continue
+
+            events_to_keep[key] = aulaevents_from_outlook[key]
+
+        aulaevents_from_outlook = events_to_keep
+
+        events_to_keep = {}
+        for key in outlookevents_from_aula:
+
+            date_string = outlookevents_from_aula[key]["appointmentitem"].start
+            dateobj = dt.datetime.strptime(date_string,'%Y-%m-%dT%H:%M:%S%z') #2020-08-10T10:05:00+00:00
+            dateobj = dateobj + dt.timedelta(hours=2)
+
+            if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
+                self.logger.info("AULA event \"%s\" that begins at \"%s\" is in the past. Skipped." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+                continue
+
+            events_to_keep[key] = outlookevents_from_aula[key]
+
+        outlookevents_from_aula = events_to_keep
+
         #Checking for dublicate entryes to be removed
         for key in outlookevents_from_aula:
             if outlookevents_from_aula[key]["isDuplicate"] == True:
-                pass
-                #events_to_remove.append(outlookevents_from_aula[key])
-                #self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+                events_to_remove.append(outlookevents_from_aula[key])
+                self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+
 
         #Checking for events that has been updated, and exists both places
         for key in aulaevents_from_outlook:
@@ -149,25 +182,22 @@ class EventManager:
                     self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key]["appointmentitem"].GlobalAppointmentID))
                     self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
-                    events_to_create.append(aulaevents_from_outlook[key])
+                    events_to_create.append(aulaevents_from_outlook[key])  
 
         #Checking for events that currently only exists in Outlook and should be created in AULA
         for key in aulaevents_from_outlook:
+
             if not key in outlookevents_from_aula:
                 events_to_create.append(aulaevents_from_outlook[key])
                 self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key]["appointmentitem"].subject,aulaevents_from_outlook[key]["appointmentitem"].start))
-                #self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime))
-                #self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key]["appointmentitem"].GlobalAppointmentID))
 
         #Checking for events that currently only exists in AULA, and therefore should be deleted from AULA. 
         for key in outlookevents_from_aula:
+
             if not key in aulaevents_from_outlook:
                 if not key in events_to_remove:
                     events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" that begins at \"%s\" only exists in AULA. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
-                    #self.logger.info(" - Appointment URL: %s" %(outlookevents_from_aula[key]["aula_event_url"]))
-                    #self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
-                    #self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
 
         #Summary of changes
         self.logger.info(" ")

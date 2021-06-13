@@ -68,6 +68,7 @@ class OutlookManager:
                         pass
                         #print("SKIPPED")
 
+
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 
                     "aula_startdate": format_as_aula_date(event.start),
