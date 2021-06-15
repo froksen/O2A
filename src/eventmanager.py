@@ -92,11 +92,14 @@ class EventManager:
                 for Recipient in event_to_create["appointmentitem"].Recipients:
                     attendees.append(Recipient.name)
                     #print(Recipient.name)
-
+                self.logger.info("Searching in AULA for attendees:")
                 for attendee in attendees:
+                    attendee = attendee.strip()
                     if not self.aulamanager.findRecipient(attendee) == None:
+                        self.logger.info("  Attendee %s was found in AULA!" %(attendee))
                         attendee_ids.append(self.aulamanager.findRecipient(attendee))
-
+                    else:
+                        self.logger.info("  Attendee %s was NOT found in AULA!" %(attendee))
 
             #Creating new event
             self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
