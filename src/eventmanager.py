@@ -80,26 +80,33 @@ class EventManager:
             if sensitivity == 2:
                 isPrivate = True
 
-            #Only do this if organizer is current user
-            #print("Current user: %s" %(self.outlookmanager.get_personal_calendar_username()))
-            #print("Organizer: %s " %(event_to_create["appointmentitem"].Organizer))
+            #If event has been created by some one else. Set in description that its the case.
+            if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
+                self.logger.debug("Event was created by another user. Appending to description")
+                description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event_to_create["appointmentitem"].Organizer).strip()) + "</p>" + description
+
+            #Only attempt to add attendees to event if created by the user them self. 
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
                 attendees = attendees + event_to_create["appointmentitem"].OptionalAttendees.split(";") 
-                #print("Recipients")
-                #print(event_to_create["appointmentitem"].Recipients)
-
+                
+                #Appends all recipeients to an array and attempts to add them later to AULA.
                 for Recipient in event_to_create["appointmentitem"].Recipients:
                     attendees.append(Recipient.name)
-                    #print(Recipient.name)
+
                 self.logger.info("Searching in AULA for attendees:")
                 for attendee in attendees:
                     attendee = attendee.strip()
+
+                    if attendee == str(event_to_create["appointmentitem"].Organizer) or attendee == "":
+                        self.logger.debug("     Attendee is organizer - Skipping")
+                        continue
+
                     if not self.aulamanager.findRecipient(attendee) == None:
-                        self.logger.info("  Attendee %s was found in AULA!" %(attendee))
+                        self.logger.info("      Attendee %s was found in AULA!" %(attendee))
                         attendee_ids.append(self.aulamanager.findRecipient(attendee))
                     else:
-                        self.logger.info("  Attendee %s was NOT found in AULA!" %(attendee))
+                        self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
 
             #Creating new event
             self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
