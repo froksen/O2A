@@ -86,6 +86,76 @@ class OutlookManager:
                 #time.sleep(2)
 
         return aulaEvents
+
+    def send_a_mail(self, message_to_send=""):
+        #FROM: https://gist.github.com/vinovator/0a6d653c22c32ab67e11
+        outlook = win32com.client.Dispatch("Outlook.Application")
+
+        exchange_user = outlook.Session.CurrentUser.AddressEntry.GetExchangeUser()
+        ownEmailAdress = exchange_user.PrimarySmtpAddress
+
+        self.logger.debug("Exchange user " + str(exchange_user))
+        self.logger.debug("Exchange user email " + ownEmailAdress)
+        if ownEmailAdress == None:
+            return
+
+       #     Outlook VBA Reference 
+       # 0 - olMailItem
+       # 1 - olAppointmentItem
+       # 2 - olContactItem
+       # 3 - olTaskItem
+       # 4 - olJournalItem
+       # 5 - olNoteItem 
+       # 6 - olPostItem
+       # 7 - olDistributionListItem
+        mail = outlook.CreateItem(0)
+
+        mail.To = ownEmailAdress
+        #mail.CC = "mail2@example.com"
+        #mail.BCC = "mail3@example.com"
+
+        mail.Subject = "Outlook2Aula - Opmærksomhed på fejl"
+
+        # Using "Body" constructs body as plain text
+        # mail.Body = "Test mail body from Python"
+
+        """
+        Using "HtmlBody" constructs body as html text
+        default font size for most browser is 12
+        setting font size to "-1" might set it to 10
+        """
+        mail.HTMLBody = f"""
+        <html>
+        <head></head>
+        <body>
+            <font color="DarkBlue" size=-1 face="Arial">
+            <p>Hej {str(exchange_user)}!<br>
+            I forbindelse med at Outlook2Aula overførselsprogrammet prøvede at køre på din computer, da skete der en fejl.<br>
+            Problemet er, at <u>programmet ikke kan logge på AULA.</u> <br><br> 
+            <u>Det er typisk fordi du har ændret din adgangskode</u>. Det kræves derfor, at du geninstaster din adgangskode i programmet.  <br><br>
+            Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
+            </p>
+            <p>Venlig hilsen <br> Outlook2Aula overførselsprogrammet</p>
+            </font>
+        </body>
+        </html>
+        """
+
+        """
+        Set the format of mail
+        1 - Plain Text
+        2 - HTML
+        3 - Rich Text
+        """
+        mail.BodyFormat = 2
+
+        # Instead of sending the message, just display the compiled message
+        # Useful for visual inspection of compiled message
+        #mail.Display(True)
+
+        # Send the mail
+        # Use this directly if there is no need for visual inspection
+        mail.Send()
         
     def get_personal_calendar_username(self):
         outlook = win32com.client.Dispatch("Outlook.Application")
