@@ -28,7 +28,11 @@ class AulaManager:
         return self.__profilesByLogin
 
     def getProfileinstitutionCode(self):
-        return self.getProfilesByLogin()['data']['profiles'][0]['institutionProfiles'][0]['institutionCode']
+        profiles = self.getProfilesByLogin()['data']['profiles']
+
+        for profile in profiles:
+            if profile['institutionProfiles'][0]['role'] == "employee":
+                return profile['institutionProfiles'][0]['institutionCode']
 
         def getProfileId(self):
             profiles = self.getProfilesByLogin()['data']['profiles']
