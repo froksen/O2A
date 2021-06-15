@@ -563,7 +563,11 @@ class AulaManager:
         for event in events:
             response = self.getEventById(event["id"])
             #print(response["data"])
-            self.logger.info("     (%s/%s) Event %s with start date %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
+
+            try:
+                self.logger.info("     (%s/%s) Event %s with start date %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
+            except TypeError as e:
+                self.logger.warning("Skipping due to error: %s" %(e))
 
             mAppointmentitem = appointmentitem()
             mAppointmentitem.subject = response["data"]["title"]
