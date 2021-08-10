@@ -65,12 +65,18 @@ class EventManager:
             end_date = event_to_create["aula_enddate"]
             start_time = event_to_create["aula_starttime"]
             end_time = event_to_create["aula_endtime"]
-            start_dateTime = str(start_date).replace("/","-") + "T" + start_time + "+02:00"  # FORMAT: 2021-05-18T15:00:00+02:00
-            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+            allDay = event_to_create["appointmentitem"].AllDayEvent
+
+            if allDay == True:
+                start_dateTime = str(start_date).replace("/","-")  # FORMAT: 2021-05-18
+                end_dateTime = str(end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
+            else:
+                start_dateTime = str(start_date).replace("/","-") + "T" + start_time + "+02:00"  # FORMAT: 2021-05-18T15:00:00+02:00
+                end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+
             location = event_to_create["appointmentitem"].location 
             sensitivity = event_to_create["appointmentitem"].Sensitivity 
             description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p>o2a_outlook_GlobalAppointmentID=%s</p> <p> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
-            allDay = event_to_create["appointmentitem"].AllDayEvent
             attendees = []
             attendee_ids = []
             isPrivate = False
