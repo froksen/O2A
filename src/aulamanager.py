@@ -264,8 +264,8 @@ class AulaManager:
             'description': description,
             'startDateTime': startDateTime, # 2021-05-18T14:30:00.0000+02:00
             'endDateTime': endDateTime, # '2021-05-18T15:00:00.0000+02:00'
-            #'startDate': startDate, #'2021-05-17'
-            #'endDate': endDate #'2021-05-17', #'2021-05-17'
+            'startDate': datetime.datetime.today().strftime('%Y-%m-%d'), #Is always today
+            'endDate': datetime.datetime.today().strftime('%Y-%m-%d'), # is always today
             #'startTime': '12:00:19', 
             #'endTime': '12:30:19',
             'id': '',
