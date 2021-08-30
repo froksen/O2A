@@ -90,9 +90,13 @@ class AulaManager:
         #response = session.get(url).json()
         #print(json.dumps(response, indent=4))
 
-        for event in response["data"]:
-            if(event["type"] == "event" and profileId == event["creatorInstProfileId"]):
-                events.append(event)
+        try:
+            for event in response["data"]:
+                if(event["type"] == "event" and profileId == event["creatorInstProfileId"]):
+                    events.append(event)
+        except TypeError as e:
+            self.logger.critical("Der skete en fejl:")
+            self.logger.critical(e)
 
         return events
 
