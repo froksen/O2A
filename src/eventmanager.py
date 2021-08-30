@@ -96,6 +96,9 @@ class EventManager:
             if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
                 attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
                 attendees = attendees + event_to_create["appointmentitem"].OptionalAttendees.split(";") 
+
+                #Removes dublicates
+                attendees = list(dict.fromkeys(attendees))
                 
                 #Appends all recipeients to an array and attempts to add them later to AULA.
                 for Recipient in event_to_create["appointmentitem"].Recipients:
