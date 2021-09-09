@@ -118,6 +118,8 @@ class EventManager:
                     else:
                         self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
 
+                    time.sleep(0.5)
+
             #Creating new event
             self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
