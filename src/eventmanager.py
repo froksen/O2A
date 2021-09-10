@@ -112,9 +112,14 @@ class EventManager:
                         self.logger.debug("     Attendee is organizer - Skipping")
                         continue
 
-                    if not self.aulamanager.findRecipient(attendee) == None:
+                    #Removes potential emails from contact name
+                    attendee = attendee.split("(")[0].strip()
+
+                    search_result = self.aulamanager.findRecipient(attendee)
+
+                    if not search_result == None:
                         self.logger.info("      Attendee %s was found in AULA!" %(attendee))
-                        attendee_ids.append(self.aulamanager.findRecipient(attendee))
+                        attendee_ids.append(search_result)
                     else:
                         self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
 
