@@ -59,11 +59,12 @@ class OutlookManager:
                 #TODO: Make a better fix. 
                 if event.AllDayEvent == True:
                     try:
+                        #pass
                         endDateTime_fix = event.end - timedelta(days=1)
                         event.end = endDateTime_fix
 
-                        startDateTime_fix = event.start + timedelta(days=1)
-                        event.start = startDateTime_fix
+                        #startDateTime_fix = event.start - timedelta(days=1)
+                        #event.start = startDateTime_fix
                     except: 
                         pass
                         #print("SKIPPED")
