@@ -76,7 +76,7 @@ class EventManager:
 
             location = event_to_create["appointmentitem"].location 
             sensitivity = event_to_create["appointmentitem"].Sensitivity 
-            description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p>o2a_outlook_GlobalAppointmentID=%s</p> <p> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
+            description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
             attendees = []
             attendee_ids = []
             isPrivate = False
