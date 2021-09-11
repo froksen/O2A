@@ -603,11 +603,11 @@ class AulaManager:
             if m1 and m2:
                 isDuplicate = False 
                 if outlook_GlobalAppointmentID in aula_events.keys():
-
+                    pass
                     #If event is added to institution calendar and also in own. Duples will occur. This prevents events from beeing removed. 
-                    if response["data"]["hideInOwnCalendar"] == True or response["data"]["hideInOwnCalendar"] == False and response["data"]["addedToInstitutionCalendar"] == False: 
-                        outlook_GlobalAppointmentID = str(index) + "_" + outlook_GlobalAppointmentID
-                        isDuplicate = True
+                    #if response["data"]["hideInOwnCalendar"] == True or response["data"]["hideInOwnCalendar"] == False and response["data"]["addedToInstitutionCalendar"] == False or  response["data"]["addedToInstitutionCalendar"] == False: 
+                    #    outlook_GlobalAppointmentID = str(index) + "_" + outlook_GlobalAppointmentID
+                    #    isDuplicate = True
 
 
                 aula_events[outlook_GlobalAppointmentID]={
