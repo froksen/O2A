@@ -519,6 +519,13 @@ class AulaManager:
 
             return False
 
+    #FROM: https://medium.com/@jorlugaqui/how-to-strip-html-tags-from-a-string-in-python-7cb81a2bbf44
+    def __remove_html_tags(self,text):
+        """Remove html tags from a string"""
+        import re
+        clean = re.compile('<.*?>')
+        return re.sub(clean, '', text)
+
     def getEvents(self, startDatetime, endDatetime):
        
         #Calculates the diffence between the dates.
@@ -591,13 +598,15 @@ class AulaManager:
             m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
             if m1:
                 outlook_GlobalAppointmentID = m1.group(0)
-                outlook_GlobalAppointmentID = outlook_GlobalAppointmentID.split("=")[1].replace("</p>","").strip()
+                outlook_GlobalAppointmentID = outlook_GlobalAppointmentID.split("=")[1].strip()
+                outlook_GlobalAppointmentID = self.__remove_html_tags(outlook_GlobalAppointmentID).strip()
 
             #FINDS LMT in description
             m2 = re.search('o2a_outlook_LastModificationTime=\S* \S*\S\S:\S\S', description)
             if m2:
                 outlook_LastModificationTime = m2.group(0)
                 outlook_LastModificationTime = outlook_LastModificationTime.split("=")[1].strip()
+                outlook_LastModificationTime = self.__remove_html_tags(outlook_LastModificationTime).strip()
 
             #if both GAID and LMT exists then add item to dict. 
             if m1 and m2:
