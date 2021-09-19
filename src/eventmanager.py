@@ -8,7 +8,7 @@ import sys
 import win32com.client
 import keyring
 from setupmanager import SetupManager
-
+from peoplecsvmanager import PeopleCsvManager
 
 class EventManager:
     def __init__(self):
@@ -16,6 +16,7 @@ class EventManager:
         self.aulamanager = AulaManager()
         self.outlookmanager = OutlookManager()
         self.setupmanager = SetupManager()
+        self.peoplecsvmanager = PeopleCsvManager()
 
         #Sets logger
         self.logger = logging.getLogger('O2A')
@@ -115,6 +116,14 @@ class EventManager:
                     #Removes potential emails from contact name
                     attendee = attendee.split("(")[0].strip()
 
+                    #Checks if person should be replaced with other name from CSV-file
+                    csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
+
+                    if not csv_aula_name == None:
+                        self.logger.info("      NOTE: Attendee %s Outlook name was found in CSV-file was replaced with %s" %(attendee,csv_aula_name))
+                        attendee = csv_aula_name
+
+                    #Searching for name in AULA
                     search_result = self.aulamanager.findRecipient(attendee)
 
                     if not search_result == None:

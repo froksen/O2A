@@ -1,7 +1,9 @@
 import csv
+import logging
 
 class PeopleCsvManager():    
     def __init__(self, csv_file="personer.csv") -> None:
+        self.logger = logging.getLogger('O2A')
         self.__people = self.__readFile(csv_file)
 
     def getPersonData(self,person_outlook_name):
@@ -17,32 +19,32 @@ class PeopleCsvManager():
         return None
 
     def __readFile(self, csv_file="personer.csv"):
-        #TODO: Tilføj flere checks her...
-        if csv_file == None:
-            print("File not found.")
-            return None
-
         people = []
-        with open(csv_file, mode='r') as csv_file:
-            csv_reader = csv.DictReader(csv_file,delimiter=";")
-            line_count = 0
-            for row in csv_reader:
-                if line_count == 0:
-                    print(f'Column names are {"; ".join(row)}')
+
+        try:
+            with open(csv_file, mode='r') as csv_file:
+                csv_reader = csv.DictReader(csv_file,delimiter=";")
+                line_count = 0
+                for row in csv_reader:
+                    if line_count == 0:
+                        print(f'Column names are {"; ".join(row)}')
+                        line_count += 1
+
+                    person = {
+                        "outlook_name" : row["Outlook navn"],
+                        "aula_name" : row["AULA navn"]
+                    }
+
+                    people.append(person)
+
+                    print(f'\t{row["Outlook navn"]} works in the {row["AULA navn"]} .')
                     line_count += 1
 
-                person = {
-                    "outlook_name" : row["Outlook navn"],
-                    "aula_name" : row["AULA navn"]
-                }
-
-                people.append(person)
-
-                print(f'\t{row["Outlook navn"]} works in the {row["AULA navn"]} .')
-                line_count += 1
-
-            print(people)
-            print(f'Processed {line_count} lines.')
+                print(people)
+                print(f'Processed {line_count} lines.')
+        except FileNotFoundError as e:
+            self.logger.warning(f"CSV file '{csv_file}'' was not found. Continuing without.")
+            self.logger.debug(e)
 
             return people
 
