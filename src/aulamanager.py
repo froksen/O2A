@@ -596,7 +596,7 @@ class AulaManager:
 
             #Find GAID in description
             #m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
-            m1 = re.search('o2a_outlook_GlobalAppointmentID_DEV=\S*', description)
+            m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
             if m1:
                 outlook_GlobalAppointmentID = m1.group(0)
                 outlook_GlobalAppointmentID = outlook_GlobalAppointmentID.split("=")[1].strip()
