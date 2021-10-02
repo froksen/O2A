@@ -36,11 +36,91 @@ class EventManager:
             sys.exit()
             return
 
+    def aula_event_update(self,obj):
+        event_title = obj["appointmentitem"].subject
+        start_date = obj["aula_startdate"]
+        end_date = obj["aula_enddate"]
+        start_time = obj["aula_starttime"]
+        end_time = obj["aula_endtime"]
+        allDay = obj["appointmentitem"].AllDayEvent
+        event_id = obj["event_id"]
+
+        if allDay == True:
+            start_dateTime = str(start_date).replace("/","-")  # FORMAT: 2021-05-18
+            end_dateTime = str(end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
+        else:
+            start_dateTime = str(start_date).replace("/","-") + "T" + start_time + "+02:00"  # FORMAT: 2021-05-18T15:00:00+02:00
+            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+
+        location = obj["appointmentitem"].location 
+        sensitivity = obj["appointmentitem"].Sensitivity 
+        description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID_DEV=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(obj["appointmentitem"].body,obj["appointmentitem"].GlobalAppointmentID,obj["appointmentitem"].LastModificationTime)
+        attendees = []
+        attendee_ids = []
+        isPrivate = False
+        addToInstitutionCalendar = obj["addToInstitutionCalendar"]
+        hideInOwnCalendar = obj["hideInOwnCalendar"]
+
+        #Sensitivity == 2 means private
+        if sensitivity == 2:
+            isPrivate = True
+
+        #If event has been created by some one else. Set in description that its the case.
+        if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(obj["appointmentitem"].Organizer).strip(): 
+            self.logger.debug("Event was created by another user. Appending to description")
+            description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(obj["appointmentitem"].Organizer).strip()) + "</p>" + description
+
+        #Only attempt to add attendees to event if created by the user them self. 
+        if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(obj["appointmentitem"].Organizer).strip(): 
+            attendees = obj["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
+            attendees = attendees + obj["appointmentitem"].OptionalAttendees.split(";") 
+
+            #Removes dublicates
+            attendees = list(dict.fromkeys(attendees))
+            
+            #Appends all recipeients to an array and attempts to add them later to AULA.
+            for Recipient in obj["appointmentitem"].Recipients:
+                attendees.append(Recipient.name)
+
+            self.logger.info("Searching in AULA for attendees:")
+            for attendee in attendees:
+                attendee = attendee.strip()
+
+                if attendee == str(obj["appointmentitem"].Organizer) or attendee == "":
+                    self.logger.debug("     Attendee is organizer - Skipping")
+                    continue
+
+                #Removes potential emails from contact name
+                attendee = attendee.split("(")[0].strip()
+
+                #Checks if person should be replaced with other name from CSV-file
+                csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
+
+                if not csv_aula_name == None:
+                    self.logger.info("      NOTE: Attendee %s Outlook name was found in CSV-file was replaced with %s" %(attendee,csv_aula_name))
+                    attendee = csv_aula_name
+
+                #Searching for name in AULA
+                search_result = self.aulamanager.findRecipient(attendee)
+
+                if not search_result == None:
+                    self.logger.info("      Attendee %s was found in AULA!" %(attendee))
+                    attendee_ids.append(search_result)
+                else:
+                    self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
+
+                time.sleep(0.5)
+
+            #Creating new event
+            self.aulamanager.updateEvent(event_id=event_id,title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+
+
+
     def update_aula_calendar(self, changes):
 
 
         #If no changes, then do nothing
-        if len(changes['events_to_create'] or changes['events_to_remove']) <= 0:
+        if len(changes['events_to_create']) <= 0 and len(changes['events_to_remove']) <= 0 and len(changes['events_to_update']) <= 0:
             self.logger.info("No changes. Process completed")
             return
 
@@ -58,6 +138,9 @@ class EventManager:
             self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
+
+        for event_to_update in changes["events_to_update"]:
+            self.aula_event_update(event_to_update)
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
@@ -222,7 +305,7 @@ class EventManager:
                     #events_to_create.append(aulaevents_from_outlook[key]) 
 
                     #Adds AULA eventid to array
-                    aulaevents_from_outlook[key]["event_id"] = aulaevents_from_outlook[key]["appointmentitem"].aula_id
+                    aulaevents_from_outlook[key]["event_id"] = outlookevents_from_aula[key]["appointmentitem"].aula_id
                     events_to_update.append(aulaevents_from_outlook[key]) 
 
         #Checking for events that currently only exists in Outlook and should be created in AULA
@@ -244,6 +327,7 @@ class EventManager:
         self.logger.info(" ")
         self.logger.info("..:: CHANGES SUMMARY :: ...")
         self.logger.info("Events to be created: %s" %(len(events_to_create)))
+        self.logger.info("Events to be updated: %s" %(len(events_to_update)))
         self.logger.info("Events to be removed: %s" %(len(events_to_remove)))
         self.logger.info(" ")
 
