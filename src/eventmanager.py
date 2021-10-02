@@ -251,7 +251,8 @@ class EventManager:
 
         return {
                 'events_to_create': events_to_create,
-                'events_to_remove': events_to_remove
+                'events_to_remove': events_to_remove,
+                'events_to_update' : events_to_update
                 }
     
         
