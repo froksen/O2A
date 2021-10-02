@@ -244,6 +244,80 @@ class AulaManager:
         return text
             #foundText = m1.group(0)
 
+    def updateEvent(self, event_id, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+        session = self.getSession()
+        url = self.getAulaApiUrl()
+
+        print("update")
+
+        params = {
+            'method': 'calendar.updateSimpleEvent'
+            }
+
+        description = self.teams_url_fixer(description)
+
+        data = {
+            "creator":{"id":self.getProfileId()},
+            "institutionCode":self.getProfileinstitutionCode()
+            ,"description":description,
+            "primaryResource":None,
+            "additionalResources":[],
+            "additionalResourceText":None,
+            "invitees":[],
+            "invitedGroups":[],
+            "attachments":[],
+            "pendingMedia":False,
+            "timeSlot":None,
+            "vacationRegistration":None,
+            "isDeleted":False,
+            "eventClass":"basic",
+            "responseDeadline":None,
+            "isDeadlineExceeded":False,
+            "hideInOwnCalendar":hideInOwnCalendar,
+            "invitedGroupHomeChildren":[],
+            "id":event_id,
+            "title":title,
+            "allDay":allDay,
+            "startDateTime": startDateTime , #"2021-10-03T10:10:00.0000+02:00",
+            "endDateTime":endDateTime, #"2021-10-03T12:00:00.0000+02:00",
+            #"oldEndDateTime":"2021-10-03T10:00:00+00:00",
+            #"oldStartDateTime":"2021-10-03T01:10:00+00:00",
+            "responseRequired":True,
+            "private":isPrivate,
+            "type":"event",
+            "primaryResourceText":None,
+            "addedToInstitutionCalendar":False,
+            #"start":"2021-10-03T01:10:00+00:00",
+            #"end":"2021-10-03T10:00:00+00:00",
+            "invitedGroupHomes":[],
+            "addToInstitutionCalendar":addToInstitutionCalendar,
+            "additionalLocations":[],
+            "resources":[],
+            "pattern":"never",
+            "occurenceLimit":0,
+            "weekdayMask":[False,False,False,False,False,False,False],
+            "maxDate":None,
+            "interval":0,
+            "eventId":event_id,
+            "isPrivate":isPrivate,
+            "inviteeIds": attendee_ids, #[],
+            "invitedGroupIds":[],
+            "resourceIds":[],
+            "additionalLocationIds":[],
+            "additionalResourceIds":[],
+            "attachmentIds":[],
+            "isEditEvent":True
+            }
+
+        response_calendar = session.post(url, params=params, json=data).json()
+        #print(json.dumps(response_calendar, indent=4))
+
+        if(response_calendar["status"]["message"] == "OK"):
+            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY updated" %(title,startDateTime))
+        else:
+            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
+
+
     def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         
@@ -425,6 +499,7 @@ class AulaManager:
         # Login succeeded without an HTTP error code and API requests can begin 
         if success == True and response.status_code == 200:
             self.logger.info("Login was successful")
+            print("logged ind")
 
 
             # All API requests go to the below url
@@ -643,10 +718,12 @@ class AulaManager:
         
         self.login(aula_usr,aula_pwd)
 
-        events = self.getEvents(None, None)
+        self.updateEvent(287982478,"222NyTitel1","Min seje beskrivelse","2021-10-03T10:10:00.0000+02:00","2021-10-03T11:00:00.0000+02:00",[],False,False,True,False)
 
-        for event in events:
-            print(event["outlook_GlobalAppointmentID"])
+        #events = self.getEvents(None, None)
+
+        #for event in events:
+           # print(event["outlook_GlobalAppointmentID"])
 
         #events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
 
