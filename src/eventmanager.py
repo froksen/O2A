@@ -165,6 +165,7 @@ class EventManager:
 
         events_to_create = []
         events_to_remove = []
+        events_to_update = []
 
         self.logger.info("..:: CHANGES :: ...")
 
@@ -211,14 +212,18 @@ class EventManager:
         for key in aulaevents_from_outlook:
             if  key in outlookevents_from_aula:
                 if str(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
-                    events_to_remove.append(outlookevents_from_aula[key])
+                    #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" has been updated. Old entry will be removed, and a new will be created." %(outlookevents_from_aula[key]["appointmentitem"].subject))
                     self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
                     self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime))
                     self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key]["appointmentitem"].GlobalAppointmentID))
                     self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
-                    events_to_create.append(aulaevents_from_outlook[key])  
+                    #events_to_create.append(aulaevents_from_outlook[key]) 
+
+                    #Adds AULA eventid to array
+                    aulaevents_from_outlook[key]["event_id"] = aulaevents_from_outlook[key]["appointmentitem"].aula_id
+                    events_to_update.append(aulaevents_from_outlook[key]) 
 
         #Checking for events that currently only exists in Outlook and should be created in AULA
         for key in aulaevents_from_outlook:
