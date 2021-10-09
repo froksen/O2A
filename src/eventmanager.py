@@ -36,6 +36,21 @@ class EventManager:
             sys.exit()
             return
 
+    def is_in_daylight(self, date_to_check):
+        daylight_periods = [
+                {
+                "start": dt.datetime(2021,10,31),
+                "end" : dt.datetime(2022,3,27)
+                },
+            ]
+
+        is_daylight = False
+        for daylight_period in daylight_periods:
+            if date_to_check < daylight_period["end"] and date_to_check > daylight_period["start"]:
+                is_daylight = True
+
+        return is_daylight
+
     def aula_event_update(self,obj):
         event_title = obj["appointmentitem"].subject
         start_date = obj["aula_startdate"]
