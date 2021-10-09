@@ -37,17 +37,31 @@ class EventManager:
             return
 
     def is_in_daylight(self, date_to_check):
+        #TODO: Find en smartere måde, at lave dette tjek på!
         daylight_periods = [
                 {
-                "start": dt.datetime(2021,10,31),
-                "end" : dt.datetime(2022,3,27)
+                    "start": dt.datetime(2022,3,27), #Den første dag i sommertid
+                    "end" : dt.datetime(2022,10,29) #Den sidste dag i sommertid
+                },
+                {
+                    "start": dt.datetime(2023,3,26), #Den første dag i sommertid
+                    "end" : dt.datetime(2023,10,28) #Den sidste dag i sommertid
+                },
+                {
+                    "start": dt.datetime(2024,3,31), #Den første dag i sommertid
+                    "end" : dt.datetime(2024,10,27) #Den sidste dag i sommertid
+                },
+                {
+                    "start": dt.datetime(2025,3,30), #Den første dag i sommertid
+                    "end" : dt.datetime(2025,10,26) #Den sidste dag i sommertid
                 },
             ]
 
         is_daylight = False
         for daylight_period in daylight_periods:
-            if date_to_check < daylight_period["end"] and date_to_check > daylight_period["start"]:
+            if date_to_check <= daylight_period["end"] and date_to_check >= daylight_period["start"]:
                 is_daylight = True
+                break
 
         return is_daylight
 
@@ -353,6 +367,3 @@ class EventManager:
                 'events_to_remove': events_to_remove,
                 'events_to_update' : events_to_update
                 }
-    
-        
-
