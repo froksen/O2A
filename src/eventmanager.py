@@ -44,13 +44,15 @@ class EventManager:
         end_time = obj["aula_endtime"]
         allDay = obj["appointmentitem"].AllDayEvent
         event_id = obj["event_id"]
+        start_date_timezone = obj["aula_startdate_timezone"]
+        end_date_timezone = obj["aula_enddate_timezone"]
 
         if allDay == True:
             start_dateTime = str(start_date).replace("/","-")  # FORMAT: 2021-05-18
             end_dateTime = str(end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
         else:
-            start_dateTime = str(start_date).replace("/","-") + "T" + start_time + "+02:00"  # FORMAT: 2021-05-18T15:00:00+02:00
-            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + "+02:00" # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+            start_dateTime = str(start_date).replace("/","-") + "T" + start_time + start_date_timezone  # FORMAT: 2021-05-18T15:00:00+02:00
+            end_dateTime = str(end_date).replace("/","-") + "T" + end_time + end_date_timezone # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
 
         location = obj["appointmentitem"].location 
         sensitivity = obj["appointmentitem"].Sensitivity 

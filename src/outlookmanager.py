@@ -16,6 +16,10 @@ class OutlookManager:
         #TODO: Find en smartere måde, at lave dette tjek på!
         daylight_periods = [
                 {
+                    "start": dt.datetime(2021,3,28), #Den første dag i sommertid
+                    "end" : dt.datetime(2021,10,30) #Den sidste dag i sommertid
+                },
+                {
                     "start": dt.datetime(2022,3,27), #Den første dag i sommertid
                     "end" : dt.datetime(2022,10,29) #Den sidste dag i sommertid
                 },
@@ -56,9 +60,9 @@ class OutlookManager:
             mDate = dt.datetime(year,month,day)
 
             if self.is_in_daylight(mDate):
-                return "+01:00"
-            else:
                 return "+02:00"
+            else:
+                return "+01:00"
 
         def format_as_aula_date(outlook_date_time):
             outlook_date_time = str(outlook_date_time)
