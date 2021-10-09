@@ -43,6 +43,23 @@ class OutlookManager:
 
     def get_aulaevents_from_outlook(self,begin,end):
 
+        def get_aula_timezone(outlook_date_time):
+
+            outlook_date_time = str(outlook_date_time)
+            date_part = outlook_date_time.split(" ")[0]
+            date_part = date_part.split("-")
+
+            year = int(date_part[0])
+            month = int(date_part[1])
+            day = int(date_part[2])
+
+            mDate = dt.datetime(year,month,day)
+
+            if self.is_in_daylight(mDate):
+                return "+01:00"
+            else:
+                return "+02:00"
+
         def format_as_aula_date(outlook_date_time):
             outlook_date_time = str(outlook_date_time)
             date_part = outlook_date_time.split(" ")[0]
@@ -106,6 +123,8 @@ class OutlookManager:
                     "aula_enddate": format_as_aula_date(event.end),
                     "aula_starttime": format_as_aula_time(event.start),
                     "aula_endtime": format_as_aula_time(event.end),
+                    "aula_startdate_timezone" : get_aula_timezone(event.start),
+                    "aula_enddate_timezone" : get_aula_timezone(event.end),
                     "hideInOwnCalendar" : hideInOwnCalendar,
                     "addToInstitutionCalendar" : addToInstitutionCalendar
                 }
