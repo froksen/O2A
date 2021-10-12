@@ -30,7 +30,7 @@ logger.info('O2A startet')
 today = dt.datetime.today()
 
 
-def run_script():
+def run_script(force_update_existing_events = False):
       print ("***********************************************************")
       print("                   OUTLOOK TO AULA")
       print(" Jesper Qvist, Kløver-Skolen & Ole Frandsen, Dybbøl-Skolen")
@@ -38,24 +38,26 @@ def run_script():
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       eman = eventmanager()
       #comp = eman.compare_calendars(today,today+relativedelta(days=+30)) #Start dato er nu altid dags dato :) 
-      comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00))
+      comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
       eman.update_aula_calendar(comp)
 
 #The main function
 def main(argv):
+  forceupdate = False
 
   #If no argument is passed
   if len(sys.argv) <= 1:
-      run_script()
+      run_script(forceupdate)
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsrd",["setup","help","run","days="])
+    opts, args = getopt.getopt(argv,"hsrdf",["setup","help","run","days=","force"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
     print(' -s --setup  : To setup script')
     print(' -r --run    : To run script')
+    print(' -f --force  : Force update all existing events')
     print(' -d --days    : To run script')
     print(' -h --help   : To show help')
     sys.exit(2)
@@ -65,14 +67,17 @@ def main(argv):
       print(' without parameter  : same as -r')
       print(' -s --setup  : To setup script')
       print(' -r --run    : To run script')
+      print(' -f --force  : Force update all existing events')
       print(' -d --days    : To run script')
       print(' -h --help   : To show help')
     elif opt in ("-d", "--days"): 
       print("days")
       print(str(arg))
-
+    elif opt in ("-f", "--force"): 
+      forceupdate = True
+      logger.warning("Force update is set to: " + str(forceupdate))
     elif opt in ("-r", "--run"): 
-      run_script()
+      run_script(forceupdate)
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
       setupmgr.do_setup()

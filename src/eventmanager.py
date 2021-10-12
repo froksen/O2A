@@ -226,7 +226,7 @@ class EventManager:
 
 
 
-    def compare_calendars(self, begin, end):
+    def compare_calendars(self, begin, end, force_update_existing_events = False):
         #Summary of changes
         self.logger.info(" ")
         self.logger.info("..:: Comparing Outlook and AULA events :: ...")
@@ -295,9 +295,22 @@ class EventManager:
                 self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
 
 
-        #Checking for events that has been updated, and exists both places
+        #Checking for events that has been updated or needs to be forced updated, and exists both places
         for key in aulaevents_from_outlook:
             if  key in outlookevents_from_aula:
+                
+                #If forceupdate is enabled
+                if force_update_existing_events == True:
+                    self.logger.info("Event \"%s\" will be force updated." %(outlookevents_from_aula[key]["appointmentitem"].subject))
+
+                    #Adds AULA eventid to array
+                    aulaevents_from_outlook[key]["event_id"] = outlookevents_from_aula[key]["appointmentitem"].aula_id
+                    events_to_update.append(aulaevents_from_outlook[key]) 
+
+                    #Prevents the same event to be set en both update metods. 
+                    continue
+
+                #If event has been updated, but force update is not set.
                 if str(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
                     #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" has been updated. Old entry will be removed, and a new will be created." %(outlookevents_from_aula[key]["appointmentitem"].subject))
