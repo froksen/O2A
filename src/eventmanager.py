@@ -114,7 +114,7 @@ class EventManager:
                 time.sleep(0.5)
 
             #Creating new event
-            self.aulamanager.updateEvent(event_id=event_id,title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+            self.aulamanager.updateEvent(event_id=event_id,title=event_title,description=description,location=location, startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
 
 
@@ -222,7 +222,7 @@ class EventManager:
                     time.sleep(0.5)
 
             #Creating new event
-            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+            self.aulamanager.createEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
 
 

@@ -244,7 +244,7 @@ class AulaManager:
         return text
             #foundText = m1.group(0)
 
-    def updateEvent(self, event_id, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def updateEvent(self, event_id, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         url = self.getAulaApiUrl()
 
@@ -260,7 +260,8 @@ class AulaManager:
             "creator":{"id":self.getProfileId()},
             "institutionCode":self.getProfileinstitutionCode()
             ,"description":description,
-            "primaryResource":None,
+            'primaryResource': location,
+            'primaryResourceText' : location,
             "additionalResources":[],
             "additionalResourceText":None,
             "invitees":[],
@@ -285,7 +286,6 @@ class AulaManager:
             "responseRequired":True,
             "private":isPrivate,
             "type":"event",
-            "primaryResourceText":None,
             "addedToInstitutionCalendar":False,
             #"start":"2021-10-03T01:10:00+00:00",
             #"end":"2021-10-03T10:00:00+00:00",
@@ -318,7 +318,7 @@ class AulaManager:
             self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
 
 
-    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         
         #print("START: %s" %(startDateTime))
@@ -352,7 +352,8 @@ class AulaManager:
             'type': 'event',
             'allDay': allDay,
             'private': isPrivate,
-            'primaryResource': {},
+            'primaryResource': location,
+            'primaryResourceText' : location,
             'additionalLocations': [],
             'invitees': [],
             'invitedGroups': [],
