@@ -7,7 +7,7 @@ import time
 
 class ContactsChecker():
     def __init__(self,csv_file="contacts_to_check.csv"):
-        self.aulamgr = AulaManager()
+        self.aulamanager = AulaManager()
         self.logger = logging.getLogger('O2A')
         self.setupmanager = SetupManager()
         self.__people = self.__readFile(csv_file)
