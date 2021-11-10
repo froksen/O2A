@@ -27,6 +27,8 @@ class ContactsChecker():
             return
 
     def searchForPeople(self):
+        people_not_found = []
+
         for person in self.__people:
             print(person)
             #Searching for name in AULA
@@ -36,10 +38,16 @@ class ContactsChecker():
 
             if not search_result == None:
                 self.logger.info("      Attendee %s was found in AULA!" %(outlook_name))
+                pass
             else:
                 self.logger.info("      Attendee %s was NOT found in AULA!" %(outlook_name))
+                people_not_found.append(outlook_name)
             
             time.sleep(0.5)
+
+        self.logger.info("..::THE FOLLOWING PEOPLE WHERE NOT FOUND IN AULA::..")
+        for p_not_found in people_not_found:
+            self.logger.info(p_not_found)
 
 
     def __readFile(self, csv_file="personer.csv"):
