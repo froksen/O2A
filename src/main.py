@@ -6,6 +6,7 @@ from datetime import timedelta
 import logging
 import sys, getopt
 from dateutil.relativedelta import relativedelta
+from contactschecker import ContactsChecker
 
 #
 # LOGGER
@@ -51,14 +52,14 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsrdf",["setup","help","run","days=","force"])
+    opts, args = getopt.getopt(argv,"hsrdfc",["setup","help","run","days=","force","check"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
     print(' -s --setup  : To setup script')
     print(' -r --run    : To run script')
     print(' -f --force  : Force update all existing events')
-    print(' -d --days    : To run script')
+    print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
     print(' -h --help   : To show help')
     sys.exit(2)
   for opt, arg in opts:
@@ -68,7 +69,7 @@ def main(argv):
       print(' -s --setup  : To setup script')
       print(' -r --run    : To run script')
       print(' -f --force  : Force update all existing events')
-      print(' -d --days    : To run script')
+      print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
       print(' -h --help   : To show help')
     elif opt in ("-d", "--days"): 
       print("days")
@@ -81,11 +82,16 @@ def main(argv):
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
       setupmgr.do_setup()
+    elif opt in ("-c", "--check"):
+      mChecker = ContactsChecker()
+      mChecker.searchForPeople()
     else:
       print('OPTIONS')
-      print (' <empty>    : Same as -r')
+      print(' without parameter  : same as -r')
       print(' -s --setup  : To setup script')
       print(' -r --run    : To run script')
+      print(' -f --force  : Force update all existing events')
+      print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
       print(' -h --help   : To show help')
 
 
