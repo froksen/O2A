@@ -15,7 +15,6 @@ class ContactsChecker():
         self.login_to_aula()
 
 
-
     def login_to_aula(self):
         #Gets AULA password and username from keyring
         aula_usr = self.setupmanager.get_aula_username()
@@ -29,26 +28,18 @@ class ContactsChecker():
 
     def searchForPeople(self):
         for person in self.__people:
+            print(person)
             #Searching for name in AULA
-            search_result = self.aulamanager.findRecipient(person)
+            outlook_name = person["outlook_name"]
+
+            search_result = self.aulamanager.findRecipient(outlook_name)
 
             if not search_result == None:
-                self.logger.info("      Attendee %s was found in AULA!" %(person))
+                self.logger.info("      Attendee %s was found in AULA!" %(outlook_name))
             else:
-                self.logger.info("      Attendee %s was NOT found in AULA!" %(person))
-
-            time.sleep(0.5)
+                self.logger.info("      Attendee %s was NOT found in AULA!" %(outlook_name))
             
-            #self.logger.debug(f"Searching for {person_outlook_name} in AULA")
-
-           # for person in self.__people:
-               # if person["outlook_name"] == person_outlook_name:
-                  #  aula_name = person["aula_name"]
-                   # self.logger.debug(f"FOUND and should be replaced with {aula_name}")
-                    #return aula_name
-
-            self.logger.debug("NOT FOUND")
-            return None
+            time.sleep(0.5)
 
 
     def __readFile(self, csv_file="personer.csv"):
