@@ -47,7 +47,7 @@ class AulaManager:
         return self.session
 
     def getAulaApiUrl(self):
-        return 'https://www.aula.dk/api/v11/'
+        return 'https://www.aula.dk/api/v12/'
 
     def getEventsForInstitutions(self,profileId,instCodes, startDateTime, endDateTime):
         session = self.getSession()
@@ -506,7 +506,7 @@ class AulaManager:
             # All API requests go to the below url
             # Each request has a number of parameters, of which method is always included
             # Data is returned in JSON
-            url = 'https://www.aula.dk/api/v11/'
+            url = 'https://www.aula.dk/api/v12/'
 
             ### First API request. This request most be run to generate correct correct cookies for subsequent requests. ###
             params = {
@@ -532,6 +532,7 @@ class AulaManager:
             institutions = []
             institution_profiles = []
             children = []
+
             for institution in response_profile_context['data']['institutions']:
                 institutions.append(institution['institutionCode'])
                 institution_profiles.append(institution['institutionProfileId'])
