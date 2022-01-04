@@ -409,7 +409,7 @@ class AulaManager:
 
         session  = self.getSession()
 
-        url = 'https://www.aula.dk/api/v11/'
+        url = self.getAulaApiUrl()
         
         ### First example API request ###
         params = {
