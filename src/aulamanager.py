@@ -437,7 +437,7 @@ class AulaManager:
         except requests.exceptions.ConnectionError as e:
             self.logger.critical("Det var ikke muligt, at oprette forbindelse til UNI-login dialogen")
             self.logger.critical(e)
-        
+
         # Login is handled by a loop where each page is first parsed by BeautifulSoup.
         # Then the destination of the form is saved as the next url to post to and all
         # inputs are collected with special cases for the username and password input.
@@ -457,6 +457,13 @@ class AulaManager:
                 # If form has a destination, inputs are collected and names and values
                 # for posting to form destination are saved to a dictionary called data
                 if url:
+                    #Prints if any errors on login-dialog is present
+                    login_errors = soup.find_all("span", {"class": "form-error-message"})
+
+                    for login_error in login_errors:
+                        self.logger.critical("UNI-Login error message: " + str(login_error.text))
+                        counter = 10 #Breaks the loop. TODO: MAKE Pythonic
+
                     # Get all inputs from page
                     inputs = soup.find_all('input')
 
@@ -489,6 +496,7 @@ class AulaManager:
                             # destination.
                             except:
                                 pass
+
                     # If there's data in the dictionary, it is submitted to the destination url
                     if data:
                         response = session.post(url, data=data)
