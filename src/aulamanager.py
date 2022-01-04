@@ -511,7 +511,7 @@ class AulaManager:
             # All API requests go to the below url
             # Each request has a number of parameters, of which method is always included
             # Data is returned in JSON
-            url = 'https://www.aula.dk/api/v12/'
+            url = self.getAulaApiUrl()
 
             ### First API request. This request most be run to generate correct correct cookies for subsequent requests. ###
             params = {
