@@ -3,6 +3,7 @@ import keyring
 import configparser
 import win32com.client
 import time
+import sys
 
 class SetupManager:
     def __init__(self):
@@ -30,9 +31,40 @@ class SetupManager:
     def __aula_setup(self):
         print("..:: Information for AULA ::..")
         print("The following information is used to operate and login to AULA. Please enter information for UNI-login")
+
+
         usr = self.__ask_for_username()
         passwd = self.__ask_for_password()
+
+        print("")
+        print("")
+        print("")
+        print("")
+        print("Is the following correct?")
+        print("UNI-username: " + str(usr))
+        print("UNI-password: " + str(passwd)) 
+        print("(All passwords are stored in the keyring for your operation system.)")
+        print("")
+        print("")
+        print("")
         
+        should_save = False
+        while not should_save:
+            reply = str(input('Do you want to store these information? (Y)es or (N)o: ')).lower().strip()
+
+            try:
+                if reply[:1] == 'y':
+                    #self.create_outlook_categories()
+                    should_save = True
+                if reply[:1] == 'n':
+                    should_save = False
+            except IndexError:
+                should_save = False
+
+            if should_save == False:
+                print("Process abortet, nothing saved or changed! Rerun this setup if, you want to retype username or password.")
+                sys.exit()
+
         try:
             self.config.add_section("AULA")
         except configparser.DuplicateSectionError:
@@ -50,6 +82,19 @@ class SetupManager:
         self.yes_or_no("Do you want to create necessary categories in Outlook?")
 
         print("AULA setup completed!")
+
+    def store_yes_or_no(self, question):
+        while "the answer is invalid":
+            reply = str(input(question+' (y/n): ')).lower().strip()
+
+            try:
+                if reply[:1] == 'y':
+                    #self.create_outlook_categories()
+                    return True
+                if reply[:1] == 'n':
+                    return False
+            except IndexError:
+                return False
 
     def yes_or_no(self, question):
         while "the answer is invalid":
