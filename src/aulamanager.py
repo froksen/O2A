@@ -431,8 +431,12 @@ class AulaManager:
         session = self.getSession()
             
         # Get login page
-        url = 'https://login.aula.dk/auth/login.php?type=unilogin'
-        response = self.session.get(url)
+        try:
+            url = 'https://login.aula.dk/auth/login.php?type=unilogin'
+            response = self.session.get(url)
+        except requests.exceptions.ConnectionError as e:
+            self.logger.critical("Det var ikke muligt, at oprette forbindelse til UNI-login dialogen")
+            self.logger.critical(e)
         
         # Login is handled by a loop where each page is first parsed by BeautifulSoup.
         # Then the destination of the form is saved as the next url to post to and all
@@ -468,12 +472,15 @@ class AulaManager:
                                 # Save username if input is a username field
                                 if input['name'] == 'username':
                                     data[input['name']] = user['username']
+                                    self.logger.debug("Login-field: Username FOUND")
                                 # Save password if input is a password field
                                 elif input['name'] == 'password':
                                     data[input['name']] = user['password']
+                                    self.logger.debug("Login-field: password FOUND")
                                 #Selects login type, as employee this is "MEDARBEJDER_EKSTERN"
                                 elif input['name'] == 'selected-aktoer':
                                     data[input['name']] = "MEDARBEJDER_EKSTERN"
+                                    self.logger.debug("UNI-Login: role FOUND (Employee)")
                                 # For all other inputs, save name and value of input
                                 else:
                                     data[input['name']] = input['value']
@@ -500,8 +507,6 @@ class AulaManager:
         # Login succeeded without an HTTP error code and API requests can begin 
         if success == True and response.status_code == 200:
             self.logger.info("Login was successful")
-            print("logged ind")
-
 
             # All API requests go to the below url
             # Each request has a number of parameters, of which method is always included
