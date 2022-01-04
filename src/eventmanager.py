@@ -30,9 +30,10 @@ class EventManager:
         
 
         #Login to AULA
-        if not self.aulamanager.login(aula_usr,aula_pwd).status == True:
+        login_response = self.aulamanager.login(aula_usr,aula_pwd)
+        if not login_response.status == True:
             self.logger.critical("Program stopped because unable to log in to AULA.")
-            self.outlookmanager.send_a_mail()
+            self.outlookmanager.send_a_mail(login_response)
             sys.exit()
             return
 

@@ -141,17 +141,24 @@ class OutlookManager:
 
         return aulaEvents
 
-    def send_a_mail(self, message_to_send=""):
+    def send_a_mail(self, login_response_obj, message_to_send=""):
         #FROM: https://gist.github.com/vinovator/0a6d653c22c32ab67e11
         outlook = win32com.client.Dispatch("Outlook.Application")
 
         exchange_user = outlook.Session.CurrentUser.AddressEntry.GetExchangeUser()
         ownEmailAdress = exchange_user.PrimarySmtpAddress
 
+        error_messages = login_response_obj.error_messages
+        attemptet_uni_login_name = login_response_obj.username
+
         self.logger.debug("Exchange user " + str(exchange_user))
         self.logger.debug("Exchange user email " + ownEmailAdress)
         if ownEmailAdress == None:
             return
+
+        error_messages_string = ""
+        for error_msg in error_messages:
+            error_messages_string = error_messages_string + "<li>" + str(error_msg) + "</li>"
 
        #     Outlook VBA Reference 
        # 0 - olMailItem
@@ -182,13 +189,20 @@ class OutlookManager:
         <html>
         <head></head>
         <body>
-            <font color="DarkBlue" size=-1 face="Arial">
-            <p>Hej {str(exchange_user)}!<br>
-            I forbindelse med at Outlook2Aula overførselsprogrammet prøvede at køre på din computer, da skete der en fejl.<br>
-            Problemet er, at <u>programmet ikke kan logge på AULA.</u> <br><br> 
-            <u>Det er typisk fordi du har ændret din adgangskode</u>. Det kræves derfor, at du geninstaster din adgangskode i programmet.  <br><br>
+            <font color="Black" size=-1 face="Arial">
+            <p>Mojn {str(exchange_user)}!</p>
+            Outlook2Aula overførselsprogrammet prøvede at køre på din computer. Der skete desværre en eller flere fejl, som gjorde at programmet ikke kunne logge på AULA.<br><br>
+
+            <b>Følgende fejl blev meldt:</b>
+            <ul>
+            {error_messages_string}
+            </ul>
+            
+            <p><b>Du har anvendt følgende AULA brugernavn: </b> {attemptet_uni_login_name}<br>(Kodeord ikke nævnt, af sikkerhedsmæssige årsager)</p>
+            <br>
+            Hvis det er fordi du har ændret din adgangskode eller dit brugernavn er forkert, da skal du genintaste din UNI-oplysninger i programmet.<br><br>
             Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
-            </p>
+
             <p>Venlig hilsen <br> Outlook2Aula overførselsprogrammet</p>
             </font>
         </body>
