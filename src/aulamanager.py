@@ -420,7 +420,14 @@ class AulaManager:
         print(json.dumps(response_profile, indent=4))
 
     def login(self, username, password):
-        
+        class LoginResponse:
+            def __init__(self):
+                self.status = False
+                self.error_messages = []
+                self.username = ""
+
+        login_response = LoginResponse()
+
         # User info
         user = {
             'username': username,
@@ -462,6 +469,7 @@ class AulaManager:
 
                     for login_error in login_errors:
                         self.logger.critical("UNI-Login error message: " + str(login_error.text))
+                        login_response.error_messages.append("UNI-Login error message: " + str(login_error.text))
                         counter = 10 #Breaks the loop. TODO: MAKE Pythonic
 
                     # Get all inputs from page
@@ -601,13 +609,20 @@ class AulaManager:
             # Csrfp-tokenis manually added to session headers.
             session.headers['csrfp-token'] = session.cookies['Csrfp-Token']
 
-            return True
+            #Setting information for response
+            login_response.status = True
+            login_response.username = username
+
+            return login_response
 
         # Login failed for some unknown reason
         else:
             self.logger.critical("Log in was unsuccessful")
 
-            return False
+            #Setting information for response
+            login_response.status = False
+            login_response.username = username
+            return login_response
 
     #FROM: https://medium.com/@jorlugaqui/how-to-strip-html-tags-from-a-string-in-python-7cb81a2bbf44
     def __remove_html_tags(self,text):
