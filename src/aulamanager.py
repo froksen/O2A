@@ -457,7 +457,7 @@ class AulaManager:
         while success == False and counter < 10:
             try:
                 # Parse response using BeautifulSoup
-                soup = BeautifulSoup(response.text, "lxml")
+                soup = BeautifulSoup(response.text, "html.parser")
                 # Get destination of form element (assumes only one)
                 url = soup.form['action']   
                 
