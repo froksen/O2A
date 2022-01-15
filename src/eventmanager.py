@@ -225,7 +225,24 @@ class EventManager:
 
             #Creating new event
             if is_Recurring:
-                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+
+                #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
+                def outlook_pattern_to_aula_pattern(x):
+                    x = int(x)
+                    print("PATTERN")
+                    print(x)
+                    return {
+                        0: "daily",
+                        1: "weekly",
+                        2: "monthly"
+                    }.get(x, "never")
+
+                recurrence_pattern = event_to_create["appointmentitem"].GetRecurrencePattern() #Gets the pattern of the event. How it is repeated.
+                recurrence_pattern_aula = outlook_pattern_to_aula_pattern(recurrence_pattern.RecurrenceType) #Gets the type, like if its daily etc. And converts it from Outlook-naming to AULA. 
+                max_date = str(recurrence_pattern.PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
+                interval = recurrence_pattern.Interval #How often event should be repeated. 
+
+                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
             else:
                 self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
