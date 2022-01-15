@@ -402,7 +402,7 @@ class AulaManager:
             self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
 
 
-    def createRecuringEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def createRecuringEvent(self, title, description, startDateTime, endDateTime, maxDate, pattern, interval, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         
         #print("START: %s" %(startDateTime))
@@ -452,9 +452,24 @@ class AulaManager:
             'isEditEvent': False,
             'addToInstitutionCalendar': addToInstitutionCalendar,
             'hideInOwnCalendar': hideInOwnCalendar,
+            # "repeating": {
+            #     "pattern": "daily",
+            #     "interval": 1,
+            #     "weekdayMask": [
+            #     False,
+            #     False,
+            #     False,
+            #     False,
+            #     False,
+            #     False,
+            #     False
+            #     ],
+            #     "occurenceLimit": 0,
+            #     "maxDate": "2022-01-28"
+            # },
             'inviteeIds': attendee_ids,
             'additionalResources': [],
-            'pattern': 'never',
+            'pattern': pattern, #EX "daily"
             'occurenceLimit': 0,
             'weekdayMask': [
                 False,
@@ -465,8 +480,8 @@ class AulaManager:
                 False,
                 False
             ],
-            'maxDate': None,
-            'interval': 0,
+            "maxDate": maxDate, #EX: "2022-01-28"
+            'interval': interval, #EX: 1
             'lessonId': '',
             'noteToClass': '',
             'noteToSubstitute': '',
@@ -482,9 +497,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(title,startDateTime))
+            self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY created" %(title,startDateTime))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
+            self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
 
     def getProfile(self):
                 # All API requests go to the below url

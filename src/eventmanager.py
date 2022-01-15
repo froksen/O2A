@@ -155,6 +155,7 @@ class EventManager:
             start_time = event_to_create["aula_starttime"]
             end_time = event_to_create["aula_endtime"]
             allDay = event_to_create["appointmentitem"].AllDayEvent
+            is_Recurring = event_to_create["appointmentitem"].IsRecurring
 
             if allDay == True:
                 start_dateTime = str(start_date).replace("/","-")  # FORMAT: 2021-05-18
@@ -223,7 +224,10 @@ class EventManager:
                     time.sleep(0.5)
 
             #Creating new event
-            self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+            if is_Recurring:
+                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+            else:
+                self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
 
 
