@@ -4,3 +4,5 @@ dist/*
 build/*
 src/__pycache__/*
 webdrivers/*
+installer.bat
+contacts_to_check.xlsx
