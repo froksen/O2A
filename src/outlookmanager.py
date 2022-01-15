@@ -134,9 +134,13 @@ class OutlookManager:
                 }
                 
                 #print("ENDDATE")
-                #print(aulaEvents[event.GlobalAppointmentID]["appointmentitem"].subject)
+               # print(aulaEvents[event.GlobalAppointmentID]["appointmentitem"].subject)
                 #print(aulaEvents[event.GlobalAppointmentID]["aula_enddate"])
                 #print(event.end)
+                #print(event.IsRecurring)
+               # paatern = event.GetRecurrencePattern()
+               # print(paatern)
+                #print(paatern.RecurrenceType)
                 #time.sleep(2)
 
         return aulaEvents

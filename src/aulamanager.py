@@ -317,8 +317,7 @@ class AulaManager:
         else:
             self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
 
-
-    def createEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         session = self.getSession()
         
         #print("START: %s" %(startDateTime))
@@ -333,7 +332,92 @@ class AulaManager:
         ### First example API request ###
         params = {
             'method': 'calendar.createSimpleEvent'
-            }
+        }
+
+        description = self.teams_url_fixer(description)
+
+        data = {
+            'title': title,
+            'description': description,
+            'startDateTime': startDateTime, # 2021-05-18T14:30:00.0000+02:00
+            'endDateTime': endDateTime, # '2021-05-18T15:00:00.0000+02:00'
+            'startDate': datetime.datetime.today().strftime('%Y-%m-%d'), #Is always today
+            'endDate': datetime.datetime.today().strftime('%Y-%m-%d'), # is always today
+            #'startTime': '12:00:19', 
+            #'endTime': '12:30:19',
+            'id': '',
+            'institutionCode': self.getProfileinstitutionCode(),
+            'creatorInstProfileId': self.getProfileId(),
+            'type': 'event',
+            'allDay': allDay,
+            'private': isPrivate,
+            'primaryResource': location,
+            'primaryResourceText' : location,
+            'additionalLocations': [],
+            'invitees': [],
+            'invitedGroups': [],
+            'invitedGroupIds': [],
+            'invitedGroupHomes': [],
+            'responseRequired': True,
+            'responseDeadline': None,
+            'resources': [],
+            'attachments': [],
+            'oldStartDateTime': '',
+            'oldEndDateTime': '',
+            'isEditEvent': False,
+            'addToInstitutionCalendar': addToInstitutionCalendar,
+            'hideInOwnCalendar': hideInOwnCalendar,
+            'inviteeIds': attendee_ids,
+            'additionalResources': [],
+            'pattern': 'never',
+            'occurenceLimit': 0,
+            'weekdayMask': [
+                False,
+                False,
+                False,
+                False,
+                False,
+                False,
+                False
+            ],
+            'maxDate': None,
+            'interval': 0,
+            'lessonId': '',
+            'noteToClass': '',
+            'noteToSubstitute': '',
+            'eventId': '',
+            'isPrivate': isPrivate,
+            'resourceIds': [],
+            'additionalLocationIds': [],
+            'additionalResourceIds': [],
+            'attachmentIds': []
+        }
+
+        response_calendar = session.post(url, params=params, json=data).json()
+        #print(json.dumps(response_calendar, indent=4))
+
+        if(response_calendar["status"]["message"] == "OK"):
+            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(title,startDateTime))
+        else:
+            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
+
+
+    def createRecuringEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+        session = self.getSession()
+        
+        #print("START: %s" %(startDateTime))
+        #print("END: %s" %(endDateTime))
+        #return
+
+        # All API requests go to the below url
+        # Each request has a number of parameters, of which method is always included
+        # Data is returned in JSON
+        url = self.getAulaApiUrl()
+        
+        ### First example API request ###
+        params = {
+            'method': 'calendar.createRepeatingEvent'
+        }
 
         description = self.teams_url_fixer(description)
 
