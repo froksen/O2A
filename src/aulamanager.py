@@ -411,10 +411,7 @@ class AulaManager:
         olTuesday = 4    # Tuesday
         olWednesday = 8  # Wednesday
         
-        session = self.getSession()
-
-        print("mask", weekmask)
-        
+        session = self.getSession()        
         #print("START: %s" %(startDateTime))
         #print("END: %s" %(endDateTime))
         #return

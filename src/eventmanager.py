@@ -229,8 +229,6 @@ class EventManager:
                 #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
                 def outlook_pattern_to_aula_pattern(x):
                     x = int(x)
-                    print("PATTERN")
-                    print(x)
                     return {
                         0: "daily",
                         1: "weekly",
@@ -266,7 +264,7 @@ class EventManager:
                 max_date = str(recurrence_pattern.PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
                 interval = recurrence_pattern.Interval #How often event should be repeated. 
                 day_of_week_mask = recurrence_pattern.DayOfWeekMask #TODO, make this work when multiple days are selected.
-                
+
                 day_of_week_mask_list = [day_of_week_mask]
                 if not day_of_week_mask in weekDays:
                     self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
