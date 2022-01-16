@@ -237,12 +237,42 @@ class EventManager:
                         2: "monthly"
                     }.get(x, "never")
 
+                def day_of_week_convert(x):
+                    x = int(x)
+                    print("day_of_week_convert")
+                    print(x)
+                    return {
+                        0: "daily",
+                        1: "weekly",
+                        2: "monthly"
+                    }.get(x, "never")
+
+                def day_of_week_convert(x):
+                    from collections import deque
+
+                olFriday = 32    # Friday
+                olMonday = 2     # Monday
+                olSaturday = 64  # Saturday
+                olSunday = 1     # Sunday
+                olThursday = 16  # Thursday
+                olTuesday = 4    # Tuesday
+                olWednesday = 8  # Wednesday
+                from collections import deque
+                weekDays = deque((olMonday, olTuesday, olWednesday, olThursday,
+                                olFriday, olSaturday, olSunday))
+
                 recurrence_pattern = event_to_create["appointmentitem"].GetRecurrencePattern() #Gets the pattern of the event. How it is repeated.
                 recurrence_pattern_aula = outlook_pattern_to_aula_pattern(recurrence_pattern.RecurrenceType) #Gets the type, like if its daily etc. And converts it from Outlook-naming to AULA. 
                 max_date = str(recurrence_pattern.PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
                 interval = recurrence_pattern.Interval #How often event should be repeated. 
+                day_of_week_mask = recurrence_pattern.DayOfWeekMask #TODO, make this work when multiple days are selected.
+                
+                day_of_week_mask_list = [day_of_week_mask]
+                if not day_of_week_mask in weekDays:
+                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
+                    day_of_week_mask_list = []
 
-                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval,weekmask=day_of_week_mask_list, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
             else:
                 self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 

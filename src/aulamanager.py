@@ -402,8 +402,18 @@ class AulaManager:
             self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
 
 
-    def createRecuringEvent(self, title, description, startDateTime, endDateTime, maxDate, pattern, interval, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def createRecuringEvent(self, title, description, startDateTime, endDateTime, maxDate, pattern, interval, weekmask = [], attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+        olFriday = 32    # Friday
+        olMonday = 2     # Monday
+        olSaturday = 64  # Saturday
+        olSunday = 1     # Sunday
+        olThursday = 16  # Thursday
+        olTuesday = 4    # Tuesday
+        olWednesday = 8  # Wednesday
+        
         session = self.getSession()
+
+        print("mask", weekmask)
         
         #print("START: %s" %(startDateTime))
         #print("END: %s" %(endDateTime))
@@ -452,33 +462,33 @@ class AulaManager:
             'isEditEvent': False,
             'addToInstitutionCalendar': addToInstitutionCalendar,
             'hideInOwnCalendar': hideInOwnCalendar,
-            # "repeating": {
-            #     "pattern": "daily",
-            #     "interval": 1,
-            #     "weekdayMask": [
-            #     False,
-            #     False,
-            #     False,
-            #     False,
-            #     False,
-            #     False,
-            #     False
-            #     ],
-            #     "occurenceLimit": 0,
-            #     "maxDate": "2022-01-28"
-            # },
+            "repeating": {
+                "pattern": "daily",
+                "interval": 1,
+                "weekdayMask": [
+                False if not olSunday in weekmask else True,
+                False if not olMonday in weekmask else True,
+                False if not olTuesday in weekmask else True,
+                False if not olWednesday in weekmask else True,
+                False if not olThursday in weekmask else True,
+                False if not olFriday in weekmask else True,
+                False if not olSaturday in weekmask else True,
+                ],
+                "occurenceLimit": 0,
+                "maxDate": maxDate
+            },
             'inviteeIds': attendee_ids,
             'additionalResources': [],
             'pattern': pattern, #EX "daily"
             'occurenceLimit': 0,
             'weekdayMask': [
-                False,
-                False,
-                False,
-                False,
-                False,
-                False,
-                False
+                False if not olSunday in weekmask else True,
+                False if not olMonday in weekmask else True,
+                False if not olTuesday in weekmask else True,
+                False if not olWednesday in weekmask else True,
+                False if not olThursday in weekmask else True,
+                False if not olFriday in weekmask else True,
+                False if not olSaturday in weekmask else True,
             ],
             "maxDate": maxDate, #EX: "2022-01-28"
             'interval': interval, #EX: 1
