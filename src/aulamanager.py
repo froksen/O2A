@@ -441,7 +441,7 @@ class AulaManager:
             "isDeadlineExceeded":False,
             "hideInOwnCalendar":hideInOwnCalendar,
             "repeating": {
-                "pattern": "daily",
+                "pattern": pattern,
                 "interval": interval,
                 "weekdayMask": [
                 False if not olSunday in weekmask else True,
@@ -563,7 +563,7 @@ class AulaManager:
             'addToInstitutionCalendar': addToInstitutionCalendar,
             'hideInOwnCalendar': hideInOwnCalendar,
             "repeating": {
-                "pattern": "daily",
+                "pattern": pattern,
                 "interval": interval,
                 "weekdayMask": [
                 False if not olSunday in weekmask else True,
