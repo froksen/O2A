@@ -501,9 +501,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY updated" %(title,startDateTime))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
 
     def createRecuringEvent(self, title, description, startDateTime, endDateTime, maxDate, pattern, interval, weekmask = [], attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         olFriday = 32    # Friday
