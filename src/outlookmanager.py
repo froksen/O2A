@@ -85,6 +85,7 @@ class OutlookManager:
 
         events = self.get_personal_calendar(begin,end) #Finds all events
         
+        self.logger.info("Reading Outlook events")
         for event in events: #Loops through
             categories_org = event.categories.split(";") #If event has multiple categories, then split
 
@@ -120,6 +121,9 @@ class OutlookManager:
                         pass
                         #print("SKIPPED")
 
+                if event.GlobalAppointmentID in aulaEvents:
+                    self.logger.debug(f'Outlook mananger: Event with title "{event.subject}" and uid "{event.GlobalAppointmentID}" is already found in Outlook. Skipping')
+                    continue
 
                 #Array containing event information
                 aulaEvents[event.GlobalAppointmentID] = {"appointmentitem":event, 

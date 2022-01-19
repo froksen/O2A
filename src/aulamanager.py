@@ -748,6 +748,7 @@ class AulaManager:
             monthsDiff = 1
 
         events = []
+        self.logger.info("Reading AULA calendar")
         self.logger.info("Locating events in calendars")
         step = 0
         for months in range(monthsDiff):
