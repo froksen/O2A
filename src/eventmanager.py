@@ -9,6 +9,7 @@ import win32com.client
 import keyring
 from setupmanager import SetupManager
 from peoplecsvmanager import PeopleCsvManager
+import itertools
 
 class EventManager:
     def __init__(self):
@@ -36,6 +37,54 @@ class EventManager:
             self.outlookmanager.send_a_mail(login_response)
             sys.exit()
             return
+
+    def calulate_day_of_the_week_mask(self):
+        olFriday = 32    # Friday
+        olMonday = 2     # Monday
+        olSaturday = 64  # Saturday
+        olSunday = 1     # Sunday
+        olThursday = 16  # Thursday
+        olTuesday = 4    # Tuesday
+        olWednesday = 8  # Wednesday
+
+        days_list = [olMonday, olTuesday, olWednesday, olThursday,
+                        olFriday, olSaturday, olSunday]
+
+        data = []
+        #Used to convert from value to string
+        def day_of_week_convert(x):
+                            x = int(x)
+                            print("day_of_week_convert")
+                            print(x)
+                            return {
+                                olSunday: "sunday",
+                                olMonday: "monday",
+                                olTuesday: "tuesday",
+                                olWednesday: "wednesday",
+                                olThursday: "thursday",
+                                olFriday: "friday",
+                                olSaturday: "saturday",
+                            }.get(x, "unknown")
+
+        #Find all combinations of the days_list, and creates a data dict
+        for L in range(0, len(days_list)+1):
+            for subset in itertools.combinations(days_list, L):
+                sum = 0
+                days_text = []
+                for i in subset:
+                    sum = sum + i
+                    days_text.append(day_of_week_convert(i))
+                #print(subset)
+
+                days_info = {
+                    "days_integer": subset,
+                    "days_string": days_text,
+                    "sum": sum
+                }     
+
+                data.append(days_info)
+
+        return data
 
     def aula_event_update(self,obj):
         event_title = obj["appointmentitem"].subject
