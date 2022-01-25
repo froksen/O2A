@@ -421,6 +421,10 @@ class EventManager:
                 self.logger.info("Outlook event \"%s\" that begins at \"%s\" is in the past. Skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
+            if aulaevents_from_outlook[key]["appointmentitem"].IsRecurring and aulaevents_from_outlook[key]["appointmentitem"].GetRecurrencePattern().RecurrenceType == 5:
+                self.logger.info("NOTICE: Outlook event \"%s\" that begins at \"%s\" is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
+                continue
+
             events_to_keep[key] = aulaevents_from_outlook[key]
 
         aulaevents_from_outlook = events_to_keep
