@@ -54,8 +54,6 @@ class EventManager:
         #Used to convert from value to string
         def day_of_week_convert(x):
                             x = int(x)
-                            print("day_of_week_convert")
-                            print(x)
                             return {
                                 olSunday: "sunday",
                                 olMonday: "monday",
@@ -74,7 +72,6 @@ class EventManager:
                 for i in subset:
                     sum = sum + i
                     days_text.append(day_of_week_convert(i))
-                #print(subset)
 
                 days_info = {
                     "days_integer": subset,
@@ -85,6 +82,15 @@ class EventManager:
                 data.append(days_info)
 
         return data
+
+    def get_day_of_the_week_mask(self,sum):
+        days_combinations = self.calulate_day_of_the_week_mask()
+
+        for day in days_combinations:
+            if sum == day["sum"]:
+                return day["days_integer"]
+
+        return False
 
     def aula_event_update(self,obj):
         event_title = obj["appointmentitem"].subject
@@ -172,7 +178,8 @@ class EventManager:
                     return {
                         0: "daily",
                         1: "weekly",
-                        2: "monthly"
+                        2: "monthly",
+                        5: "yearly"
                     }.get(x, "never")
 
                 olFriday = 32    # Friday
@@ -192,10 +199,14 @@ class EventManager:
                 interval = recurrence_pattern.Interval #How often event should be repeated. 
                 day_of_week_mask = recurrence_pattern.DayOfWeekMask #TODO, make this work when multiple days are selected.
 
-                day_of_week_mask_list = [day_of_week_mask]
-                if not day_of_week_mask in weekDays:
-                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
-                    day_of_week_mask_list = []
+                day_of_week_mask_list = self.get_day_of_the_week_mask(day_of_week_mask) #[day_of_week_mask]
+
+                if recurrence_pattern.RecurrenceType == 5:
+                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped.")
+                    return
+                #if not day_of_week_mask in weekDays:
+                #    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
+                #    day_of_week_mask_list = []
 
                 self.aulamanager.updateRecuringEvent(event_id=event_id,title=event_title,description=description,location=location, startDateTime=start_dateTime,endDateTime=end_dateTime, maxDate=max_date, pattern=recurrence_pattern_aula, interval=interval, weekmask = day_of_week_mask_list, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
             else:
@@ -325,8 +336,8 @@ class EventManager:
 
                 def day_of_week_convert(x):
                     x = int(x)
-                    print("day_of_week_convert")
-                    print(x)
+                    #print("day_of_week_convert")
+                    #print(x)
                     return {
                         0: "daily",
                         1: "weekly",
@@ -351,12 +362,15 @@ class EventManager:
                 recurrence_pattern_aula = outlook_pattern_to_aula_pattern(recurrence_pattern.RecurrenceType) #Gets the type, like if its daily etc. And converts it from Outlook-naming to AULA. 
                 max_date = str(recurrence_pattern.PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
                 interval = recurrence_pattern.Interval #How often event should be repeated. 
-                day_of_week_mask = recurrence_pattern.DayOfWeekMask #TODO, make this work when multiple days are selected.
+                day_of_week_mask = recurrence_pattern.DayOfWeekMask
+                day_of_week_mask_list = self.get_day_of_the_week_mask(day_of_week_mask)
 
-                day_of_week_mask_list = [day_of_week_mask]
-                if not day_of_week_mask in weekDays:
-                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
-                    day_of_week_mask_list = []
+                if recurrence_pattern.RecurrenceType == 5:
+                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped.")
+                    continue
+                #if not day_of_week_mask in weekDays:
+                #    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
+                #    day_of_week_mask_list = []
 
                 self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval,weekmask=day_of_week_mask_list, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
             else:

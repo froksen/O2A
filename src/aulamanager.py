@@ -602,7 +602,6 @@ class AulaManager:
             'additionalResourceIds': [],
             'attachmentIds': []
         }
-
         response_calendar = session.post(url, params=params, json=data).json()
         #print(json.dumps(response_calendar, indent=4))
 
