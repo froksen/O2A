@@ -242,7 +242,7 @@ class OutlookManager:
         outlook = win32com.client.Dispatch("Outlook.Application")
         ns = outlook.GetNamespace("MAPI")
         calendar = ns.GetDefaultFolder(9).Items
-        calendar.IncludeRecurrences = True
+        #calendar.IncludeRecurrences = True
 
         return self.__get_calendar(calendar,begin,end)
         
