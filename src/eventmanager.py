@@ -175,19 +175,6 @@ class EventManager:
                         2: "monthly"
                     }.get(x, "never")
 
-                def day_of_week_convert(x):
-                    x = int(x)
-                    print("day_of_week_convert")
-                    print(x)
-                    return {
-                        0: "daily",
-                        1: "weekly",
-                        2: "monthly"
-                    }.get(x, "never")
-
-                def day_of_week_convert(x):
-                    from collections import deque
-
                 olFriday = 32    # Friday
                 olMonday = 2     # Monday
                 olSaturday = 64  # Saturday
