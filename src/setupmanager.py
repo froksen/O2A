@@ -17,8 +17,10 @@ class SetupManager:
     def run_setup_gui(self):
         #messagebox.showwarning("Sikkerhed", "Alle kodeord gemmes i dit operativsystems nøglering. Hvis en anden person eller program får adgang til din brugerkonto, da har de også adgang til dine kodeord! Brug dette program på eget ansvar!")
 
+        self.create_outlook_categories()
+
         mainwindow = Tk()
-        mainwindow.geometry('400x200')
+        mainwindow.geometry('380x150')
         mainwindow.title("O2A Opsætningsassistent")
 
 
@@ -55,12 +57,14 @@ class SetupManager:
 
             return entry
 
+
         #Setup form
         username_field = create_form_field("UNI-brugernavn",2)
         password_field = create_form_field("UNI-kodeord",3,show="*")
 
         save_button = Button(mainwindow, text="Gem", command=save_button_clicked)
         save_button.grid(column=1, row=5)
+
 
         mainwindow.mainloop()
 
@@ -169,6 +173,24 @@ class SetupManager:
 
         os.system("schtasks /CREATE /F /TN MINOPGAVE /XML task_template.xml")
 
+    def check_outlook_categories(self):
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        ns = outlook.GetNamespace("MAPI")
+        print("Checking if Outlook has necessary categories")
+
+        hasAula = False
+        hasAULAInstitutionskalender = False
+        for category in ns.Categories:
+            if(category.name == "AULA"):
+                hasAula = True
+
+            if category.name == "AULA Institutionskalender":
+                hasAULAInstitutionskalender = True
+
+        if hasAula or hasAULAInstitutionskalender:
+            return True
+        else:
+            return False
 
     def create_outlook_categories(self):
         outlook = win32com.client.Dispatch("Outlook.Application")
