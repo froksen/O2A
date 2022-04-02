@@ -55,17 +55,12 @@ class SetupManager:
 
             return entry
 
-
         #Setup form
-
         username_field = create_form_field("UNI-brugernavn",2)
         password_field = create_form_field("UNI-kodeord",3,show="*")
 
-
-        save_button = Button(mainwindow, text="Gem og afslut", command=save_button_clicked)
+        save_button = Button(mainwindow, text="Gem", command=save_button_clicked)
         save_button.grid(column=1, row=5)
-
-        
 
         mainwindow.mainloop()
 

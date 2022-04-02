@@ -52,7 +52,7 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsrdfc",["setup","help","run","days=","force","check"])
+    opts, args = getopt.getopt(argv,"hsgrdfc",["setup","setupgui","help","run","days=","force","check"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
@@ -79,9 +79,11 @@ def main(argv):
       logger.warning("Force update is set to: " + str(forceupdate))
     elif opt in ("-r", "--run"): 
       run_script(forceupdate)
+    elif opt in ("-g", "--setupgui"):
+      setupmgr = SetupManager()
+      setupmgr.run_setup_gui()
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
-      #setupmgr.run_setup_gui()
       setupmgr.do_setup()
     elif opt in ("-c", "--check"):
       mChecker = ContactsChecker()
