@@ -381,14 +381,14 @@ class EventManager:
     def compare_calendars(self, begin, end, force_update_existing_events = False):
         #Summary of changes
         self.logger.info(" ")
-        self.logger.info("..:: Comparing Outlook and AULA events :: ...")
-        self.logger.info("Between")
-        self.logger.info(" Start datetime: %s" %(begin.strftime('%Y-%m-%d')))
-        self.logger.info(" End datetime: %s" %(end.strftime('%Y-%m-%d')))
+        self.logger.info("..:: Sammenligner Outlook og AULA kalenderne :: ...")
+        self.logger.info("Mellem datoerne")
+        self.logger.info(" Start: %s" %(begin.strftime('%Y-%m-%d')))
+        self.logger.info(" End: %s" %(end.strftime('%Y-%m-%d')))
         self.logger.info(" ")
 
         if(begin.strftime('%Y-%m-%d') < dt.datetime.today().strftime('%Y-%m-%d')):
-            self.logger.critical("Begin date must be today or in the future! Exitting.")
+            self.logger.critical("Kritisk fejl: Start datoen skal være senest dags dato.")
             sys.exit()
 
         #Finds all events from Outlook
