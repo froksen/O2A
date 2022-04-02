@@ -1,14 +1,74 @@
+from email import message
 import getpass
+from tkinter import messagebox
+from venv import create
 import keyring
 import configparser
 import win32com.client
 import time
 import sys
+from tkinter import *
 
 class SetupManager:
     def __init__(self):
         self.config = configparser.ConfigParser()
         self.__read_config_file()
+
+    def run_setup_gui(self):
+        #messagebox.showwarning("Sikkerhed", "Alle kodeord gemmes i dit operativsystems nøglering. Hvis en anden person eller program får adgang til din brugerkonto, da har de også adgang til dine kodeord! Brug dette program på eget ansvar!")
+
+        mainwindow = Tk()
+        mainwindow.geometry('400x200')
+        mainwindow.title("O2A Opsætningsassistent")
+
+
+        header_label = Label( mainwindow, text="Aula oplysninger", relief="flat", font=("Arial Bold", 25) )
+        #header_label.configure("center", justify='center')
+        header_label.grid(column=0, row=0,columnspan=2)
+
+        #helptext = Label( mainwindow, text="Anvendes til at kunne læse din kalender på AULA.", relief="flat", font=("Arial Bold", 12) )
+        #helptext.grid(column=0, row=1,columnspan=2)
+
+        def save_button_clicked():
+
+            answer = messagebox.askyesno("Gem oplysninger", "Sikker på, at du ønsker at gemme disse oplysninger?")
+
+            if answer == True:
+                self.config['AULA']['username'] = username_field.get()
+                keyring.set_password("o2a", "aula_password", password_field.get())
+                self.__write_config_file()
+                messagebox.showinfo("Aula oplysninger","Oplysningerne er blevet gemt!")
+
+            else:
+                messagebox.showinfo("Aula oplysninger","Der blev ikke gemt nogle oplysninger.")
+
+            print(username_field.get())
+            print(password_field.get())
+
+
+        def create_form_field(label, row, show=""):
+            label = Label( mainwindow, text=label, relief="flat", font=("Arial Bold", 12) )
+            entry = Entry(mainwindow,width=20, show=show)
+
+            label.grid(column=0, row=row)
+            entry.grid(column=1, row=row)
+
+            return entry
+
+
+        #Setup form
+
+        username_field = create_form_field("UNI-brugernavn",2)
+        password_field = create_form_field("UNI-kodeord",3,show="*")
+
+
+        save_button = Button(mainwindow, text="Gem og afslut", command=save_button_clicked)
+        save_button.grid(column=1, row=5)
+
+        
+
+        mainwindow.mainloop()
+
 
 
     def do_setup(self):

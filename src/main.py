@@ -81,6 +81,7 @@ def main(argv):
       run_script(forceupdate)
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
+      #setupmgr.run_setup_gui()
       setupmgr.do_setup()
     elif opt in ("-c", "--check"):
       mChecker = ContactsChecker()
