@@ -44,9 +44,6 @@ class SetupManager:
             else:
                 messagebox.showinfo("Aula oplysninger","Der blev ikke gemt nogle oplysninger.")
 
-            print(username_field.get())
-            print(password_field.get())
-
 
         def create_form_field(label, row, show=""):
             label = Label( mainwindow, text=label, relief="flat", font=("Arial Bold", 12) )
