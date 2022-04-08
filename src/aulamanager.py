@@ -8,6 +8,9 @@ import re
 from dateutil.relativedelta import relativedelta
 import datetime
 import time
+from aulaevent import AulaEvent
+
+from aulaevent import AulaEvent
 
 #THIS CODE IS LARGELY INSPIRED BY CODE FROM https://helmstedt.dk/2020/05/et-lille-kig-paa-aulas-api/
 
@@ -317,7 +320,9 @@ class AulaManager:
         else:
             self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
 
-    def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    #def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def createSimpleEvent(self, aula_event = AulaEvent):
+    
         session = self.getSession()
         
         #print("START: %s" %(startDateTime))
@@ -334,13 +339,13 @@ class AulaManager:
             'method': 'calendar.createSimpleEvent'
         }
 
-        description = self.teams_url_fixer(description)
+        description = self.teams_url_fixer(aula_event.description)
 
         data = {
-            'title': title,
-            'description': description,
-            'startDateTime': startDateTime, # 2021-05-18T14:30:00.0000+02:00
-            'endDateTime': endDateTime, # '2021-05-18T15:00:00.0000+02:00'
+            'title': aula_event.title,
+            'description': aula_event.description,
+            'startDateTime': aula_event.start_date_time, # 2021-05-18T14:30:00.0000+02:00
+            'endDateTime': aula_event.end_date_time, # '2021-05-18T15:00:00.0000+02:00'
             'startDate': datetime.datetime.today().strftime('%Y-%m-%d'), #Is always today
             'endDate': datetime.datetime.today().strftime('%Y-%m-%d'), # is always today
             #'startTime': '12:00:19', 
@@ -349,10 +354,10 @@ class AulaManager:
             'institutionCode': self.getProfileinstitutionCode(),
             'creatorInstProfileId': self.getProfileId(),
             'type': 'event',
-            'allDay': allDay,
-            'private': isPrivate,
-            'primaryResource': location,
-            'primaryResourceText' : location,
+            'allDay': aula_event.all_day,
+            'private': aula_event.is_private,
+            'primaryResource': aula_event.location,
+            'primaryResourceText' : aula_event.location,
             'additionalLocations': [],
             'invitees': [],
             'invitedGroups': [],
@@ -365,9 +370,9 @@ class AulaManager:
             'oldStartDateTime': '',
             'oldEndDateTime': '',
             'isEditEvent': False,
-            'addToInstitutionCalendar': addToInstitutionCalendar,
-            'hideInOwnCalendar': hideInOwnCalendar,
-            'inviteeIds': attendee_ids,
+            'addToInstitutionCalendar': aula_event.add_to_institution_calendar,
+            'hideInOwnCalendar': aula_event.hide_in_own_calendar,
+            'inviteeIds': aula_event.attendee_ids,
             'additionalResources': [],
             'pattern': 'never',
             'occurenceLimit': 0,
@@ -386,7 +391,7 @@ class AulaManager:
             'noteToClass': '',
             'noteToSubstitute': '',
             'eventId': '',
-            'isPrivate': isPrivate,
+            'isPrivate': aula_event.is_private,
             'resourceIds': [],
             'additionalLocationIds': [],
             'additionalResourceIds': [],
@@ -397,9 +402,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(title,startDateTime))
+            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(title,startDateTime))
+            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
 
     def updateRecuringEvent(self, event_id, title, description, startDateTime, endDateTime,maxDate, pattern, interval, weekmask = [], attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         olFriday = 32    # Friday

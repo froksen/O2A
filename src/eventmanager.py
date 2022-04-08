@@ -234,7 +234,7 @@ class EventManager:
             #event_GlobalAppointmentID = event_to_remove["appointmentitem"].GlobalAppointmentID
             
             #Removing event
-            self.logger.info("Attempting to REMOVE event: %s " %(event_to_remove.title))
+            self.logger.info("Attempting to REMOVE event: %s " %(event_title))
             self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
@@ -244,25 +244,6 @@ class EventManager:
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
-            #event_title = event_to_create["appointmentitem"].subject
-           # start_date = event_to_create["aula_startdate"]
-            #start_date_timezone = event_to_create["aula_startdate_timezone"]
-            #end_date = event_to_create["aula_enddate"]
-            #end_date_timezone = event_to_create["aula_enddate_timezone"]
-            #end_time = event_to_create["aula_endtime"]
-            #allDay = event_to_create["appointmentitem"].AllDayEvent
-            #is_Recurring = event_to_create["appointmentitem"].IsRecurring
-
-            #start_time = event_to_create.start_time
-            if event_to_create.all_day == True:
-                event_to_create.start_date_time = str(event_to_create.start_date).replace("/","-")  # FORMAT: 2021-05-18
-                event_to_create.end_date_time = str(event_to_create.end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
-            else:
-                event_to_create.start_date_time = str(event_to_create.start_date).replace("/","-") + "T" + event_to_create.start_time + event_to_create.start_timezone  # FORMAT: 2021-05-18T15:00:00+02:00
-                event_to_create.end_date_time = str(event_to_create.end_date).replace("/","-") + "T" + event_to_create.end_time + event_to_create.end_timezone # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
-
-            event_to_create.description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create.description,event_to_create.outlook_global_appointment_id,event_to_create.outlook_last_modification_time)
-
             #If event has been created by some one else. Set in description that its the case.
             if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create.outlook_organizer).strip(): 
                 self.logger.debug("Event was created by another user. Appending to description")
@@ -350,10 +331,10 @@ class EventManager:
                 #if not day_of_week_mask in weekDays:
                 #    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
                 #    day_of_week_mask_list = []
-
+                #TODO: Få dette til at virke igen.
                 self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval,weekmask=day_of_week_mask_list, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
             else:
-                self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+                self.aulamanager.createSimpleEvent(event_to_create)
 
     def __from_outlookobject_to_aulaevent(self,outlookobject):
         aula_event = AulaEvent()
@@ -365,7 +346,7 @@ class EventManager:
         aula_event.creator_inst_profile_id = ""
         aula_event.title = outlookobject["appointmentitem"].subject
         aula_event.type = "event"
-        aula_event.description = outlookobject["appointmentitem"].body
+        aula_event.outlook_body = outlookobject["appointmentitem"].body
         aula_event.location = outlookobject["appointmentitem"].location 
         aula_event.start_date = outlookobject["aula_startdate"]
         aula_event.end_date = outlookobject["aula_enddate"]
@@ -472,7 +453,7 @@ class EventManager:
                     continue
 
                 #If event has been updated, but force update is not set.
-                if str(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
+                if str(aulaevents_from_outlook[key].outlook_last_modification_time) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
                     #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" has been updated in Outlook. Will attempt to do the same in AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
                     self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))

@@ -12,6 +12,7 @@ class AulaEvent():
         self.title = ""
         self.type = ""
         self.description = ""
+        self.outlook_body = ""
         self.location = ""
         self.start_date = ""
         self.end_date = ""
@@ -27,5 +28,38 @@ class AulaEvent():
         self.hide_in_own_calendar = False
         self.add_to_institution_calendar = False
         self.is_private = False
+    
+    @property
+    def start_date_time(self):
+        if self.all_day == True:
+            self.start_date_time = str(self.start_date).replace("/","-")  # FORMAT: 2021-05-18
+        else:
+            self.start_date_time = str(self.start_date).replace("/","-") + "T" + self.start_time + self.start_timezone  # FORMAT: 2021-05-18T15:00:00+02:00
 
-        
+        return self._start_date_time
+
+    @start_date_time.setter
+    def start_date_time(self,txt):
+        self._start_date_time = txt
+
+    @property
+    def end_date_time(self):
+        if self.all_day == True:
+            self.end_date_time = str(self.end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
+        else:
+            self.end_date_time = str(self.end_date).replace("/","-") + "T" + self.end_time + self.end_timezone # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+
+        return self._end_date_time
+
+    @end_date_time.setter
+    def end_date_time(self,txt):
+        self._end_date_time = txt
+
+    @property
+    def description(self):
+        self.description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(self.outlook_body,self.outlook_global_appointment_id,self.outlook_last_modification_time)
+        return self._description
+
+    @description.setter
+    def description(self,txt):
+        self._description = txt 
