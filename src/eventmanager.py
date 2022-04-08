@@ -401,6 +401,8 @@ class EventManager:
         aula_event.add_to_institution_calendar = outlookobject["addToInstitutionCalendar"]
         aula_event.is_private = True if outlookobject["appointmentitem"].Sensitivity == 2 else False #Værdien 2 betyder privat
 
+        return aula_event
+
     def compare_calendars(self, begin, end, force_update_existing_events = False):
         #Summary of changes
         self.logger.info(" ")
@@ -493,8 +495,8 @@ class EventManager:
                     #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" has been updated in Outlook. Will attempt to do the same in AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
                     self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
-                    self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key]["appointmentitem"].LastModificationTime))
-                    self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key]["appointmentitem"].GlobalAppointmentID))
+                    self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key].last_modification_time))
+                    self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].global_appointment_iD))
                     self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
                     #events_to_create.append(aulaevents_from_outlook[key]) 
@@ -505,10 +507,10 @@ class EventManager:
 
         #Checking for events that currently only exists in Outlook and should be created in AULA
         for key in aulaevents_from_outlook:
-
             if not key in outlookevents_from_aula:
+                print(aulaevents_from_outlook[key])
                 events_to_create.append(aulaevents_from_outlook[key])
-                self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key]["appointmentitem"].subject,aulaevents_from_outlook[key]["appointmentitem"].start))
+                self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key].title, aulaevents_from_outlook[key].start_date))
 
         #Checking for events that currently only exists in AULA, and therefore should be deleted from AULA. 
         for key in outlookevents_from_aula:
