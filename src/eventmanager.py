@@ -157,7 +157,7 @@ class EventManager:
             event_to_create = self._basic_aula_event_actions(event_to_create)
 
             #Creating new event
-            is_Recurring = False
+            is_Recurring = False #TODO: Gør via variable
             if is_Recurring:
 
                 #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
