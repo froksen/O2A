@@ -218,6 +218,45 @@ class EventManager:
             #Creating new event
             #self.aulamanager.updateEvent(event_id=event_id,title=event_title,description=description,location=location, startDateTime=start_dateTime,endDateTime=end_dateTime, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
+    def _basic_aula_event_actions(self, event):
+        #If event has been created by some one else. Set in description that its the case.
+        if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
+            self.logger.debug("Event was created by another user. Appending to description")
+            event.description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event.outlook_organizer).strip()) + "</p>" +  event.description
+
+        #Only attempt to add attendees to event if created by the user them self. 
+        if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
+
+            self.logger.info("Searching in AULA for attendees:")
+            for attendee in event.outlook_required_attendees:
+                attendee = attendee.strip()
+
+                if attendee == str(event.outlook_organizer) or attendee == "":
+                    self.logger.debug("     Attendee is organizer - Skipping")
+                    continue
+
+                #Removes potential emails from contact name
+                attendee = attendee.split("(")[0].strip()
+
+                #Checks if person should be replaced with other name from CSV-file
+                csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
+
+                if not csv_aula_name == None:
+                    self.logger.info("      NOTE: Attendee %s Outlook name was found in CSV-file was replaced with %s" %(attendee,csv_aula_name))
+                    attendee = csv_aula_name
+
+                #Searching for name in AULA
+                search_result = self.aulamanager.findRecipient(attendee)
+
+                if not search_result == None:
+                    self.logger.info("      Attendee %s was found in AULA!" %(attendee))
+                    event.attendee_ids.append(search_result)
+                else:
+                    self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
+
+                time.sleep(0.5)
+
+            return event
 
 
     def update_aula_calendar(self, changes):
@@ -244,42 +283,7 @@ class EventManager:
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
-            #If event has been created by some one else. Set in description that its the case.
-            if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create.outlook_organizer).strip(): 
-                self.logger.debug("Event was created by another user. Appending to description")
-                event_to_create.description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event_to_create.outlook_organizer).strip()) + "</p>" +  event_to_create.description
-
-            #Only attempt to add attendees to event if created by the user them self. 
-            if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create.outlook_organizer).strip(): 
-
-                self.logger.info("Searching in AULA for attendees:")
-                for attendee in event_to_create.outlook_required_attendees:
-                    attendee = attendee.strip()
-
-                    if attendee == str(event_to_create.outlook_organizer) or attendee == "":
-                        self.logger.debug("     Attendee is organizer - Skipping")
-                        continue
-
-                    #Removes potential emails from contact name
-                    attendee = attendee.split("(")[0].strip()
-
-                    #Checks if person should be replaced with other name from CSV-file
-                    csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
-
-                    if not csv_aula_name == None:
-                        self.logger.info("      NOTE: Attendee %s Outlook name was found in CSV-file was replaced with %s" %(attendee,csv_aula_name))
-                        attendee = csv_aula_name
-
-                    #Searching for name in AULA
-                    search_result = self.aulamanager.findRecipient(attendee)
-
-                    if not search_result == None:
-                        self.logger.info("      Attendee %s was found in AULA!" %(attendee))
-                        event_to_create.attendee_ids.append(search_result)
-                    else:
-                        self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
-
-                    time.sleep(0.5)
+            event_to_create = self._basic_aula_event_actions(event_to_create)
 
             #Creating new event
             is_Recurring = False
