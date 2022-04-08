@@ -139,13 +139,13 @@ class EventManager:
 
         #If no changes, then do nothing
         if len(changes['events_to_create']) <= 0 and len(changes['events_to_remove']) <= 0 and len(changes['events_to_update']) <= 0:
-            self.logger.info("No changes. Process completed")
+            self.logger.info("Ingen ændringer. Processen er afsluttet")
             return
 
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
             event_id = event_to_remove["appointmentitem"].aula_id #Should be regexp instead!
-            self.logger.info("Attempting to REMOVE event: %s " %(event_title))
+            self.logger.info("Prøver at FJERNE begivenheden: %s " %(event_title))
             self.aulamanager.deleteEvent(event_id)
 
         for event_to_update in changes["events_to_update"]:
@@ -268,7 +268,7 @@ class EventManager:
         events_to_remove = []
         events_to_update = []
 
-        self.logger.info("..:: CHANGES :: ...")
+        self.logger.info("..:: ÆNDRINGER :: ...")
 
 
 
@@ -278,11 +278,11 @@ class EventManager:
             dateobj = aulaevents_from_outlook[key]["appointmentitem"].start.replace(tzinfo=pytz.UTC)
 
             if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
-                self.logger.info("Outlook event \"%s\" that begins at \"%s\" is in the past. Skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
+                self.logger.info("Outlook begivenheden \"%s\" der begynder \"%s\" er fra før nu. Springer over." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
             if aulaevents_from_outlook[key]["appointmentitem"].IsRecurring and aulaevents_from_outlook[key]["appointmentitem"].GetRecurrencePattern().RecurrenceType == 5:
-                self.logger.info("NOTICE: Outlook event \"%s\" that begins at \"%s\" is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
+                self.logger.info("OBS: Outlook begivenehder \"%s\" der begynder \"%s\" er indstillet til at blive gentaget årlig. Dette er pt. ikke understøttet af AULA! Derfor vil begivenheden ikke blive oprettet.." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
             events_to_keep[key] = self.__from_outlookobject_to_aulaevent(aulaevents_from_outlook[key]) #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
@@ -298,7 +298,7 @@ class EventManager:
             dateobj = dateobj + dt.timedelta(hours=2)
 
             if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
-                self.logger.info("AULA event \"%s\" that begins at \"%s\" is in the past. Skipped." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+                self.logger.info("AULA begivenheden \"%s\" der begynder \"%s\" er fra før nu. Springer over." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
                 continue
 
             events_to_keep[key] = outlookevents_from_aula[key] #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
@@ -310,7 +310,7 @@ class EventManager:
         for key in outlookevents_from_aula:
             if outlookevents_from_aula[key]["isDuplicate"] == True:
                 events_to_remove.append(outlookevents_from_aula[key])
-                self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+                self.logger.info("Begivenheden \"%s\" der begynder \"%s\" er en dublet. Den ekstra optegnelse vil blive fjenet fra AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
 
         #Checking for events that has been updated or needs to be forced updated, and exists both places
         for key in aulaevents_from_outlook:
@@ -318,7 +318,7 @@ class EventManager:
                 
                 #If forceupdate is enabled
                 if force_update_existing_events == True:
-                    self.logger.info("Event \"%s\" will be force updated." %(outlookevents_from_aula[key]["appointmentitem"].subject))
+                    self.logger.info("Begivenheden \"%s\" vil blive tvunget opdateret." %(outlookevents_from_aula[key]["appointmentitem"].subject))
 
                     #Adds AULA eventid to array
                     aulaevents_from_outlook[key]["appointmentitem"].id = outlookevents_from_aula[key]["appointmentitem"].aula_id
@@ -330,11 +330,11 @@ class EventManager:
                 #If event has been updated, but force update is not set.
                 if str(aulaevents_from_outlook[key].outlook_last_modification_time) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
                     #events_to_remove.append(outlookevents_from_aula[key])
-                    self.logger.info("Event \"%s\" has been updated in Outlook. Will attempt to do the same in AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
-                    self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
-                    self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key].outlook_last_modification_time))
-                    self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].outlook_global_appointment_id))
-                    self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
+                    self.logger.info("Begivenhden \"%s\" er blevet opdateret i Outlook. Vil forsøge, at opdatere på AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
+                    self.logger.info(" - LastModificationTime fra AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
+                    self.logger.info(" - LastModificationTime fra Outlook: %s" %(aulaevents_from_outlook[key].outlook_last_modification_time))
+                    self.logger.info(" - Outlook begivenhed GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].outlook_global_appointment_id))
+                    self.logger.info(" - AULA begivenhed GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
                     #events_to_create.append(aulaevents_from_outlook[key]) 
 
@@ -346,7 +346,7 @@ class EventManager:
         for key in aulaevents_from_outlook:
             if not key in outlookevents_from_aula:
                 events_to_create.append(aulaevents_from_outlook[key])
-                self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key].title, aulaevents_from_outlook[key].start_date))
+                self.logger.info("Begivenheden \"%s\" der begynder \"%s\" findes ikke i AULA. Vil blive oprettet i AULA." %(aulaevents_from_outlook[key].title, aulaevents_from_outlook[key].start_date))
 
         #Checking for events that currently only exists in AULA, and therefore should be deleted from AULA. 
         for key in outlookevents_from_aula:
@@ -354,14 +354,14 @@ class EventManager:
             if not key in aulaevents_from_outlook:
                 if not key in events_to_remove:
                     events_to_remove.append(outlookevents_from_aula[key])
-                    self.logger.info("Event \"%s\" that begins at \"%s\" only exists in AULA. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
+                    self.logger.info("Begivenheden \"%s\" der begynder \"%s\" findes kun i AULA. Vil blive fjernet fra AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
 
         #Summary of changes
         self.logger.info(" ")
-        self.logger.info("..:: CHANGES SUMMARY :: ...")
-        self.logger.info("Events to be created: %s" %(len(events_to_create)))
-        self.logger.info("Events to be updated: %s" %(len(events_to_update)))
-        self.logger.info("Events to be removed: %s" %(len(events_to_remove)))
+        self.logger.info("..:: OPSAMLING AF ÆNDRIGNER :: ...")
+        self.logger.info("Begivenheder der skal oprettes: %s" %(len(events_to_create)))
+        self.logger.info("Begivenheder der skal opdateres: %s" %(len(events_to_update)))
+        self.logger.info("Begivenheder der skal fjernes: %s" %(len(events_to_remove)))
         self.logger.info(" ")
 
         #time.sleep(10)
