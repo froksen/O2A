@@ -268,18 +268,13 @@ class EventManager:
 
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
-            #event_url = event_to_remove["aula_event_url"]
             event_id = event_to_remove["appointmentitem"].aula_id #Should be regexp instead!
-            #event_GlobalAppointmentID = event_to_remove["appointmentitem"].GlobalAppointmentID
-            
-            #Removing event
             self.logger.info("Attempting to REMOVE event: %s " %(event_title))
             self.aulamanager.deleteEvent(event_id)
 
-        #time.sleep(5)
-
         for event_to_update in changes["events_to_update"]:
-            self.aula_event_update(event_to_update)
+            event_to_update = self._basic_aula_event_actions(event_to_update)
+            self.aulamanager.updateEvent(event_to_update)
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
@@ -450,31 +445,30 @@ class EventManager:
                     self.logger.info("Event \"%s\" will be force updated." %(outlookevents_from_aula[key]["appointmentitem"].subject))
 
                     #Adds AULA eventid to array
-                    aulaevents_from_outlook[key]["event_id"] = outlookevents_from_aula[key]["appointmentitem"].aula_id
+                    aulaevents_from_outlook[key]["appointmentitem"].id = outlookevents_from_aula[key]["appointmentitem"].aula_id
                     events_to_update.append(aulaevents_from_outlook[key]) 
 
                     #Prevents the same event to be set en both update metods. 
                     continue
-
+  
                 #If event has been updated, but force update is not set.
                 if str(aulaevents_from_outlook[key].outlook_last_modification_time) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
                     #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Event \"%s\" has been updated in Outlook. Will attempt to do the same in AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
                     self.logger.info(" - LastModificationTime from AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
-                    self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key].last_modification_time))
-                    self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].global_appointment_iD))
+                    self.logger.info(" - LastModificationTime from Outlook: %s" %(aulaevents_from_outlook[key].outlook_last_modification_time))
+                    self.logger.info(" - Outlook event GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].outlook_global_appointment_id))
                     self.logger.info(" - AULA event GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
                     #events_to_create.append(aulaevents_from_outlook[key]) 
 
                     #Adds AULA eventid to array
-                    aulaevents_from_outlook[key]["event_id"] = outlookevents_from_aula[key]["appointmentitem"].aula_id
+                    aulaevents_from_outlook[key].id = outlookevents_from_aula[key]["appointmentitem"].aula_id
                     events_to_update.append(aulaevents_from_outlook[key]) 
 
         #Checking for events that currently only exists in Outlook and should be created in AULA
         for key in aulaevents_from_outlook:
             if not key in outlookevents_from_aula:
-                print(aulaevents_from_outlook[key])
                 events_to_create.append(aulaevents_from_outlook[key])
                 self.logger.info("Event \"%s\" that begins at \"%s\" does not exists in AULA. Set to be created in AULA." %(aulaevents_from_outlook[key].title, aulaevents_from_outlook[key].start_date))
 

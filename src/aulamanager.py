@@ -247,7 +247,7 @@ class AulaManager:
         return text
             #foundText = m1.group(0)
 
-    def updateEvent(self, event_id, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def updateEvent(self, aula_event):
         session = self.getSession()
         url = self.getAulaApiUrl()
 
@@ -257,14 +257,14 @@ class AulaManager:
             'method': 'calendar.updateSimpleEvent'
             }
 
-        description = self.teams_url_fixer(description)
+        aula_event.description = self.teams_url_fixer(aula_event.description)
 
         data = {
             "creator":{"id":self.getProfileId()},
             "institutionCode":self.getProfileinstitutionCode()
-            ,"description":description,
-            'primaryResource': location,
-            'primaryResourceText' : location,
+            ,"description":aula_event.description,
+            'primaryResource': aula_event.location,
+            'primaryResourceText' : aula_event.location,
             "additionalResources":[],
             "additionalResourceText":None,
             "invitees":[],
@@ -277,23 +277,23 @@ class AulaManager:
             "eventClass":"basic",
             "responseDeadline":None,
             "isDeadlineExceeded":False,
-            "hideInOwnCalendar":hideInOwnCalendar,
+            'addToInstitutionCalendar': aula_event.add_to_institution_calendar,
+            'hideInOwnCalendar': aula_event.hide_in_own_calendar,
             "invitedGroupHomeChildren":[],
-            "id":event_id,
-            "title":title,
-            "allDay":allDay,
-            "startDateTime": startDateTime , #"2021-10-03T10:10:00.0000+02:00",
-            "endDateTime":endDateTime, #"2021-10-03T12:00:00.0000+02:00",
+            "id":aula_event.id,
+            "title":aula_event.title,
+            "allDay":aula_event.all_day,
+            "startDateTime": aula_event.start_date_time , #"2021-10-03T10:10:00.0000+02:00",
+            "endDateTime":aula_event.end_date_time, #"2021-10-03T12:00:00.0000+02:00",
             #"oldEndDateTime":"2021-10-03T10:00:00+00:00",
             #"oldStartDateTime":"2021-10-03T01:10:00+00:00",
             "responseRequired":True,
-            "private":isPrivate,
+            "private":aula_event.is_private,
             "type":"event",
             "addedToInstitutionCalendar":False,
             #"start":"2021-10-03T01:10:00+00:00",
             #"end":"2021-10-03T10:00:00+00:00",
             "invitedGroupHomes":[],
-            "addToInstitutionCalendar":addToInstitutionCalendar,
             "additionalLocations":[],
             "resources":[],
             "pattern":"never",
@@ -301,9 +301,9 @@ class AulaManager:
             "weekdayMask":[False,False,False,False,False,False,False],
             "maxDate":None,
             "interval":0,
-            "eventId":event_id,
-            "isPrivate":isPrivate,
-            "inviteeIds": attendee_ids, #[],
+            "eventId":aula_event.id,
+            "isPrivate":aula_event.is_private,
+            "inviteeIds": aula_event.attendee_ids, #[],
             "invitedGroupIds":[],
             "resourceIds":[],
             "additionalLocationIds":[],
@@ -316,9 +316,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
 
     #def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
     def createSimpleEvent(self, aula_event = AulaEvent):
