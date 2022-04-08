@@ -1,4 +1,5 @@
 from dateutil.relativedelta import relativedelta
+from aulaevent import AulaEvent, AulaNewEvent
 from outlookmanager import OutlookManager
 from aulamanager import AulaManager
 import datetime as dt
@@ -221,7 +222,6 @@ class EventManager:
 
     def update_aula_calendar(self, changes):
 
-
         #If no changes, then do nothing
         if len(changes['events_to_create']) <= 0 and len(changes['events_to_remove']) <= 0 and len(changes['events_to_update']) <= 0:
             self.logger.info("No changes. Process completed")
@@ -377,7 +377,29 @@ class EventManager:
             else:
                 self.aulamanager.createSimpleEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
 
+    def __from_outlookobject_to_aulaevent(self,outlookobject):
+        aula_event = AulaEvent()
 
+        aula_event.id = ""
+        aula_event.outlook_global_appointment_id = outlookobject["appointmentitem"].GlobalAppointmentID
+        aula_event.outlook_organizer = outlookobject["appointmentitem"].Organizer
+        aula_event.institution_code = ""
+        aula_event.creator_inst_profile_id = ""
+        aula_event.title = outlookobject["appointmentitem"].subject
+        aula_event.type = ""
+        aula_event.start_date = outlookobject["aula_startdate"]
+        aula_event.end_date = outlookobject["aula_enddate"]
+        aula_event.start_time = outlookobject["aula_starttime"]
+        aula_event.end_time = outlookobject["aula_endtime"]
+        aula_event.start_timezone  = outlookobject["aula_startdate_timezone"]
+        aula_event.end_timezone = outlookobject["aula_enddate_timezone"]
+        aula_event.outlook_last_modification_time = outlookobject["appointmentitem"].LastModificationTime
+        aula_event.all_day = outlookobject["appointmentitem"].AllDayEvent
+        aula_event.private = True if outlookobject["appointmentitem"].Sensitivity == 2 else False #Værdien 2 betyder privat
+        aula_event.is_recurring = outlookobject["appointmentitem"].IsRecurring
+        aula_event.hide_in_own_calendar = outlookobject["hideInOwnCalendar"]
+        aula_event.add_to_institution_calendar = outlookobject["addToInstitutionCalendar"]
+        aula_event.is_private = True if outlookobject["appointmentitem"].Sensitivity == 2 else False #Værdien 2 betyder privat
 
     def compare_calendars(self, begin, end, force_update_existing_events = False):
         #Summary of changes
@@ -450,7 +472,6 @@ class EventManager:
             if outlookevents_from_aula[key]["isDuplicate"] == True:
                 events_to_remove.append(outlookevents_from_aula[key])
                 self.logger.info("Event \"%s\" that begins at \"%s\" only is a dublicated entry. Set to be removed from AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
-
 
         #Checking for events that has been updated or needs to be forced updated, and exists both places
         for key in aulaevents_from_outlook:
