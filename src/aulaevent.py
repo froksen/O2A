@@ -4,11 +4,15 @@ class AulaEvent():
         self.id = ""
         self.outlook_global_appointment_id = ""
         self.outlook_last_modification_time = ""
+        self.attendee_ids = []
+        self.outlook_required_attendees = []
         self.outlook_organizer = ""
         self.institution_code = ""
         self.creator_inst_profile_id = ""
         self.title = ""
         self.type = ""
+        self.description = ""
+        self.location = ""
         self.start_date = ""
         self.end_date = ""
         self.start_time = ""

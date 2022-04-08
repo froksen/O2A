@@ -227,9 +227,6 @@ class EventManager:
             self.logger.info("No changes. Process completed")
             return
 
-        # Create a browser
-        #self.aulamanager.setBrowser(self.aulamanager.createBrowser(headless=True))
-
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
             #event_url = event_to_remove["aula_event_url"]
@@ -237,7 +234,7 @@ class EventManager:
             #event_GlobalAppointmentID = event_to_remove["appointmentitem"].GlobalAppointmentID
             
             #Removing event
-            self.logger.info("Attempting to REMOVE event: %s " %(event_title))
+            self.logger.info("Attempting to REMOVE event: %s " %(event_to_remove.title))
             self.aulamanager.deleteEvent(event_id)
 
         #time.sleep(5)
@@ -247,58 +244,38 @@ class EventManager:
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
-            event_title = event_to_create["appointmentitem"].subject
-            start_date = event_to_create["aula_startdate"]
-            start_date_timezone = event_to_create["aula_startdate_timezone"]
-            end_date = event_to_create["aula_enddate"]
-            end_date_timezone = event_to_create["aula_enddate_timezone"]
-            start_time = event_to_create["aula_starttime"]
-            end_time = event_to_create["aula_endtime"]
-            allDay = event_to_create["appointmentitem"].AllDayEvent
-            is_Recurring = event_to_create["appointmentitem"].IsRecurring
+            #event_title = event_to_create["appointmentitem"].subject
+           # start_date = event_to_create["aula_startdate"]
+            #start_date_timezone = event_to_create["aula_startdate_timezone"]
+            #end_date = event_to_create["aula_enddate"]
+            #end_date_timezone = event_to_create["aula_enddate_timezone"]
+            #end_time = event_to_create["aula_endtime"]
+            #allDay = event_to_create["appointmentitem"].AllDayEvent
+            #is_Recurring = event_to_create["appointmentitem"].IsRecurring
 
-            if allDay == True:
-                start_dateTime = str(start_date).replace("/","-")  # FORMAT: 2021-05-18
-                end_dateTime = str(end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
+            #start_time = event_to_create.start_time
+            if event_to_create.all_day == True:
+                event_to_create.start_date_time = str(event_to_create.start_date).replace("/","-")  # FORMAT: 2021-05-18
+                event_to_create.end_date_time = str(event_to_create.end_date).replace("/","-")  # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20
             else:
-                start_dateTime = str(start_date).replace("/","-") + "T" + start_time + start_date_timezone  # FORMAT: 2021-05-18T15:00:00+02:00
-                end_dateTime = str(end_date).replace("/","-") + "T" + end_time + end_date_timezone # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
+                event_to_create.start_date_time = str(event_to_create.start_date).replace("/","-") + "T" + event_to_create.start_time + event_to_create.start_timezone  # FORMAT: 2021-05-18T15:00:00+02:00
+                event_to_create.end_date_time = str(event_to_create.end_date).replace("/","-") + "T" + event_to_create.end_time + event_to_create.end_timezone # FORMAT: 2021-05-18T15:00:00+02:00 2021-05-20T19:45:01T+02:00
 
-            location = event_to_create["appointmentitem"].location 
-            sensitivity = event_to_create["appointmentitem"].Sensitivity 
-            description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create["appointmentitem"].body,event_to_create["appointmentitem"].GlobalAppointmentID,event_to_create["appointmentitem"].LastModificationTime)
-            attendees = []
-            attendee_ids = []
-            isPrivate = False
-            addToInstitutionCalendar = event_to_create["addToInstitutionCalendar"]
-            hideInOwnCalendar = event_to_create["hideInOwnCalendar"]
-
-            #Sensitivity == 2 means private
-            if sensitivity == 2:
-                isPrivate = True
+            event_to_create.description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(event_to_create.description,event_to_create.global_appointment_id,event_to_create.last_modification_time)
 
             #If event has been created by some one else. Set in description that its the case.
-            if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
+            if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create.outlook_organizer).strip(): 
                 self.logger.debug("Event was created by another user. Appending to description")
-                description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event_to_create["appointmentitem"].Organizer).strip()) + "</p>" + description
+                event_to_create.description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event_to_create.outlook_organizer).strip()) + "</p>" +  event_to_create.description
 
             #Only attempt to add attendees to event if created by the user them self. 
-            if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create["appointmentitem"].Organizer).strip(): 
-                attendees = event_to_create["appointmentitem"].RequiredAttendees.split(";") #| event_to_create["appointmentitem"].OptionalAttendees.split(";") #Both optional and required attendees. In AULA they are the same.
-                attendees = attendees + event_to_create["appointmentitem"].OptionalAttendees.split(";") 
-
-                #Removes dublicates
-                attendees = list(dict.fromkeys(attendees))
-                
-                #Appends all recipeients to an array and attempts to add them later to AULA.
-                for Recipient in event_to_create["appointmentitem"].Recipients:
-                    attendees.append(Recipient.name)
+            if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event_to_create.outlook_organizer).strip(): 
 
                 self.logger.info("Searching in AULA for attendees:")
-                for attendee in attendees:
+                for attendee in event_to_create.outlook_required_attendees:
                     attendee = attendee.strip()
 
-                    if attendee == str(event_to_create["appointmentitem"].Organizer) or attendee == "":
+                    if attendee == str(event_to_create.outlook_organizer) or attendee == "":
                         self.logger.debug("     Attendee is organizer - Skipping")
                         continue
 
@@ -317,13 +294,14 @@ class EventManager:
 
                     if not search_result == None:
                         self.logger.info("      Attendee %s was found in AULA!" %(attendee))
-                        attendee_ids.append(search_result)
+                        event_to_create.attendee_ids.append(search_result)
                     else:
                         self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
 
                     time.sleep(0.5)
 
             #Creating new event
+            is_Recurring = False
             if is_Recurring:
 
                 #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
@@ -386,7 +364,9 @@ class EventManager:
         aula_event.institution_code = ""
         aula_event.creator_inst_profile_id = ""
         aula_event.title = outlookobject["appointmentitem"].subject
-        aula_event.type = ""
+        aula_event.type = "event"
+        aula_event.description = outlookobject["appointmentitem"].body
+        aula_event.location = outlookobject["appointmentitem"].location 
         aula_event.start_date = outlookobject["aula_startdate"]
         aula_event.end_date = outlookobject["aula_enddate"]
         aula_event.start_time = outlookobject["aula_starttime"]
@@ -400,6 +380,7 @@ class EventManager:
         aula_event.hide_in_own_calendar = outlookobject["hideInOwnCalendar"]
         aula_event.add_to_institution_calendar = outlookobject["addToInstitutionCalendar"]
         aula_event.is_private = True if outlookobject["appointmentitem"].Sensitivity == 2 else False #Værdien 2 betyder privat
+        aula_event.outlook_required_attendees = outlookobject["appointmentitem"].RequiredAttendees.split(";")
 
         return aula_event
 
