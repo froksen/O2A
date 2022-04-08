@@ -52,21 +52,23 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsrdfc",["setup","help","run","days=","force","check"])
+    opts, args = getopt.getopt(argv,"hsgrdfc",["setup","setupgui","help","run","days=","force","check"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
-    print(' -s --setup  : To setup script')
-    print(' -r --run    : To run script')
-    print(' -f --force  : Force update all existing events')
-    print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
-    print(' -h --help   : To show help')
+    print(' -s --setup    : Run setup in terminal')
+    print(' -g --setupgui : Run setup with GUI')
+    print(' -r --run      : To run script')
+    print(' -f --force    : Force update all existing events')
+    print(' -c --check    : Check if people in "contacts_to_check.csv" is present in AULA')
+    print(' -h --help     : To show help')
     sys.exit(2)
   for opt, arg in opts:
     if opt in ("-h", "--help"): 
       print('OPTIONS')
       print(' without parameter  : same as -r')
-      print(' -s --setup  : To setup script')
+      print(' -s --setup    : Run setup in terminal')
+      print(' -g --setupgui : Run setup with GUI')
       print(' -r --run    : To run script')
       print(' -f --force  : Force update all existing events')
       print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
@@ -79,6 +81,9 @@ def main(argv):
       logger.warning("Force update is set to: " + str(forceupdate))
     elif opt in ("-r", "--run"): 
       run_script(forceupdate)
+    elif opt in ("-g", "--setupgui"):
+      setupmgr = SetupManager()
+      setupmgr.run_setup_gui()
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
       setupmgr.do_setup()
