@@ -14,9 +14,6 @@ class AulaBaseEvent():
         self.add_to_institution_calendar = False
         self.is_private = False
 
-
-
 class AulaNewEvent(AulaBaseEvent):
     pass
-
         

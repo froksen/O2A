@@ -10,6 +10,7 @@ import keyring
 from setupmanager import SetupManager
 from peoplecsvmanager import PeopleCsvManager
 import itertools
+import pytz
 
 class EventManager:
     def __init__(self):
@@ -409,10 +410,8 @@ class EventManager:
         self.logger.info("..:: CHANGES :: ...")
 
 
-        aulaevents_from_outlook_keep = {}
-        import pytz
 
-        #Removing events that are from the past
+        #Springer over OUTLOOK begivenheder der ligger med start dato før d.d.
         events_to_keep = {}
         for key in aulaevents_from_outlook:
             dateobj = aulaevents_from_outlook[key]["appointmentitem"].start.replace(tzinfo=pytz.UTC)
@@ -425,10 +424,11 @@ class EventManager:
                 self.logger.info("NOTICE: Outlook event \"%s\" that begins at \"%s\" is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
-            events_to_keep[key] = aulaevents_from_outlook[key]
+            events_to_keep[key] = aulaevents_from_outlook[key] #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
 
-        aulaevents_from_outlook = events_to_keep
+        aulaevents_from_outlook = events_to_keep #Renavngives listen.
 
+        #Springer over AULA begivenheder der ligger med start dato før d.d.
         events_to_keep = {}
         for key in outlookevents_from_aula:
 
@@ -440,11 +440,12 @@ class EventManager:
                 self.logger.info("AULA event \"%s\" that begins at \"%s\" is in the past. Skipped." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
                 continue
 
-            events_to_keep[key] = outlookevents_from_aula[key]
+            events_to_keep[key] = outlookevents_from_aula[key] #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
 
-        outlookevents_from_aula = events_to_keep
+        outlookevents_from_aula = events_to_keep#Renavngives listen.
 
-        #Checking for dublicate entryes to be removed
+
+        # TJEKKER FOR DULETTER FRA AULA. Altså samme begivenhed er oprettet flere gange. Hvis da, da fjernes den ene udgave.
         for key in outlookevents_from_aula:
             if outlookevents_from_aula[key]["isDuplicate"] == True:
                 events_to_remove.append(outlookevents_from_aula[key])
