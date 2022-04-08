@@ -1,5 +1,5 @@
 from dateutil.relativedelta import relativedelta
-from aulaevent import AulaEvent, AulaNewEvent
+from aulaevent import AulaEvent
 from outlookmanager import OutlookManager
 from aulamanager import AulaManager
 import datetime as dt
@@ -446,7 +446,7 @@ class EventManager:
                 self.logger.info("NOTICE: Outlook event \"%s\" that begins at \"%s\" is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
-            events_to_keep[key] = aulaevents_from_outlook[key] #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
+            events_to_keep[key] = self.__from_outlookobject_to_aulaevent(aulaevents_from_outlook[key]) #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
 
         aulaevents_from_outlook = events_to_keep #Renavngives listen.
 
