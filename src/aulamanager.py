@@ -186,9 +186,9 @@ class AulaManager:
         #print(json.dumps(response, indent=4))
 
         if(response["status"]["message"] == "OK"):
-            self.logger.info("Event was removed!")
+            self.logger.info("Begivenheden blev fjernet!")
         else:
-            self.logger.warning("Event was not removed!")
+            self.logger.warning("Begivenheden blev IKKE fjernet!")
 
     def teams_url_fixer(self,text):
         #Patterns for all the different parts of the Teams Meeting
@@ -203,7 +203,7 @@ class AulaManager:
         meeting_options = re.search(pattern_meeting_options,text)
 
         if teams_meeting and know_more and meeting_options:
-            self.logger.info("Microsoft Teams meeting detected. Fixing urls.")
+            self.logger.info("Microsoft Teams meeting fundet. Fikser urls.")
 
         #If they are found, then do differnt things. 
         if teams_meeting:
@@ -316,9 +316,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
+            self.logger.info("Begivenheden \"%s\" med start dato %s blev opdateret." %(aula_event.title,aula_event.start_date_time))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
+            self.logger.warning("Begivenheden \"%s\" med start dato %s blev IKKE opdateret" %(aula_event.title,aula_event.start_date_time))
 
     #def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
     def createSimpleEvent(self, aula_event = AulaEvent):
@@ -402,9 +402,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Event \"%s\" with start date %s was SUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
+            self.logger.info("Begivenheden \"%s\" med startdato %s blev oprettet." %(aula_event.title,aula_event.start_date_time))
         else:
-            self.logger.warning("Event \"%s\" with start date %s was UNSUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
+            self.logger.warning("Begivenheden \"%s\" med startdato %s blev IKKE oprettet." %(aula_event.title,aula_event.start_date_time))
 
     def updateRecuringEvent(self, event_id, title, description, startDateTime, endDateTime,maxDate, pattern, interval, weekmask = [], attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
         olFriday = 32    # Friday
@@ -666,7 +666,7 @@ class AulaManager:
         # with the Aula login.
         counter = 0
         success = False
-        self.logger.info("Attempting to login to AULA")
+        self.logger.info("Forsøger at logge på AULA...")
         while success == False and counter < 10:
             try:
                 # Parse response using BeautifulSoup
@@ -681,7 +681,7 @@ class AulaManager:
                     login_errors = soup.find_all("span", {"class": "form-error-message"})
 
                     for login_error in login_errors:
-                        self.logger.critical("UNI-Login error message: " + str(login_error.text))
+                        self.logger.critical("UNI-LOGIN Fejlmeddelelse: " + str(login_error.text))
                         login_response.error_messages.append("UNI-Login error message: " + str(login_error.text))
                         counter = 10 #Breaks the loop. TODO: MAKE Pythonic
 
@@ -735,7 +735,7 @@ class AulaManager:
         
         # Login succeeded without an HTTP error code and API requests can begin 
         if success == True and response.status_code == 200:
-            self.logger.info("Login was successful")
+            self.logger.info("Login var succesfuldt!")
 
             # All API requests go to the below url
             # Each request has a number of parameters, of which method is always included
@@ -830,7 +830,7 @@ class AulaManager:
 
         # Login failed for some unknown reason
         else:
-            self.logger.critical("Log in was unsuccessful")
+            self.logger.critical("Login mislykkes!")
 
             #Setting information for response
             login_response.status = False
@@ -855,8 +855,8 @@ class AulaManager:
             monthsDiff = 1
 
         events = []
-        self.logger.info("Reading AULA calendar")
-        self.logger.info("Locating events in calendars")
+        self.logger.info("Læser AULA kalendere")
+        self.logger.info("Lokaliserer begivenheder i kalendere")
         step = 0
         for months in range(monthsDiff):
             lookUp_begin = startDatetime + relativedelta(months=months)
@@ -871,14 +871,14 @@ class AulaManager:
             endTimeFormattet = lookUp_end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
 
             step = step +1
-            self.logger.info("  (%i of %i) Events from %s to %s"%(step,monthsDiff, startTimeFormattet,endTimeFormattet))
+            self.logger.info("  (%i of %i) Begivenheder fra %s til %s"%(step,monthsDiff, startTimeFormattet,endTimeFormattet))
 
             #Includes institution
-            self.logger.info("      In AULA institution calendar")
+            self.logger.info("      I institution kalender")
             events = events + self.getEventsForInstitutions(self.getProfileId(),self.getProfileinstitutionCode(),startTimeFormattet,endTimeFormattet)
 
             #Gets own events
-            self.logger.info("      In AULA personal calendar")
+            self.logger.info("      I personlig kalender")
             events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
 
             #Seems to be god with a simple cooldown time here. 
@@ -888,16 +888,16 @@ class AulaManager:
             pass
 
         aula_events = {}
-        self.logger.info("Reading current AULA calendar events:")
+        self.logger.info("Læser følgende AULA begivenhed:")
         index = 1
         for event in events:
             response = self.getEventById(event["id"])
             #print(response["data"])
 
             try:
-                self.logger.info("     (%s/%s) Event %s with start date %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
+                self.logger.info("     (%s/%s) Begivenhed %s med startdato %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
             except TypeError as e:
-                self.logger.warning("Skipping due to error: %s" %(e))
+                self.logger.warning("Springer over grundet fejl!: %s" %(e))
 
             mAppointmentitem = appointmentitem()
             mAppointmentitem.subject = response["data"]["title"]
