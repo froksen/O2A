@@ -198,8 +198,8 @@ class OutlookManager:
         <head></head>
         <body>
             <font color="Black" size=-1 face="Arial">
-            <p>Mojn {str(exchange_user)}!</p>
-            Outlook2Aula overførselsprogrammet prøvede at køre på din computer. Der skete desværre en eller flere fejl, som gjorde at programmet ikke kunne logge på AULA.<br><br>
+            <p>Kære {str(exchange_user)}!</p>
+            Outlook2Aula overførselsprogrammet prøvede at køre på din computer. Der skete desværre en eller flere fejl, som gjorde at afviklingen mislykkes.<br><br>
 
             <b>Følgende fejl blev meldt:</b>
             <ul>
