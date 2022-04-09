@@ -748,7 +748,6 @@ class AulaManager:
                 }
             # Perform request, convert to json and print on screen
             response_profile = session.get(url, params=params).json()
-            #print(json.dumps(response_profile, indent=4))
 
             self.setProfilesByLogin(response_profile)
 
@@ -759,7 +758,6 @@ class AulaManager:
             }
             # Perform request, convert to json and print on screen
             response_profile_context = session.get(url, params=params).json()
-            #print(json.dumps(response_profile_context, indent=4))
 
             # Loop to get institutions and children associated with profile and save
             # them to lists
@@ -782,10 +780,6 @@ class AulaManager:
                 'activeInstitutionCodes[]': institutions
             }
 
-            # Perform request, convert to json and print on screen
-            #notifications_response = session.get(url, params=params).json()
-            #print(json.dumps(notifications_response, indent=4))
-
             ### Fourth example API request, only succeeds when the third has been run before ###
             params = {
                 'method': 'messaging.getThreads',
@@ -793,10 +787,6 @@ class AulaManager:
                 'orderDirection': 'desc',
                 'page': '0'
             }
-
-            # Perform request, convert to json and print on screen
-            #response_threads = session.get(url, params=params).json()
-            #print(json.dumps(response_threads, indent=4))
 
             ### Fifth example. getAllPosts uses a combination of children and instituion profiles. ###
             params = {
@@ -848,7 +838,6 @@ class AulaManager:
        
         #Calculates the diffence between the dates.
         monthsDiff = abs((endDatetime.year - startDatetime.year)) * 12 + abs(endDatetime.month - startDatetime.month)
-        #print(monthsDiff)
 
         #Makes sure that even if only one event in same month, the loop will be run
         if monthsDiff <= 0:
@@ -892,7 +881,6 @@ class AulaManager:
         index = 1
         for event in events:
             response = self.getEventById(event["id"])
-            #print(response["data"])
 
             try:
                 self.logger.info("     (%s/%s) Begivenhed %s med startdato %s" %(str(index),str(len(events)),response["data"]["title"],response["data"]["startDateTime"]))
@@ -908,13 +896,7 @@ class AulaManager:
             mAppointmentitem.location = response["data"]["primaryResourceText"] 
 
             description = response["data"]["description"]["html"]
-            #Finds AULA-Url for event
-            #m = re.search('(?P<url>https?://[^\s]+)', description)
-            #if m:
-            #    aula_calendar_url = m.group("url").replace(",","")
 
-            #Find GAID in description
-            #m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
             m1 = re.search('o2a_outlook_GlobalAppointmentID=\S*', description)
             if m1:
                 outlook_GlobalAppointmentID = m1.group(0)
@@ -933,11 +915,6 @@ class AulaManager:
                 isDuplicate = False 
                 if outlook_GlobalAppointmentID in aula_events.keys():
                     pass
-                    #If event is added to institution calendar and also in own. Duples will occur. This prevents events from beeing removed. 
-                    #if response["data"]["hideInOwnCalendar"] == True or response["data"]["hideInOwnCalendar"] == False and response["data"]["addedToInstitutionCalendar"] == False or  response["data"]["addedToInstitutionCalendar"] == False: 
-                    #    outlook_GlobalAppointmentID = str(index) + "_" + outlook_GlobalAppointmentID
-                    #    isDuplicate = True
-
 
                 aula_events[outlook_GlobalAppointmentID]={
                     "appointmentitem":mAppointmentitem,
@@ -947,9 +924,6 @@ class AulaManager:
                 }
 
             index = index +1
-                #print( aula_events[outlook_GlobalAppointmentID]["outlook_GlobalAppointmentID"])
-
-
 
         return aula_events
 
@@ -963,27 +937,3 @@ class AulaManager:
         self.login(aula_usr,aula_pwd)
 
         self.updateEvent(287982478,"222NyTitel1","Min seje beskrivelse","2021-10-03T10:10:00.0000+02:00","2021-10-03T11:00:00.0000+02:00",[],False,False,True,False)
-
-        #events = self.getEvents(None, None)
-
-        #for event in events:
-           # print(event["outlook_GlobalAppointmentID"])
-
-        #events = self.getEventsByProfileIdsAndResourceIds(self.getProfileId())
-
-        #for event in events:
-        #    self.getEventById(event["id"])
-
-
-    
-        
-        #invites = []
-        #invites.append(aulagmr.findRecipient("Jesper Qvist"))
-
-       # self.createEvent("TEST BEGIVENHED","BESKRIVELSEN AF BEGIVENHEDEN","2021-05-19T20:00:00+02:00","2021-05-19T23:00:00+02:00",invites,False,False)
-
-       
-
-
-#aulagmr = AulaManager()
-#aulagmr.test_run()
