@@ -35,7 +35,7 @@ class EventManager:
         #Login to AULA
         login_response = self.aulamanager.login(aula_usr,aula_pwd)
         if not login_response.status == True:
-            self.logger.critical("Program stopped because unable to log in to AULA.")
+            self.logger.critical("Programmet stoppede uventet, da det ikke kunne logge ind på AULA!.")
             self.outlookmanager.send_a_mail(login_response)
             sys.exit()
             return
@@ -97,18 +97,18 @@ class EventManager:
     def _basic_aula_event_actions(self, event):
         #If event has been created by some one else. Set in description that its the case.
         if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
-            self.logger.debug("Event was created by another user. Appending to description")
+            self.logger.debug("Begivenheden er blevet oprettet af en anden person. Tilføjer dette til beskrivelsen.")
             event.description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event.outlook_organizer).strip()) + "</p>" +  event.description
 
         #Only attempt to add attendees to event if created by the user them self. 
         if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
 
-            self.logger.info("Searching in AULA for attendees:")
+            self.logger.info("Søger efter deltagere:")
             for attendee in event.outlook_required_attendees:
                 attendee = attendee.strip()
 
                 if attendee == str(event.outlook_organizer) or attendee == "":
-                    self.logger.debug("     Attendee is organizer - Skipping")
+                    self.logger.debug("     Deltageren er arrangør - Springer over")
                     continue
 
                 #Removes potential emails from contact name
@@ -118,17 +118,17 @@ class EventManager:
                 csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
 
                 if not csv_aula_name == None:
-                    self.logger.info("      NOTE: Attendee %s Outlook name was found in CSV-file was replaced with %s" %(attendee,csv_aula_name))
+                    self.logger.info("      OBS: Dektagerens %s Outlook navn blev fundet i CSV-filen og blev erstattet med %s" %(attendee,csv_aula_name))
                     attendee = csv_aula_name
 
                 #Searching for name in AULA
                 search_result = self.aulamanager.findRecipient(attendee)
 
                 if not search_result == None:
-                    self.logger.info("      Attendee %s was found in AULA!" %(attendee))
+                    self.logger.info("      Deltager %s blev fundet i AULA!" %(attendee))
                     event.attendee_ids.append(search_result)
                 else:
-                    self.logger.info("      Attendee %s was NOT found in AULA!" %(attendee))
+                    self.logger.info("      Deltager %s blev IKKE fundet i AULA!" %(attendee))
 
                 time.sleep(0.5)
 
