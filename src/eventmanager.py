@@ -98,7 +98,7 @@ class EventManager:
         #If event has been created by some one else. Set in description that its the case.
         if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
             self.logger.debug("Begivenheden er blevet oprettet af en anden person. Tilføjer dette til beskrivelsen.")
-            event.description = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event.outlook_organizer).strip()) + "</p>" +  event.description
+            event.outlook_body = "<p><b>OBS:</b> Begivenheden er oprindelig oprettet af: %s" %(str(event.outlook_organizer).strip()) + "</p>" +  event.outlook_body
 
         #Only attempt to add attendees to event if created by the user them self. 
         if str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
