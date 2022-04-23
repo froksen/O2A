@@ -132,7 +132,7 @@ class EventManager:
 
                 time.sleep(0.5)
 
-            return event
+        return event
 
 
     def update_aula_calendar(self, changes):
