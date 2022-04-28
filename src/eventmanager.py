@@ -157,61 +157,24 @@ class EventManager:
             event_to_create = self._basic_aula_event_actions(event_to_create)
 
             #Creating new event
-            is_Recurring = False #TODO: Gør via variable
+            is_Recurring = event_to_create.is_recurring #TODO: Gør via variable
             if is_Recurring:
-
-                #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
-                def outlook_pattern_to_aula_pattern(x):
-                    x = int(x)
-                    return {
-                        0: "daily",
-                        1: "weekly",
-                        2: "monthly"
-                    }.get(x, "never")
-
-                def day_of_week_convert(x):
-                    x = int(x)
-                    #print("day_of_week_convert")
-                    #print(x)
-                    return {
-                        0: "daily",
-                        1: "weekly",
-                        2: "monthly"
-                    }.get(x, "never")
-
-                def day_of_week_convert(x):
-                    from collections import deque
-
-                olFriday = 32    # Friday
-                olMonday = 2     # Monday
-                olSaturday = 64  # Saturday
-                olSunday = 1     # Sunday
-                olThursday = 16  # Thursday
-                olTuesday = 4    # Tuesday
-                olWednesday = 8  # Wednesday
-                from collections import deque
-                weekDays = deque((olMonday, olTuesday, olWednesday, olThursday,
-                                olFriday, olSaturday, olSunday))
-
-                recurrence_pattern = event_to_create["appointmentitem"].GetRecurrencePattern() #Gets the pattern of the event. How it is repeated.
-                recurrence_pattern_aula = outlook_pattern_to_aula_pattern(recurrence_pattern.RecurrenceType) #Gets the type, like if its daily etc. And converts it from Outlook-naming to AULA. 
-                max_date = str(recurrence_pattern.PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
-                interval = recurrence_pattern.Interval #How often event should be repeated. 
-                day_of_week_mask = recurrence_pattern.DayOfWeekMask
-                day_of_week_mask_list = self.get_day_of_the_week_mask(day_of_week_mask)
-
-                if recurrence_pattern.RecurrenceType == 5:
-                    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated YEARLY in outlook. This is currently not supported by Aula! Event will not be created, there for proces skipped.")
-                    continue
-                #if not day_of_week_mask in weekDays:
-                #    self.logger.warning(f"NOTICE: Event {event_title} is set to be repeated more than one day a week. This is currently not supported!. Event will not be repeated, and might not be created.")
-                #    day_of_week_mask_list = []
-                #TODO: Få dette til at virke igen.
-                self.aulamanager.createRecuringEvent(title=event_title,description=description,startDateTime=start_dateTime,endDateTime=end_dateTime,maxDate=max_date,pattern=recurrence_pattern_aula,interval=interval,weekmask=day_of_week_mask_list, location=location, attendee_ids = attendee_ids, addToInstitutionCalendar=addToInstitutionCalendar,allDay=allDay,isPrivate=isPrivate,hideInOwnCalendar=hideInOwnCalendar)
+                self.aulamanager.createRecuringEvent(event_to_create)
             else:
                 self.aulamanager.createSimpleEvent(event_to_create)
 
     def __from_outlookobject_to_aulaevent(self,outlookobject):
+
+        #Read more about patterns: https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.outlook.olrecurrencetype?view=outlook-pia
+        def outlook_pattern_to_aula_pattern(x):
+            x = int(x)
+            return {
+                0: "daily",
+                1: "weekly",
+                2: "monthly"
+            }.get(x, "never")
+
+
         aula_event = AulaEvent()
 
         aula_event.id = ""
@@ -237,6 +200,11 @@ class EventManager:
         aula_event.add_to_institution_calendar = outlookobject["addToInstitutionCalendar"]
         aula_event.is_private = True if outlookobject["appointmentitem"].Sensitivity == 2 else False #Værdien 2 betyder privat
         aula_event.outlook_required_attendees = outlookobject["appointmentitem"].RequiredAttendees.split(";")
+        aula_event.interval = outlookobject["appointmentitem"].GetRecurrencePattern().Interval
+        aula_event.recurrence_pattern = outlookobject["appointmentitem"].GetRecurrencePattern()
+        aula_event.max_date = str(outlookobject["appointmentitem"].GetRecurrencePattern().PatternEndDate).split(" ")[0] #Only the date part is needed. EX: 2022-02-11 00:00:00+00:00 --> 2022-02-11
+        aula_event.aula_recurrence_pattern = outlook_pattern_to_aula_pattern(outlookobject["appointmentitem"].GetRecurrencePattern().RecurrenceType)
+        aula_event.day_of_week_mask_list = self.get_day_of_the_week_mask(outlookobject["appointmentitem"].GetRecurrencePattern().DayOfWeekMask)
 
         return aula_event
 

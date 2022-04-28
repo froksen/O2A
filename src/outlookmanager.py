@@ -122,7 +122,7 @@ class OutlookManager:
                         #print("SKIPPED")
 
                 if event.GlobalAppointmentID in aulaEvents:
-                    self.logger.debug(f'Outlook mananger: Event with title "{event.subject}" and uid "{event.GlobalAppointmentID}" is already found in Outlook. Skipping')
+                    self.logger.info(f'Outlook mananger: Event with title "{event.subject}" and uid "{event.GlobalAppointmentID}" is already found in Outlook. Skipping')
                     continue
 
                 #Array containing event information
@@ -242,7 +242,7 @@ class OutlookManager:
         outlook = win32com.client.Dispatch("Outlook.Application")
         ns = outlook.GetNamespace("MAPI")
         calendar = ns.GetDefaultFolder(9).Items
-        #calendar.IncludeRecurrences = True
+        calendar.IncludeRecurrences = True
 
         return self.__get_calendar(calendar,begin,end)
         

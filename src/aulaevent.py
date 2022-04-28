@@ -28,7 +28,13 @@ class AulaEvent():
         self.hide_in_own_calendar = False
         self.add_to_institution_calendar = False
         self.is_private = False
-    
+        self.max_date = ""
+        self.interval = False
+        self.week_mask = []
+        self.recurrence_pattern = []
+        self.aula_recurrence_pattern = []
+        self.day_of_week_mask_list = []
+
     @property
     def start_date_time(self):
         if self.all_day == True:
