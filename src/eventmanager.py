@@ -150,7 +150,12 @@ class EventManager:
 
         for event_to_update in changes["events_to_update"]:
             event_to_update = self._basic_aula_event_actions(event_to_update)
-            self.aulamanager.updateEvent(event_to_update)
+            
+            is_Recurring = event_to_update.is_recurring #TODO: Gør via variable
+            if is_Recurring:
+                self.aulamanager.updateRecuringEvent(event_to_update)
+            else:
+                self.aulamanager.updateEvent(event_to_update)
 
         #Creation of event
         for event_to_create in changes['events_to_create']:

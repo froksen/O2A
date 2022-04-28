@@ -406,7 +406,7 @@ class AulaManager:
         else:
             self.logger.warning("Begivenheden \"%s\" med startdato %s blev IKKE oprettet." %(aula_event.title,aula_event.start_date_time))
 
-    def updateRecuringEvent(self, event_id, title, description, startDateTime, endDateTime,maxDate, pattern, interval, weekmask = [], attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
+    def updateRecuringEvent(self, aula_event = AulaEvent):
         olFriday = 32    # Friday
         olMonday = 2     # Monday
         olSaturday = 64  # Saturday
@@ -424,14 +424,14 @@ class AulaManager:
             'method': 'calendar.updateRepeatingEvent'
             }
 
-        description = self.teams_url_fixer(description)
+        description = self.teams_url_fixer(aula_event.description)
 
         data = {
             "creator":{"id":self.getProfileId()},
             "institutionCode":self.getProfileinstitutionCode()
             ,"description":description,
-            'primaryResource': location,
-            'primaryResourceText' : location,
+            'primaryResource': aula_event.location,
+            'primaryResourceText' : aula_event.location,
             "additionalResources":[],
             "additionalResourceText":None,
             "invitees":[],
@@ -444,56 +444,56 @@ class AulaManager:
             "eventClass":"basic",
             "responseDeadline":None,
             "isDeadlineExceeded":False,
-            "hideInOwnCalendar":hideInOwnCalendar,
+            "hideInOwnCalendar": aula_event.hide_in_own_calendar,
             "repeating": {
-                "pattern": pattern,
-                "interval": interval,
+                "pattern": aula_event.aula_recurrence_pattern,
+                "interval": aula_event.interval,
                 "weekdayMask": [
-                False if not olSunday in weekmask else True,
-                False if not olMonday in weekmask else True,
-                False if not olTuesday in weekmask else True,
-                False if not olWednesday in weekmask else True,
-                False if not olThursday in weekmask else True,
-                False if not olFriday in weekmask else True,
-                False if not olSaturday in weekmask else True,
+                False if not olSunday in aula_event.day_of_week_mask_list else True,
+                False if not olMonday in aula_event.day_of_week_mask_list else True,
+                False if not olTuesday in aula_event.day_of_week_mask_list else True,
+                False if not olWednesday in aula_event.day_of_week_mask_list else True,
+                False if not olThursday in aula_event.day_of_week_mask_list else True,
+                False if not olFriday in aula_event.day_of_week_mask_list else True,
+                False if not olSaturday in aula_event.day_of_week_mask_list else True,
                 ],
                 "occurenceLimit": 0,
-                "maxDate": maxDate
+                "maxDate": aula_event.max_date
             },
             "invitedGroupHomeChildren":[],
-            "id":event_id,
-            "title":title,
-            "allDay":allDay,
-            "startDateTime": startDateTime , #"2021-10-03T10:10:00.0000+02:00",
-            "endDateTime":endDateTime, #"2021-10-03T12:00:00.0000+02:00",
+            "id":aula_event.id,
+            "title":aula_event.title,
+            "allDay":aula_event.all_day,
+            "startDateTime": aula_event.start_date_time , #"2021-10-03T10:10:00.0000+02:00",
+            "endDateTime":aula_event.end_date_time, #"2021-10-03T12:00:00.0000+02:00",
             #"oldEndDateTime":"2021-10-03T10:00:00+00:00",
             #"oldStartDateTime":"2021-10-03T01:10:00+00:00",
             "responseRequired":True,
-            "private":isPrivate,
+            "private":aula_event.is_private,
             "type":"event",
             "addedToInstitutionCalendar":False,
             #"start":"2021-10-03T01:10:00+00:00",
             #"end":"2021-10-03T10:00:00+00:00",
             "invitedGroupHomes":[],
-            "addToInstitutionCalendar":addToInstitutionCalendar,
+            "addToInstitutionCalendar":aula_event.add_to_institution_calendar,
             "additionalLocations":[],
             "resources":[],
-            'pattern': pattern, #EX "daily"
+            'pattern': aula_event.aula_recurrence_pattern, #EX "daily"
             "occurenceLimit":0,
             'weekdayMask': [
-                False if not olSunday in weekmask else True,
-                False if not olMonday in weekmask else True,
-                False if not olTuesday in weekmask else True,
-                False if not olWednesday in weekmask else True,
-                False if not olThursday in weekmask else True,
-                False if not olFriday in weekmask else True,
-                False if not olSaturday in weekmask else True,
+                False if not olSunday in aula_event.day_of_week_mask_list else True,
+                False if not olMonday in aula_event.day_of_week_mask_list else True,
+                False if not olTuesday in aula_event.day_of_week_mask_list else True,
+                False if not olWednesday in aula_event.day_of_week_mask_list else True,
+                False if not olThursday in aula_event.day_of_week_mask_list else True,
+                False if not olFriday in aula_event.day_of_week_mask_list else True,
+                False if not olSaturday in aula_event.day_of_week_mask_list else True,
             ],
-            "maxDate": maxDate,
-            "interval":interval,
-            "eventId":event_id,
-            "isPrivate":isPrivate,
-            "inviteeIds": attendee_ids, #[],
+            "maxDate": aula_event.max_date,
+            "interval":aula_event.interval,
+            "eventId":aula_event.id,
+            "isPrivate":aula_event.is_private,
+            "inviteeIds": aula_event.attendee_ids, #[],
             "invitedGroupIds":[],
             "resourceIds":[],
             "additionalLocationIds":[],
@@ -506,9 +506,9 @@ class AulaManager:
         #print(json.dumps(response_calendar, indent=4))
 
         if(response_calendar["status"]["message"] == "OK"):
-            self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
         else:
-            self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(title,startDateTime))
+            self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
 
     def createRecuringEvent(self, aula_event = AulaEvent):
         olFriday = 32    # Friday
