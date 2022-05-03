@@ -9,6 +9,7 @@ class AulaEvent():
         self.outlook_organizer = ""
         self.institution_code = ""
         self.creator_inst_profile_id = ""
+        self.response_required = True
         self.title = ""
         self.type = ""
         self.description = ""
