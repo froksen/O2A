@@ -64,7 +64,7 @@ class AulaEvent():
 
     @property
     def description(self):
-        self.description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;visibility: hidden;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;visibility: hidden;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;visibility: hidden;\"> o2a_outlook_LastModificationTime=%s</p>" %(self.outlook_body,self.outlook_global_appointment_id,self.outlook_last_modification_time)
+        self.description = "<p>%s</p> \n<p>&nbsp;</p> <p>_________________________________</p><p style=\"font-size:8pt;\">Denne begivenhed er oprettet via Outlook2Aula overførselsprogrammet. Undlad at ændre i begivenheden manuelt i AULA. Understående tekniske oplysninger bruges af programmet. </p><p style=\"font-size:8pt;\">o2a_outlook_GlobalAppointmentID=%s</p> <p style=\"font-size:8pt;\"> o2a_outlook_LastModificationTime=%s</p>" %(self.outlook_body,self.outlook_global_appointment_id,self.outlook_last_modification_time)
         return self._description
 
     @description.setter
