@@ -11,6 +11,7 @@ import time
 import sys
 from tkinter import *
 from tkinter import ttk
+import os
 
 class SetupManager:
     def __init__(self):
@@ -22,9 +23,39 @@ class SetupManager:
         def action_changepwd():
             self.run_setup_gui()
 
-        def action_runprogram():
-            pass
+        def action_run_program():
+            cwd = os.getcwd()
+            print(cwd)
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            print(dir_path)
+            print(f"{cwd}\O2A\main.py -r")
 
+            cmd_to_run = f'python "{cwd}\src\main.py" -r'
+            os.system(f'start /WAIT cmd /k {cmd_to_run}')
+
+        def action_force_run_program():
+            cwd = os.getcwd()
+            print(cwd)
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            print(dir_path)
+            print(f"{cwd}\O2A\main.py -r")
+
+            cmd_to_run = f'python "{cwd}\src\main.py" -f -r'
+            os.system(f'start /WAIT cmd /k {cmd_to_run}')
+
+        def action_opensheet():
+            cwd = os.getcwd()
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+
+            cmd_to_run = f'excel.exe "{cwd}\personer.csv"'
+            os.system(f'start /WAIT {cmd_to_run}')
+
+        def action_openexplorer():
+            cwd = os.getcwd()
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+
+            cmd_to_run = f'explorer.exe "{cwd}"'
+            os.system(f'start /WAIT {cmd_to_run}')
 
         mainwindow = Tk()
         mainwindow.geometry('380x200')
@@ -32,20 +63,19 @@ class SetupManager:
         style = ttk.Style()
         style.theme_use('clam')
 
-        header_label = Label( mainwindow, text="O2A - Opsætning og kørsel", relief="flat", font=("Arial Bold", 20) )
+        header_label = Label( mainwindow, text="O2A: Opsætning og kørsel", relief="flat", font=("Arial Bold", 20) )
         header_label.grid(column=0, row=0,columnspan=2)
 
         btn = Button(mainwindow, text="Indtast AULA brugernavn og kodeord", command=action_changepwd)
         btn.grid(column=0, row=1,columnspan=2)
 
-        btn = Button(mainwindow, text="Åben regneark med personer", command="")
+        btn = Button(mainwindow, text="Åben programmets mappe", command=action_openexplorer)
         btn.grid(column=0, row=2,columnspan=2)
-
         
-        btn = Button(mainwindow, text="Kør programmet", command="")
+        btn = Button(mainwindow, text="Kør programmet", command=action_run_program)
         btn.grid(column=0, row=4,columnspan=2)
 
-        btn = Button(mainwindow, text="Gennemtving opdatering af kalender", command="")
+        btn = Button(mainwindow, text="Gennemtving opdatering af kalender", command=action_force_run_program)
         btn.grid(column=0, row=5,columnspan=2)
 
 
