@@ -83,7 +83,7 @@ def main(argv):
       run_script(forceupdate)
     elif opt in ("-g", "--setupgui"):
       setupmgr = SetupManager()
-      setupmgr.run_setup_gui()
+      setupmgr.setup_menu_gui()
     elif opt in ("-s", "--setup"):
       setupmgr = SetupManager()
       setupmgr.do_setup()

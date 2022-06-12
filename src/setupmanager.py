@@ -1,6 +1,8 @@
+from distutils.core import run_setup
 from email import message
 import getpass
 from tkinter import messagebox
+import tkinter
 from venv import create
 import keyring
 import configparser
@@ -8,11 +10,46 @@ import win32com.client
 import time
 import sys
 from tkinter import *
+from tkinter import ttk
 
 class SetupManager:
     def __init__(self):
         self.config = configparser.ConfigParser()
         self.__read_config_file()
+
+    def setup_menu_gui(self):
+
+        def action_changepwd():
+            self.run_setup_gui()
+
+        def action_runprogram():
+            pass
+
+
+        mainwindow = Tk()
+        mainwindow.geometry('380x200')
+        mainwindow.title("O2A")
+        style = ttk.Style()
+        style.theme_use('clam')
+
+        header_label = Label( mainwindow, text="O2A - Opsætning og kørsel", relief="flat", font=("Arial Bold", 20) )
+        header_label.grid(column=0, row=0,columnspan=2)
+
+        btn = Button(mainwindow, text="Indtast AULA brugernavn og kodeord", command=action_changepwd)
+        btn.grid(column=0, row=1,columnspan=2)
+
+        btn = Button(mainwindow, text="Åben regneark med personer", command="")
+        btn.grid(column=0, row=2,columnspan=2)
+
+        
+        btn = Button(mainwindow, text="Kør programmet", command="")
+        btn.grid(column=0, row=4,columnspan=2)
+
+        btn = Button(mainwindow, text="Gennemtving opdatering af kalender", command="")
+        btn.grid(column=0, row=5,columnspan=2)
+
+
+        mainwindow.mainloop()
 
     def run_setup_gui(self):
         #messagebox.showwarning("Sikkerhed", "Alle kodeord gemmes i dit operativsystems nøglering. Hvis en anden person eller program får adgang til din brugerkonto, da har de også adgang til dine kodeord! Brug dette program på eget ansvar!")
