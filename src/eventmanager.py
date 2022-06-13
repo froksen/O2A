@@ -295,7 +295,7 @@ class EventManager:
                     self.logger.info("Begivenheden \"%s\" vil blive tvunget opdateret." %(outlookevents_from_aula[key]["appointmentitem"].subject))
 
                     #Adds AULA eventid to array
-                    aulaevents_from_outlook[key]["appointmentitem"].id = outlookevents_from_aula[key]["appointmentitem"].aula_id
+                    aulaevents_from_outlook[key].id = outlookevents_from_aula[key]["appointmentitem"].aula_id
                     events_to_update.append(aulaevents_from_outlook[key]) 
 
                     #Prevents the same event to be set en both update metods. 
