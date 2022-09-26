@@ -254,9 +254,13 @@ class EventManager:
             if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
                 self.logger.info("Outlook begivenheden \"%s\" der begynder \"%s\" er fra før nu. Springer over." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
+            #SE DE FORSKELLIGE STATES: https://learn.microsoft.com/en-us/office/vba/api/outlook.olrecurrencestate og https://learn.microsoft.com/en-us/office/vba/api/outlook.appointmentitem.recurrencestate
+            if aulaevents_from_outlook[key]["appointmentitem"].IsRecurring and aulaevents_from_outlook[key]["appointmentitem"].RecurrenceState == 2:
+                self.logger.info("OBS: Outlook begivenheden \"%s\" er et tilbagevendende element i en serie. Denne serie er oprettet tidligere" %(aulaevents_from_outlook[key]["appointmentitem"].subject))
+                continue
 
             if aulaevents_from_outlook[key]["appointmentitem"].IsRecurring and aulaevents_from_outlook[key]["appointmentitem"].GetRecurrencePattern().RecurrenceType == 5:
-                self.logger.info("OBS: Outlook begivenehder \"%s\" der begynder \"%s\" er indstillet til at blive gentaget årlig. Dette er pt. ikke understøttet af AULA! Derfor vil begivenheden ikke blive oprettet.." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
+                self.logger.info("OBS: Outlook begivenheden \"%s\" der begynder \"%s\" er indstillet til at blive gentaget årlig. Dette er pt. ikke understøttet af AULA! Derfor vil begivenheden ikke blive oprettet.." %(aulaevents_from_outlook[key]["appointmentitem"].subject, aulaevents_from_outlook[key]["appointmentitem"].start))
                 continue
 
             events_to_keep[key] = self.__from_outlookobject_to_aulaevent(aulaevents_from_outlook[key]) #Hvis begivenheden er d.d. eller senere, da overføres til denne liste.
