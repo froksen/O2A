@@ -305,10 +305,10 @@ class EventManager:
                 if str(aulaevents_from_outlook[key].outlook_last_modification_time) != outlookevents_from_aula[key]["outlook_LastModificationTime"]:
                     #events_to_remove.append(outlookevents_from_aula[key])
                     self.logger.info("Begivenhden \"%s\" er blevet opdateret i Outlook. Vil forsøge, at opdatere på AULA." %(outlookevents_from_aula[key]["appointmentitem"].subject))
-                    self.logger.info(" - LastModificationTime fra AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
-                    self.logger.info(" - LastModificationTime fra Outlook: %s" %(aulaevents_from_outlook[key].outlook_last_modification_time))
-                    self.logger.info(" - Outlook begivenhed GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].outlook_global_appointment_id))
-                    self.logger.info(" - AULA begivenhed GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
+                    self.logger.debug(" - LastModificationTime fra AULA: %s" %(outlookevents_from_aula[key]["outlook_LastModificationTime"]))
+                    self.logger.debug(" - LastModificationTime fra Outlook: %s" %(aulaevents_from_outlook[key].outlook_last_modification_time))
+                    self.logger.debug(" - Outlook begivenhed GlobalAppointmentID: %s" %(aulaevents_from_outlook[key].outlook_global_appointment_id))
+                    self.logger.debug(" - AULA begivenhed GlobalAppointmentID: %s" %(outlookevents_from_aula[key]["outlook_GlobalAppointmentID"]))
                     #events_to_remove.append(outlookevents_from_aula[key])
                     #events_to_create.append(aulaevents_from_outlook[key]) 
 
