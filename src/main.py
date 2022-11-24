@@ -80,6 +80,8 @@ def main(argv):
       forceupdate = True
       logger.warning("Force update is set to: " + str(forceupdate))
     elif opt in ("-r", "--run"): 
+      forceupdate = True #TODO: Da det retter/afhjælper, at nogle kolleger af en eller anden grund ikke tilføjes første gang. Finde fejlen, og ret det i stedet. 
+      logger.warning("Force update is set to: " + str(forceupdate))
       run_script(forceupdate)
     elif opt in ("-g", "--setupgui"):
       setupmgr = SetupManager()
