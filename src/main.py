@@ -37,10 +37,13 @@ def run_script(force_update_existing_events = False):
       print(" Jesper Qvist, Kløver-Skolen & Ole Frandsen, Dybbøl-Skolen")
       print ("***********************************************************")
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
-      eman = eventmanager()
-      #comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
-      comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
-      eman.update_aula_calendar(comp)
+      try:
+        eman = eventmanager()
+        #comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
+        comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
+        eman.update_aula_calendar(comp)
+      finally:
+        pass
 
 #The main function
 def main(argv):
