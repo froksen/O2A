@@ -7,6 +7,9 @@ import logging
 import sys, getopt
 from dateutil.relativedelta import relativedelta
 from contactschecker import ContactsChecker
+from outlookmanager import OutlookManager
+import traceback
+
 
 #
 # LOGGER
@@ -30,6 +33,7 @@ logger.addHandler(ch)
 logger.info('O2A startet')
 today = dt.datetime.today()
 
+outlookmanager=OutlookManager()
 
 def run_script(force_update_existing_events = False):
       print ("***********************************************************")
@@ -42,6 +46,9 @@ def run_script(force_update_existing_events = False):
         #comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
         comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
         eman.update_aula_calendar(comp)
+      except Exception as err:
+        logger.critical(err)
+        outlookmanager.send_a_mail_program(traceback.format_exc())
       finally:
         pass
 
