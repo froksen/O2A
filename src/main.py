@@ -43,11 +43,11 @@ def run_script(force_update_existing_events = False):
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       try:
         eman = eventmanager()
-        #comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
-        comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
+        comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
+        #comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
         eman.update_aula_calendar(comp)
       except Exception as err:
-        logger.critical(err)
+        logger.critical(traceback.format_exc())
         outlookmanager.send_a_mail_program(traceback.format_exc())
       finally:
         pass
