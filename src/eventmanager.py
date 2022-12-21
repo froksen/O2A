@@ -161,7 +161,12 @@ class EventManager:
                 rlt = self.aulamanager.updateRecuringEvent(event_to_update)
             else:
                 rlt = self.aulamanager.updateEvent(event_to_update)
-            
+
+            if not rlt == True:
+                event_to_create.creation_or_update_errors.event_not_update_or_created = True
+
+            if event_to_create.creation_or_update_errors.event_not_update_or_created == True or len(event_to_create.creation_or_update_errors.attendees_not_found)>0:
+                events_with_errors.append(event_to_create)           
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
