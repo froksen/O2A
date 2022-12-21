@@ -1,4 +1,29 @@
 
+class AulaEventCreationErrors:
+    def __init__(self) -> None:
+        self.attendees_not_found = []
+        self.event_not_update_or_created = False
+        self.event_has_errors = False
+    
+
+   # @property
+   # def attendees_not_found(self):
+  #      return self.attendees_not_found
+
+   # @attendees_not_found.setter
+   # def attendees_not_found(self,attendee):
+   #     self.event_has_errors = True
+    #    self._attendees_not_found.append(attendee)
+
+    #@property
+    #ef event_not_update_or_created(self) -> bool:
+    #    return self.event_not_update_or_created
+
+    #@event_not_update_or_created.setter
+    #def event_not_update_or_created(self, status=True):
+    #    self.event_not_update_or_created = status
+    #    self.event_has_errors = True
+
 class AulaEvent():    
     def __init__(self) -> None:
         self.id = ""
@@ -35,6 +60,10 @@ class AulaEvent():
         self.recurrence_pattern = []
         self.aula_recurrence_pattern = []
         self.day_of_week_mask_list = []
+
+        #NON-AULA-Properties. Used internal.
+        self.creation_or_update_errors = AulaEventCreationErrors()
+
 
     @property
     def start_date_time(self):

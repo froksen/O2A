@@ -43,8 +43,8 @@ def run_script(force_update_existing_events = False):
       #Startdate is today, enddate is today next year - Tenical limit from AULA.
       try:
         eman = eventmanager()
-        #comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
-        comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
+        comp = eman.compare_calendars(today,today+relativedelta(days=+4)) #Start dato er nu altid dags dato :) 
+        #comp = eman.compare_calendars(dt.datetime(today.year,today.month,today.day,1,00,00,00),dt.datetime(today.year+1,7,1,00,00,00,00),force_update_existing_events)
         eman.update_aula_calendar(comp)
       except Exception as err:
         logger.critical(traceback.format_exc())
@@ -90,7 +90,7 @@ def main(argv):
       forceupdate = True
       logger.warning("Force update is set to: " + str(forceupdate))
     elif opt in ("-r", "--run"): 
-      forceupdate = True #TODO: Da det retter/afhjælper, at nogle kolleger af en eller anden grund ikke tilføjes første gang. Finde fejlen, og ret det i stedet. 
+      #forceupdate = True #TODO: Da det retter/afhjælper, at nogle kolleger af en eller anden grund ikke tilføjes første gang. Finde fejlen, og ret det i stedet. 
       logger.warning("Force update is set to: " + str(forceupdate))
       run_script(forceupdate)
     elif opt in ("-g", "--setupgui"):

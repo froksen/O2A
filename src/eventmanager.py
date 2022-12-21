@@ -13,6 +13,7 @@ from peoplecsvmanager import PeopleCsvManager
 import itertools
 import pytz
 
+
 class EventManager:
     def __init__(self):
         #Managers are init.
@@ -25,6 +26,7 @@ class EventManager:
         self.logger = logging.getLogger('O2A')
 
         self.login_to_aula()
+    
 
     def login_to_aula(self):
         #Gets AULA password and username from keyring
@@ -130,6 +132,7 @@ class EventManager:
                 else:
                     self.logger.info("      Deltager %s blev IKKE fundet i AULA!" %(attendee))
 
+                    event.creation_or_update_errors.attendees_not_found.append(attendee)
                 time.sleep(0.5)
 
         return event
@@ -142,6 +145,8 @@ class EventManager:
             self.logger.info("Ingen ændringer. Processen er afsluttet")
             return
 
+        events_with_errors = []
+
         for event_to_remove in changes['events_to_remove']:
             event_title = event_to_remove["appointmentitem"].subject
             event_id = event_to_remove["appointmentitem"].aula_id #Should be regexp instead!
@@ -153,9 +158,10 @@ class EventManager:
             
             is_Recurring = event_to_update.is_recurring #TODO: Gør via variable
             if is_Recurring:
-                self.aulamanager.updateRecuringEvent(event_to_update)
+                rlt = self.aulamanager.updateRecuringEvent(event_to_update)
             else:
-                self.aulamanager.updateEvent(event_to_update)
+                rlt = self.aulamanager.updateEvent(event_to_update)
+            
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
@@ -164,9 +170,20 @@ class EventManager:
             #Creating new event
             is_Recurring = event_to_create.is_recurring #TODO: Gør via variable
             if is_Recurring:
-                self.aulamanager.createRecuringEvent(event_to_create)
+                rlt = self.aulamanager.createRecuringEvent(event_to_create)
             else:
-                self.aulamanager.createSimpleEvent(event_to_create)
+                rlt = self.aulamanager.createSimpleEvent(event_to_create)
+
+            if not rlt == True:
+                event_to_create.creation_or_update_errors.event_not_update_or_created = True
+
+            if event_to_create.creation_or_update_errors.event_not_update_or_created == True or len(event_to_create.creation_or_update_errors.attendees_not_found)>0:
+                events_with_errors.append(event_to_create)
+        
+        self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)
+        for errobj in events_with_errors:
+            print(errobj.title)
+            print(len(errobj.creation_or_update_errors.attendees_not_found))
 
     def __from_outlookobject_to_aulaevent(self,outlookobject):
 

@@ -403,8 +403,10 @@ class AulaManager:
 
         if(response_calendar["status"]["message"] == "OK"):
             self.logger.info("Begivenheden \"%s\" med startdato %s blev oprettet." %(aula_event.title,aula_event.start_date_time))
+            return True
         else:
             self.logger.warning("Begivenheden \"%s\" med startdato %s blev IKKE oprettet." %(aula_event.title,aula_event.start_date_time))
+            return False
 
     def updateRecuringEvent(self, aula_event = AulaEvent):
         olFriday = 32    # Friday
@@ -507,8 +509,12 @@ class AulaManager:
 
         if(response_calendar["status"]["message"] == "OK"):
             self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
+
+            return True
         else:
             self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY updated" %(aula_event.title,aula_event.start_date_time))
+
+            return False
 
     def createRecuringEvent(self, aula_event = AulaEvent):
         olFriday = 32    # Friday

@@ -308,6 +308,95 @@ class OutlookManager:
         # Use this directly if there is no need for visual inspection
         mail.Send()
         
+    def send_a_aula_creation_or_update_error_mail(self, aula_events_with_errors):
+        #FROM: https://gist.github.com/vinovator/0a6d653c22c32ab67e11
+        outlook = win32com.client.Dispatch("Outlook.Application")
+
+        exchange_user = outlook.Session.CurrentUser.AddressEntry.GetExchangeUser()
+        ownEmailAdress = exchange_user.PrimarySmtpAddress
+
+        self.logger.debug("Exchange user " + str(exchange_user))
+        self.logger.debug("Exchange user email " + ownEmailAdress)
+        if ownEmailAdress == None:
+            return
+
+        error_messages_string = ""
+        print(len(aula_events_with_errors))
+        for aula_error in aula_events_with_errors:
+            error_messages_string = error_messages_string + "<b> Begivenhed: " + aula_error.title + "</b><br>"
+
+            if aula_error.creation_or_update_errors.event_not_update_or_created == True:
+                error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet."
+            elif len(aula_error.creation_or_update_errors.attendees_not_found)>0:
+                error_messages_string = error_messages_string + "FEJL: Følgende personer blev ikke tilføjet til begivenheden, da de ikke blev fundet på AULA <ul>"
+
+                for person in aula_error.creation_or_update_errors.attendees_not_found:
+                    error_messages_string = error_messages_string + "<li>" + str(person) + "</li>"
+
+                error_messages_string = error_messages_string + "</ul><br>"
+
+       #     Outlook VBA Reference 
+       # 0 - olMailItem
+       # 1 - olAppointmentItem
+       # 2 - olContactItem
+       # 3 - olTaskItem
+       # 4 - olJournalItem
+       # 5 - olNoteItem 
+       # 6 - olPostItem
+       # 7 - olDistributionListItem
+        mail = outlook.CreateItem(0)
+
+        mail.To = ownEmailAdress
+        #mail.CC = "mail2@example.com"
+        #mail.BCC = "mail3@example.com"
+
+        mail.Subject = "Outlook2Aula - Opmærksomhed på fejl"
+
+        # Using "Body" constructs body as plain text
+        # mail.Body = "Test mail body from Python"
+
+        """
+        Using "HtmlBody" constructs body as html text
+        default font size for most browser is 12
+        setting font size to "-1" might set it to 10
+        """
+        mail.HTMLBody = f"""
+        <html>
+        <head></head>
+        <body>
+            <font color="Black" size=-1 face="Arial">
+            <p>Kære {str(exchange_user)}!</p>
+           Der skete desværre en eller flere fejl, som gjorde at oprettelsen af en eller flere begivenheder mislykkes helt eller delvist.<br><br>
+
+            <b>Følgende fejl i følgende begivenheder:</b><br>
+            {error_messages_string}
+            
+            <br><br>
+            Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
+
+            <p>Venlig hilsen <br> Outlook2Aula overførselsprogrammet</p>
+            </font>
+        </body>
+        </html>
+        """
+
+        """
+        Set the format of mail
+        1 - Plain Text
+        2 - HTML
+        3 - Rich Text
+        """
+        mail.BodyFormat = 2
+
+        # Instead of sending the message, just display the compiled message
+        # Useful for visual inspection of compiled message
+        #mail.Display(True)
+
+        # Send the mail
+        # Use this directly if there is no need for visual inspection
+        mail.Send()
+        
+
     def get_personal_calendar_username(self):
         outlook = win32com.client.Dispatch("Outlook.Application")
         ns = outlook.GetNamespace("MAPI")
