@@ -326,7 +326,7 @@ class OutlookManager:
             error_messages_string = error_messages_string + "<b> Begivenhed: " + aula_error.title +" (" + aula_error.start_date_time + ") " + "</b><br>"
 
             if aula_error.creation_or_update_errors.event_not_update_or_created == True:
-                error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet."
+                error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet.<br><br>"
             elif len(aula_error.creation_or_update_errors.attendees_not_found)>0:
                 error_messages_string = error_messages_string + "FEJL: Følgende personer blev ikke tilføjet til begivenheden, da de ikke blev fundet på AULA <ul>"
 
