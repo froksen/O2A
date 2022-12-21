@@ -186,9 +186,9 @@ class EventManager:
                 events_with_errors.append(event_to_create)
         
         self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)
-        for errobj in events_with_errors:
-            print(errobj.title)
-            print(len(errobj.creation_or_update_errors.attendees_not_found))
+        #for errobj in events_with_errors:
+            #print(errobj.title)
+            #print(len(errobj.creation_or_update_errors.attendees_not_found))
 
     def __from_outlookobject_to_aulaevent(self,outlookobject):
 
