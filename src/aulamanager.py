@@ -317,8 +317,10 @@ class AulaManager:
 
         if(response_calendar["status"]["message"] == "OK"):
             self.logger.info("Begivenheden \"%s\" med start dato %s blev opdateret." %(aula_event.title,aula_event.start_date_time))
+            return True
         else:
             self.logger.warning("Begivenheden \"%s\" med start dato %s blev IKKE opdateret" %(aula_event.title,aula_event.start_date_time))
+            return False
 
     #def createSimpleEvent(self, title, description, startDateTime, endDateTime, attendee_ids = [], location = "", addToInstitutionCalendar = False, allDay = False, isPrivate = False, hideInOwnCalendar = False):
     def createSimpleEvent(self, aula_event = AulaEvent):
@@ -619,8 +621,10 @@ class AulaManager:
 
         if(response_calendar["status"]["message"] == "OK"):
             self.logger.info("Recuring event \"%s\" with start date %s was SUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
+            return True
         else:
             self.logger.warning("Recuring event \"%s\" with start date %s was UNSUCCESSFULLY created" %(aula_event.title,aula_event.start_date_time))
+            return False
 
     def getProfile(self):
                 # All API requests go to the below url

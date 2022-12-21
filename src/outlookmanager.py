@@ -323,7 +323,7 @@ class OutlookManager:
         error_messages_string = ""
         print(len(aula_events_with_errors))
         for aula_error in aula_events_with_errors:
-            error_messages_string = error_messages_string + "<b> Begivenhed: " + aula_error.title + "</b><br>"
+            error_messages_string = error_messages_string + "<b> Begivenhed: " + aula_error.title +" (" + aula_error.start_date_time + ") " + "</b><br>"
 
             if aula_error.creation_or_update_errors.event_not_update_or_created == True:
                 error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet."
