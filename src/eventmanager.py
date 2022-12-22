@@ -151,7 +151,11 @@ class EventManager:
             event_title = event_to_remove["appointmentitem"].subject
             event_id = event_to_remove["appointmentitem"].aula_id #Should be regexp instead!
             self.logger.info("Prøver at FJERNE begivenheden: %s " %(event_title))
-            self.aulamanager.deleteEvent(event_id)
+            rlt = self.aulamanager.deleteEvent(event_id)
+
+            if not rlt == True:
+                event_to_remove.creation_or_update_errors.event_not_deleted = True
+                events_with_errors.append(event_to_remove) 
 
         for event_to_update in changes["events_to_update"]:
             event_to_update = self._basic_aula_event_actions(event_to_update)

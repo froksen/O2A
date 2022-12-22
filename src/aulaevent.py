@@ -4,6 +4,7 @@ class AulaEventCreationErrors:
         self.attendees_not_found = []
         self.event_not_update_or_created = False
         self.event_has_errors = False
+        self.event_not_deleted = False
     
 
    # @property

@@ -187,8 +187,10 @@ class AulaManager:
 
         if(response["status"]["message"] == "OK"):
             self.logger.info("Begivenheden blev fjernet!")
+            return True
         else:
             self.logger.warning("Begivenheden blev IKKE fjernet!")
+            return False
 
     def teams_url_fixer(self,text):
         #Patterns for all the different parts of the Teams Meeting

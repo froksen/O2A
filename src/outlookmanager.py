@@ -322,12 +322,14 @@ class OutlookManager:
             return
 
         error_messages_string = ""
-        print(len(aula_events_with_errors))
+        #print(len(aula_events_with_errors))
         for aula_error in aula_events_with_errors:
             error_messages_string = error_messages_string + "<h4> Begivenheden: \"" + aula_error.title +"\" (" + aula_error.start_date_time + ") " + "</h4>"
 
             if aula_error.creation_or_update_errors.event_not_update_or_created == True:
                 error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet.<br><br>"
+            elif aula_error.creation_or_update_errors.event_not_deleted == True:
+                error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke fjernet i AULA.<br><br>"
             elif len(aula_error.creation_or_update_errors.attendees_not_found)>0:
                 error_messages_string = error_messages_string + "FEJL: Begivenheden blev oprettet, dog blev følgende personer blev <u>ikke</u> tilføjet til begivenheden da de ikke blev fundet på AULA <ul>"
 
