@@ -5,6 +5,7 @@ import re
 import sys
 import logging
 import time
+import os
 
 class OutlookManager:
     def __init__(self):
@@ -176,7 +177,7 @@ class OutlookManager:
         #mail.CC = "mail2@example.com"
         #mail.BCC = "mail3@example.com"
 
-        mail.Subject = "Outlook2Aula - Opmærksomhed på fejl"
+        mail.Subject = "(Outlook2Aula) Intern/programmel fejl under afvikling"
 
         # Using "Body" constructs body as plain text
         # mail.Body = "Test mail body from Python"
@@ -258,7 +259,7 @@ class OutlookManager:
         #mail.CC = "mail2@example.com"
         #mail.BCC = "mail3@example.com"
 
-        mail.Subject = "Outlook2Aula - Opmærksomhed på fejl"
+        mail.Subject = "(Outlook2Aula) Afviklingsfejl"
 
         # Using "Body" constructs body as plain text
         # mail.Body = "Test mail body from Python"
@@ -323,12 +324,12 @@ class OutlookManager:
         error_messages_string = ""
         print(len(aula_events_with_errors))
         for aula_error in aula_events_with_errors:
-            error_messages_string = error_messages_string + "<b> Begivenhed: " + aula_error.title +" (" + aula_error.start_date_time + ") " + "</b><br>"
+            error_messages_string = error_messages_string + "<h4> Begivenheden: \"" + aula_error.title +"\" (" + aula_error.start_date_time + ") " + "</h4>"
 
             if aula_error.creation_or_update_errors.event_not_update_or_created == True:
                 error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet.<br><br>"
             elif len(aula_error.creation_or_update_errors.attendees_not_found)>0:
-                error_messages_string = error_messages_string + "FEJL: Følgende personer blev ikke tilføjet til begivenheden, da de ikke blev fundet på AULA <ul>"
+                error_messages_string = error_messages_string + "FEJL: Begivenheden blev oprettet, dog blev følgende personer blev <u>ikke</u> tilføjet til begivenheden da de ikke blev fundet på AULA <ul>"
 
                 for person in aula_error.creation_or_update_errors.attendees_not_found:
                     error_messages_string = error_messages_string + "<li>" + str(person) + "</li>"
@@ -350,7 +351,9 @@ class OutlookManager:
         #mail.CC = "mail2@example.com"
         #mail.BCC = "mail3@example.com"
 
-        mail.Subject = "Outlook2Aula - Opmærksomhed på fejl"
+        mail.Subject = "(Outlook2Aula) Fejl ved opretelse af en eller flere begivenheder"
+
+        path_to_personercsv = os.path.join(os.getcwd(),"personer.csv")
 
         # Using "Body" constructs body as plain text
         # mail.Body = "Test mail body from Python"
@@ -368,8 +371,15 @@ class OutlookManager:
             <p>Kære {str(exchange_user)}!</p>
            Der skete desværre en eller flere fejl, som gjorde at oprettelsen af en eller flere begivenheder mislykkes helt eller delvist.<br><br>
 
-            <b>Følgende fejl i følgende begivenheder:</b><br>
+            <h3>Følgende fejl i følgende begivenheder:</h3>
             {error_messages_string}
+            
+            <br><br>
+            <h3>Mulige årsager</h3>
+            <ul>
+                <li>Internettet/forbindelsen til AULA blev afbrudt i processen. F.eks. du lukke lågen på din bærbar?</li>
+                <li>Hvis fejlen skyldes, at en eller flere personer ikke blev fundet. Da undersøg om personen enten er ekstern (fra en anden instituation) eller hedder noget forskelligt på AULA iforhold til Outlook. Hvis det er sidst nævnte, da tilpas oplysningerne i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></li>
+            </ul>
             
             <br><br>
             Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
