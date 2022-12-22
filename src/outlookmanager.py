@@ -379,8 +379,8 @@ class OutlookManager:
             <br><br>
             <h3>Mulige årsager</h3>
             <ul>
-                <li>Internettet/forbindelsen til AULA blev afbrudt i processen. F.eks. du lukke lågen på din bærbar?</li>
-                <li>Hvis fejlen skyldes, at en eller flere personer ikke blev fundet. Da undersøg om personen enten er ekstern (fra en anden instituation) eller hedder noget forskelligt på AULA iforhold til Outlook. Hvis det er sidst nævnte, da tilpas oplysningerne i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></li>
+                <li>Internettet/forbindelsen til AULA blev afbrudt i processen. F.eks. du lukkede låget på din bærbar, mens programmet kørte?</li>
+                <li>Hvis fejlen skyldes, at en eller flere personer ikke blev fundet? Da undersøg om personen enten er ekstern (fra en anden instituation) eller hedder noget forskelligt på AULA iforhold til Outlook. Hvis det er sidst nævnte, da tilpas oplysningerne i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></li>
             </ul>
             
             <br><br>
