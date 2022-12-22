@@ -189,7 +189,8 @@ class EventManager:
             if event_to_create.creation_or_update_errors.event_not_update_or_created == True or len(event_to_create.creation_or_update_errors.attendees_not_found)>0:
                 events_with_errors.append(event_to_create)
         
-        self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)
+        if len(events_with_errors)>0:
+            self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)
         #for errobj in events_with_errors:
             #print(errobj.title)
             #print(len(errobj.creation_or_update_errors.attendees_not_found))
