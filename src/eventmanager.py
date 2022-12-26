@@ -119,14 +119,17 @@ class EventManager:
                 #Checks if person should be replaced with other name from CSV-file
                 csv_aula_name = self.peoplecsvmanager.getPersonData(attendee)
 
-                if not csv_aula_name == None:
+                if not csv_aula_name == None and not csv_aula_name == "IGNORE_PERSON":
                     self.logger.info("      OBS: Dektagerens %s Outlook navn blev fundet i CSV-filen og blev erstattet med %s" %(attendee,csv_aula_name))
                     attendee = csv_aula_name
 
                 #Searching for name in AULA
-                search_result = self.aulamanager.findRecipient(attendee)
+                if not csv_aula_name == "IGNORE_PERSON":
+                    search_result = self.aulamanager.findRecipient(attendee)
 
-                if not search_result == None:
+                if csv_aula_name == "IGNORE_PERSON":
+                    self.logger.info("      OBS: Deltagerens %s Outlook navn blev fundet i IGNORER-filen og vil derfor ikke blive tilføjet til begivenheden" %(attendee))
+                elif not search_result == None:
                     self.logger.info("      Deltager %s blev fundet i AULA!" %(attendee))
                     event.attendee_ids.append(search_result)
                 else:
