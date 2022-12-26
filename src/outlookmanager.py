@@ -324,7 +324,7 @@ class OutlookManager:
         error_messages_string = ""
         #print(len(aula_events_with_errors))
         for aula_error in aula_events_with_errors:
-            error_messages_string = error_messages_string + "<h4> Begivenheden: \"" + aula_error.title +"\" (" + aula_error.start_date_time + ") " + "</h4>"
+            error_messages_string = error_messages_string + "<h5> Begivenheden: \"" + aula_error.title +"\" (" + aula_error.start_date_time + ") " + "</h5>"
 
             if aula_error.creation_or_update_errors.event_not_update_or_created == True:
                 error_messages_string = error_messages_string + "FEJL: Begivenheden blev ikke oprettet.<br><br>"
@@ -357,6 +357,9 @@ class OutlookManager:
 
         path_to_personercsv = os.path.join(os.getcwd(),"personer.csv")
 
+        path_to_ignorecsv = os.path.join(os.getcwd(),"personer_ignorer.csv")
+
+
         # Using "Body" constructs body as plain text
         # mail.Body = "Test mail body from Python"
 
@@ -370,18 +373,17 @@ class OutlookManager:
         <head></head>
         <body>
             <font color="Black" size=-1 face="Arial">
-            <p>Kære {str(exchange_user)}!</p>
+            <p>Kære {str(exchange_user)}</p>
            Der skete desværre en eller flere fejl, som gjorde at oprettelsen af en eller flere begivenheder mislykkes helt eller delvist.<br><br>
 
-            <h3>Følgende fejl i følgende begivenheder:</h3>
+            <h4>Fejl i følgende begivenheder:</h4>
             {error_messages_string}
             
-            <br><br>
-            <h3>Mulige årsager</h3>
-            <ul>
-                <li>Internettet/forbindelsen til AULA blev afbrudt i processen. F.eks. du lukkede låget på din bærbar, mens programmet kørte?</li>
-                <li>Hvis fejlen skyldes, at en eller flere personer ikke blev fundet? Da undersøg om personen enten er ekstern (fra en anden instituation) eller hedder noget forskelligt på AULA iforhold til Outlook. Hvis det er sidst nævnte, da tilpas oplysningerne i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></li>
-            </ul>
+            <h4>Outlook navn forskelligt fra AULA navn?</h4>
+            <p>Nogle gange kan ansatte/kolleger være oplistet med forskellige navne i Outlook som i AULA. Det kan være et mellemnavn der er det ene sted men ikke det andet. For at håndtere dette, skal du udfylde de rigtige oplysninger i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></p>
+            
+            <h4>Få programmet til at ignorer bestemte personer, som ikke er på AULA?</h4>
+            <p>Du får en mail, hvis en person der fremgår af Outlook begivenheden ikke blev tilføjet korrekt på AULA. Dog er der nogle gange, hvor du ønsker at programmet skal ignorer at personen ikke blev tilføjet. Altså egentlig acceptere, at personen ikke blev fundet i AULA. Det kan f.eks. være hvis du ofte har eksterne kontakter på, som ikke er på AULA. Da skal du tilføje deres Outlook navn tilfølgende fil: <a href="{path_to_ignorecsv}">{path_to_ignorecsv} </p>
             
             <br><br>
             Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
