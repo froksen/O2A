@@ -382,7 +382,7 @@ class OutlookManager:
             <h4>Outlook navn forskelligt fra AULA navn?</h4>
             <p>Nogle gange kan ansatte/kolleger være oplistet med forskellige navne i Outlook som i AULA. Det kan være et mellemnavn der er det ene sted men ikke det andet. For at håndtere dette, skal du udfylde de rigtige oplysninger i følgende fil: <a href="{path_to_personercsv}">{path_to_personercsv}</a></p>
             
-            <h4>Få programmet til at ignorer bestemte personer, som ikke er på AULA?</h4>
+            <h4>Ignorer bestemte personer, som ikke er på AULA?</h4>
             <p>Du får en mail, hvis en person der fremgår af Outlook begivenheden ikke blev tilføjet korrekt på AULA. Dog er der nogle gange, hvor du ønsker at programmet skal ignorer at personen ikke blev tilføjet. Altså egentlig acceptere, at personen ikke blev fundet i AULA. Det kan f.eks. være hvis du ofte har eksterne kontakter på, som ikke er på AULA. Da skal du tilføje deres Outlook navn tilfølgende fil: <a href="{path_to_ignorecsv}">{path_to_ignorecsv} </p>
             
             <br><br>
