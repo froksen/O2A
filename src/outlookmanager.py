@@ -244,6 +244,8 @@ class OutlookManager:
         for error_msg in error_messages:
             error_messages_string = error_messages_string + "<li>" + str(error_msg) + "</li>"
 
+        path_to_setup_batfile = os.path.join(os.getcwd())
+
        #     Outlook VBA Reference 
        # 0 - olMailItem
        # 1 - olAppointmentItem
@@ -284,7 +286,19 @@ class OutlookManager:
             
             <p><b>Du har anvendt følgende AULA brugernavn: </b> {attemptet_uni_login_name}<br>(Kodeord ikke nævnt, af sikkerhedsmæssige årsager)</p>
             <br>
-            Hvis det er fordi du har ændret din adgangskode eller dit brugernavn er forkert, da skal du genintaste din UNI-oplysninger i programmet.<br><br>
+            <h4>Ændre UNI-login oplysninger?</h4>
+            Hvis det er fordi du har ændret din/fået ny adgangskode eller dit brugernavn er forkert, da skal du genintaste din UNI-oplysninger i programmet.
+            Du kan ændre dine UNI-login oplysninger vha. programmets opsætningsdialog. Du skal gøre følgende:
+            <ol>
+                <li>Gå ind i mappen: <a href="{path_to_setup_batfile}">{path_to_setup_batfile}</a></p></li>
+                <li>Start programmet "O2A Setup.bat" ved at dobbeltklikke på denne</li>
+                <li>I dialogen der fremkommer, klik på menupunktet "Indtast AULA brugernavn og kodeord"</li>
+                <li>Følg vejledningen i dialogen, og efterfølgende luk dialogen ned</li>
+                <li>Næste gang programmet afvikles, vil de nye login oplysninger bruges.</li>
+            </ol>
+            
+             
+            <br><br>
             Hvis det ikke er tilfældet, og denne fejl bliver ved med at blive meldt, da kontakt Ole Frandsen (olfr@sonderborg.dk) eller Jesper Qvist (jeqv@sonderborg.dk).
 
             <p>Venlig hilsen <br> Outlook2Aula overførselsprogrammet</p>
