@@ -10,6 +10,8 @@ from contactschecker import ContactsChecker
 from outlookmanager import OutlookManager
 import traceback
 
+from databasemanager import DatabaseManager
+
 
 #
 # LOGGER
@@ -62,7 +64,7 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsgrdfc",["setup","setupgui","help","run","days=","force","check"])
+    opts, args = getopt.getopt(argv,"hsgrdfc",["setup","setupgui","help","run","database","force","check"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
@@ -83,9 +85,10 @@ def main(argv):
       print(' -f --force  : Force update all existing events')
       print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
       print(' -h --help   : To show help')
-    elif opt in ("-d", "--days"): 
-      print("days")
+    elif opt in ("-d", "--database"): 
+      print("database tjek")
       print(str(arg))
+      dbmanger = DatabaseManager()
     elif opt in ("-f", "--force"): 
       forceupdate = True
       logger.warning("Force update is set to: " + str(forceupdate))
