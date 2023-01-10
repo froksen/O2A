@@ -12,6 +12,7 @@ from setupmanager import SetupManager
 from peoplecsvmanager import PeopleCsvManager
 import itertools
 import pytz
+from databasemanager import DatabaseManager as dbManager
 
 
 class EventManager:
@@ -148,6 +149,9 @@ class EventManager:
             self.logger.info("Ingen ændringer. Processen er afsluttet")
             return
 
+        #Opretter forbindelse til DB
+        mdbManager = dbManager()
+
         events_with_errors = []
 
         for event_to_remove in changes['events_to_remove']:
@@ -173,7 +177,11 @@ class EventManager:
                 event_to_update.creation_or_update_errors.event_not_update_or_created = True
 
             if event_to_update.creation_or_update_errors.event_not_update_or_created == True or len(event_to_update.creation_or_update_errors.attendees_not_found)>0:
-                events_with_errors.append(event_to_update)           
+                events_with_errors.append(event_to_update)    
+
+            #Hvis begivenheden blev opdateret korrekt, da bliver optegnelsen i SQL databasen opdateret.
+            if rlt == True:
+                mdbManager.update_record(event_to_update.outlook_global_appointment_id,event_to_update.id)
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
@@ -191,6 +199,10 @@ class EventManager:
 
             if event_to_create.creation_or_update_errors.event_not_update_or_created == True or len(event_to_create.creation_or_update_errors.attendees_not_found)>0:
                 events_with_errors.append(event_to_create)
+
+            #Hvis begivenheden blev oprettet korrekt, da tilføjes der en optegnelse til SQL databasen
+            if rlt == True:
+                mdbManager.update_record(event_to_create.outlook_global_appointment_id,event_to_create.id)
         
         if len(events_with_errors)>0:
             self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)

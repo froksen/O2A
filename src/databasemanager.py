@@ -65,15 +65,17 @@ class DatabaseManager:
         #Tjekker om optegnelsen allerede findes. Hvis ikke oprettes den
         if self.get_record(outlook_id) is None:
             cursor.execute("INSERT INTO tblEvents VALUES(:db_id, :outlook_id, :aula_id, :created, :updated)",data)
+            print("OPRETTER begivenheden i DB")
         else:
             cursor.execute("UPDATE tblEvents SET aula_id=:aula_id, updated=:updated WHERE outlook_id=:outlook_id",data)
+            print("OPDATERER begivenheden i DB")
 
         self.conn.commit()
 
 
-        if not self.get_record(outlook_id) is None:
-            print("Blev gemt korrekt")
-            return True
-        else:
-            print("Blev ikke gemt korrekt")
-            return False
+        #if not self.get_record(outlook_id) is None:
+        #    print("Blev gemt korrekt")
+        #    return True
+        #else:
+        #    print("Blev ikke gemt korrekt")
+        #    return False
