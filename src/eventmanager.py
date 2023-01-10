@@ -194,15 +194,15 @@ class EventManager:
             else:
                 rlt = self.aulamanager.createSimpleEvent(event_to_create)
 
-            if not rlt == True:
+            if rlt is None:
                 event_to_create.creation_or_update_errors.event_not_update_or_created = True
 
             if event_to_create.creation_or_update_errors.event_not_update_or_created == True or len(event_to_create.creation_or_update_errors.attendees_not_found)>0:
                 events_with_errors.append(event_to_create)
 
             #Hvis begivenheden blev oprettet korrekt, da tilføjes der en optegnelse til SQL databasen
-            if rlt == True:
-                mdbManager.update_record(event_to_create.outlook_global_appointment_id,event_to_create.id)
+            if not rlt is None:
+                mdbManager.update_record(event_to_create.outlook_global_appointment_id,rlt)
         
         if len(events_with_errors)>0:
             self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)

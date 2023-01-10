@@ -407,10 +407,11 @@ class AulaManager:
 
         if(response_calendar["status"]["message"] == "OK"):
             self.logger.info("Begivenheden \"%s\" med startdato %s blev oprettet." %(aula_event.title,aula_event.start_date_time))
-            return True
+            aula_event_id = response_calendar["data"]["data"]
+            return aula_event_id
         else:
             self.logger.warning("Begivenheden \"%s\" med startdato %s blev IKKE oprettet." %(aula_event.title,aula_event.start_date_time))
-            return False
+            return None
 
     def updateRecuringEvent(self, aula_event = AulaEvent):
         olFriday = 32    # Friday
