@@ -89,7 +89,7 @@ def main(argv):
       print("database tjek")
       print(str(arg))
       dbmanger = DatabaseManager()
-      rlts = dbmanger.get_record("040000008200E000744C5B7101A82E0080000000090DAC029B16AD801000000000000000010000000E3046EA24B8B6B4ABF3012BD878F09B9")
+      rlts = dbmanger.update_record("040000008200E000744C5B7101A82E0080000000090DAC029B16AD801000000000000000010000000E3046EA24B8B6B4ABF3012BD878F09B9","2342343")
       print(rlts)
 
     elif opt in ("-f", "--force"): 

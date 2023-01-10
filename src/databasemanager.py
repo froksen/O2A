@@ -1,5 +1,6 @@
 import sqlite3
 from databaseevent import DatabaseEvent as dbEvent
+import datetime
 
 database_name = "database.db"
 
@@ -22,7 +23,7 @@ class DatabaseManager:
         # Create operation
         try:
             create_query = '''CREATE TABLE "tblEvents" (
-                    "id"	INTEGER,
+                    "id"	INTEGER NOT NULL UNIQUE,
                     "outlook_id"	TEXT,
                     "aula_id"	TEXT,
                     "created"	TEXT,
@@ -52,4 +53,27 @@ class DatabaseManager:
         return event
 
     def update_record(self, outlook_id, aula_id):
-        pass
+        cursor = self.conn.cursor()
+        data = {
+            "db_id":None, 
+            "outlook_id":outlook_id,
+            "aula_id":aula_id,
+            "created": datetime.datetime.today(),
+            "updated": datetime.datetime.today()
+        }
+
+        #Tjekker om optegnelsen allerede findes. Hvis ikke oprettes den
+        if self.get_record(outlook_id) is None:
+            cursor.execute("INSERT INTO tblEvents VALUES(:db_id, :outlook_id, :aula_id, :created, :updated)",data)
+        else:
+            cursor.execute("UPDATE tblEvents SET aula_id=:aula_id, updated=:updated WHERE outlook_id=:outlook_id",data)
+
+        self.conn.commit()
+
+
+        if not self.get_record(outlook_id) is None:
+            print("Blev gemt korrekt")
+            return True
+        else:
+            print("Blev ikke gemt korrekt")
+            return False
