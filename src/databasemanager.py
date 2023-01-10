@@ -1,4 +1,5 @@
 import sqlite3
+from databaseevent import DatabaseEvent as dbEvent
 
 database_name = "database.db"
 
@@ -35,11 +36,20 @@ class DatabaseManager:
             print(e)
 
     def get_record(self, outlook_id):
-        command = 'SELECT * FROM tblEvents WHERE outlook_id="?"'
         cursor = self.conn.cursor()
-        records = cursor.execute(command, (outlook_id))
+        records = cursor.execute("SELECT * FROM tblEvents WHERE outlook_id=:outlook_id",{"outlook_id":outlook_id}).fetchone()
 
-        return records
+        if records is None:
+            return None
+
+        event = dbEvent()
+        event.db_id = records[0]
+        event.aula_id = records[2]
+        event.outlook_id = records[1]
+        event.created = records[3]
+        event.updated = records[4]
+
+        return event
 
     def update_record(self, outlook_id, aula_id):
         pass

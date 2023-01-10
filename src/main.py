@@ -89,7 +89,9 @@ def main(argv):
       print("database tjek")
       print(str(arg))
       dbmanger = DatabaseManager()
-      dbmanger.get_record("040000008200E00074C5B7101A82E0080000000090DAC029B16AD801000000000000000010000000E3046EA24B8B6B4ABF3012BD878F09B9")
+      rlts = dbmanger.get_record("040000008200E000744C5B7101A82E0080000000090DAC029B16AD801000000000000000010000000E3046EA24B8B6B4ABF3012BD878F09B9")
+      print(rlts)
+
     elif opt in ("-f", "--force"): 
       forceupdate = True
       logger.warning("Force update is set to: " + str(forceupdate))
