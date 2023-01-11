@@ -303,7 +303,7 @@ class EventManager:
 
             date_string = outlookevents_from_aula[key]["appointmentitem"].start
             dateobj = dt.datetime.strptime(date_string,'%Y-%m-%dT%H:%M:%S%z') #2020-08-10T10:05:00+00:00
-            #dateobj = dateobj + dt.timedelta(hours=2)
+            dateobj = dateobj + dt.timedelta(hours=2)
 
             if dateobj <= dt.datetime.today().replace(tzinfo=pytz.UTC):
                 self.logger.info("AULA begivenheden \"%s\" der begynder \"%s\" er fra før nu. Springer over." %(outlookevents_from_aula[key]["appointmentitem"].subject, outlookevents_from_aula[key]["appointmentitem"].start))
