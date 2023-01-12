@@ -1,5 +1,6 @@
 import csv
 import logging
+import shutil
 
 class PeopleCsvManager():    
     def __init__(self, csv_file="personer.csv", people_to_ignore="personer_ignorer.csv") -> None:
@@ -49,8 +50,12 @@ class PeopleCsvManager():
                 self.logger.debug(people)
                 self.logger.debug(f'Processed {line_count} lines.')
         except FileNotFoundError as e:
-            self.logger.warning(f"CSV file '{csv_file}'' was not found. Continuing without.")
+            self.logger.warning(f"CSV filen '{csv_file}'' blev ikke fundet. Prøver at oprette den, og genkøre sig køre igen.")
             self.logger.debug(e)
+
+            shutil.copy2("personer_ignorer_skabelon.csv","personer_ignorer.csv")
+
+            people=self.__readFile()
 
         return people
 
@@ -79,8 +84,12 @@ class PeopleCsvManager():
                 self.logger.debug(people)
                 self.logger.debug(f'Processed {line_count} lines.')
         except FileNotFoundError as e:
-            self.logger.warning(f"CSV file '{csv_file}'' was not found. Continuing without.")
+            self.logger.warning(f"CSV filen '{csv_file}'' blev ikke fundet. Prøver at oprette den, og genkøre sig køre igen.")
             self.logger.debug(e)
+
+            shutil.copy2("personer_skabelon.csv","personer.csv")
+
+            people=self.__readFile()
 
         return people
 
