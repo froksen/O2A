@@ -923,7 +923,7 @@ class AulaManager:
                 outlook_LastModificationTime = outlook_LastModificationTime.split("=")[1].strip()
                 outlook_LastModificationTime = self.__remove_html_tags(outlook_LastModificationTime).strip()
 
-            #if both GAID and LMT exists then add item to dict. 
+            #Hvis måde opdateringsdatoen og ID fundet
             if m1 and m2:
                 isDuplicate = False 
                 if outlook_GlobalAppointmentID in aula_events.keys():
@@ -934,6 +934,18 @@ class AulaManager:
                     "isDuplicate" : isDuplicate,
                     "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
                     "outlook_LastModificationTime":outlook_LastModificationTime
+                }
+            #Hvis kun GlobalID er fundet, da skal begivenheden opdateres. Derfor omsættes LastModificationTime til 2 år før d.d. Da det vil beføre en opdatering.
+            elif m1 and m2 is None:
+                isDuplicate = False 
+                if outlook_GlobalAppointmentID in aula_events.keys():
+                    pass
+
+                aula_events[outlook_GlobalAppointmentID]={
+                    "appointmentitem":mAppointmentitem,
+                    "isDuplicate" : isDuplicate,
+                    "outlook_GlobalAppointmentID":outlook_GlobalAppointmentID,
+                    "outlook_LastModificationTime":datetime.datetime.now()+relativedelta(years=-2)
                 }
 
             index = index +1
