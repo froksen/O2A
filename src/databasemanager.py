@@ -39,11 +39,11 @@ class DatabaseManager:
 
     def drop_table(self, table_name):
         cursor = self.conn.cursor()
-        cursor.execute("DROP TABLE :table_name",{"table_name": table_name})
+        cursor.execute("DROP TABLE IF EXISTS " + table_name)
 
     def create_recipients_table(self, reset_table=False):
         if reset_table:
-            self.drop_table()
+            self.drop_table("tblRecipients")
 
         # Create operation
         try:
