@@ -64,27 +64,32 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsgrdfc",["setup","setupgui","help","run","database","force","check"])
+    opts, args = getopt.getopt(argv,"hsgardfc",["setup","setupgui","help","run","database","force","check","database_recipient_reset"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
-    print(' -s --setup    : Run setup in terminal')
-    print(' -g --setupgui : Run setup with GUI')
-    print(' -r --run      : To run script')
-    print(' -f --force    : Force update all existing events')
-    print(' -c --check    : Check if people in "contacts_to_check.csv" is present in AULA')
-    print(' -h --help     : To show help')
+    print(' -s    --setup                         : Run setup in terminal')
+    print(' -g    --setupgui                      : Run setup with GUI')
+    print(' -r    --run                           : To run script')
+    print(' -a    --database_recipient_reset      : Reset local recipient database. ')
+    print(' -f    --force                         : Force update all existing events')
+    print(' -c    --check                         : Check if people in "contacts_to_check.csv" is present in AULA')
+    print(' -h    --help                          : To show help')
     sys.exit(2)
   for opt, arg in opts:
     if opt in ("-h", "--help"): 
       print('OPTIONS')
       print(' without parameter  : same as -r')
-      print(' -s --setup    : Run setup in terminal')
-      print(' -g --setupgui : Run setup with GUI')
-      print(' -r --run    : To run script')
-      print(' -f --force  : Force update all existing events')
-      print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
-      print(' -h --help   : To show help')
+      print(' -s    --setup                         : Run setup in terminal')
+      print(' -g    --setupgui                      : Run setup with GUI')
+      print(' -r    --run                           : To run script')
+      print(' -a    --database_recipient_reset      : Reset local recipient database. ')
+      print(' -f    --force                         : Force update all existing events')
+      print(' -c    --check                         : Check if people in "contacts_to_check.csv" is present in AULA')
+      print(' -h    --help                          : To show help')
+    elif opt in ("-a", "--database_recipient_reset"):
+      dbmanger = DatabaseManager()
+      dbmanger.create_recipients_table(reset_table=True)
     elif opt in ("-d", "--database"): 
       print("database tjek")
       print(str(arg))
@@ -111,11 +116,13 @@ def main(argv):
     else:
       print('OPTIONS')
       print(' without parameter  : same as -r')
-      print(' -s --setup  : To setup script')
-      print(' -r --run    : To run script')
-      print(' -f --force  : Force update all existing events')
-      print(' -c --check  : Check if people in "contacts_to_check.csv" is present in AULA')
-      print(' -h --help   : To show help')
+      print(' -s    --setup                         : Run setup in terminal')
+      print(' -g    --setupgui                      : Run setup with GUI')
+      print(' -r    --run                           : To run script')
+      print(' -a    --database_recipient_reset      : Reset local recipient database. ')
+      print(' -f    --force                         : Force update all existing events')
+      print(' -c    --check                         : Check if people in "contacts_to_check.csv" is present in AULA')
+      print(' -h    --help                          : To show help')
 
 
 if __name__ == "__main__":

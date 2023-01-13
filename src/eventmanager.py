@@ -98,6 +98,9 @@ class EventManager:
         return False
 
     def _basic_aula_event_actions(self, event):
+
+        mdbManager = dbManager()
+
         #If event has been created by some one else. Set in description that its the case.
         if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
             self.logger.debug("Begivenheden er blevet oprettet af en anden person. Tilføjer dette til beskrivelsen.")
@@ -126,12 +129,19 @@ class EventManager:
 
                 #Searching for name in AULA
                 if not csv_aula_name == "IGNORE_PERSON":
-                    search_result = self.aulamanager.findRecipient(attendee)
+                    db_search_result = mdbManager.get_recipient_id(attendee) #Prøver først i DB
+                    search_result = db_search_result
+
+                    if db_search_result is None: #Hvis ikke fundet noget i DB, da prøver at slå op på AULA.
+                        self.logger.info("      OBS: Deltagerens %s Outlook navn blev ikke fundet i den lokale database, slår op direkte på AULA." %(attendee))
+
+                        search_result = self.aulamanager.findRecipient(attendee)
 
                 if csv_aula_name == "IGNORE_PERSON":
                     self.logger.info("      OBS: Deltagerens %s Outlook navn blev fundet i IGNORER-filen og vil derfor ikke blive tilføjet til begivenheden" %(attendee))
                 elif not search_result == None:
                     self.logger.info("      Deltager %s blev fundet i AULA!" %(attendee))
+                    mdbManager.update_recipient_record(search_result,attendee) #Tilføjer til DB. 
                     event.attendee_ids.append(search_result)
                 else:
                     self.logger.info("      Deltager %s blev IKKE fundet i AULA!" %(attendee))
@@ -180,8 +190,8 @@ class EventManager:
                 events_with_errors.append(event_to_update)    
 
             #Hvis begivenheden blev opdateret korrekt, da bliver optegnelsen i SQL databasen opdateret.
-            if rlt == True:
-                mdbManager.update_record(event_to_update.outlook_global_appointment_id,event_to_update.id)
+            #if rlt == True:
+                #mdbManager.update_event_record(event_to_update.outlook_global_appointment_id,event_to_update.id)
 
         #Creation of event
         for event_to_create in changes['events_to_create']:
@@ -201,8 +211,8 @@ class EventManager:
                 events_with_errors.append(event_to_create)
 
             #Hvis begivenheden blev oprettet korrekt, da tilføjes der en optegnelse til SQL databasen
-            if not rlt is None:
-                mdbManager.update_record(event_to_create.outlook_global_appointment_id,rlt)
+            #if not rlt is None:
+                #mdbManager.update_event_record(event_to_create.outlook_global_appointment_id,rlt)
         
         if len(events_with_errors)>0:
             self.outlookmanager.send_a_aula_creation_or_update_error_mail(events_with_errors)

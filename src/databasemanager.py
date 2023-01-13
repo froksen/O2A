@@ -17,9 +17,10 @@ class DatabaseManager:
                 self.conn.close()
 
         #Opretter tabellerne.
-        self.create_tables()
+        #self.create_event_table()
+        self.create_recipients_table()
 
-    def create_tables(self):
+    def create_event_table(self):
         # Create operation
         try:
             create_query = '''CREATE TABLE "tblEvents" (
@@ -35,6 +36,35 @@ class DatabaseManager:
             print("Table created!")
         except sqlite3.OperationalError as e:
             print(e)
+
+    def drop_table(self, table_name):
+        cursor = self.conn.cursor()
+        cursor.execute("DROP TABLE :table_name",{"table_name": table_name})
+
+    def create_recipients_table(self, reset_table=False):
+        if reset_table:
+            self.drop_table()
+
+        # Create operation
+        try:
+            create_query = '''CREATE TABLE "tblRecipients" (
+                    "aula_id"	INTEGER NOT NULL UNIQUE,
+                    "name"	TEXT,
+                    PRIMARY KEY("aula_id")
+                );
+            '''
+            self.cursor.execute(create_query)
+            print("Table created!")
+        except sqlite3.OperationalError as e:
+            print(e)
+    def get_recipient_id(self,recipient_name):
+        cursor = self.conn.cursor()
+        record = cursor.execute("SELECT * FROM tblRecipients WHERE name=:recipient_name",{"recipient_name":recipient_name}).fetchone()
+
+        if record is None:
+            return None
+
+        return record[0] #0 er ID´et
 
     def get_record(self, outlook_id):
         cursor = self.conn.cursor()
@@ -52,7 +82,24 @@ class DatabaseManager:
 
         return event
 
-    def update_record(self, outlook_id, aula_id):
+    def update_recipient_record(self,aula_id,name):
+        cursor = self.conn.cursor()
+        data = {
+            "aula_id":aula_id, 
+            "name":name,
+        }
+
+        #Tjekker om optegnelsen allerede findes. Hvis ikke oprettes den
+        if self.get_recipient_id(name) is None:
+            cursor.execute("INSERT INTO tblRecipients VALUES(:aula_id, :name)",data)
+            print("OPRETTER modtageren i DB")
+        else:
+            cursor.execute("UPDATE tblRecipients SET aula_id=:aula_id, name=:name",data)
+            print("OPDATERER modtageren i DB")
+
+        self.conn.commit()
+
+    def update_event_record(self, outlook_id, aula_id):
         cursor = self.conn.cursor()
         data = {
             "db_id":None, 
