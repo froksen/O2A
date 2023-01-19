@@ -48,9 +48,10 @@ class DatabaseManager:
         # Create operation
         try:
             create_query = '''CREATE TABLE "tblRecipients" (
-                    "aula_id"	INTEGER NOT NULL UNIQUE,
+                    "db_id"	INTEGER NOT NULL UNIQUE,
+                    "aula_id"	INTEGER,
                     "name"	TEXT,
-                    PRIMARY KEY("aula_id")
+                    PRIMARY KEY("db_id" AUTOINCREMENT)
                 );
             '''
             self.cursor.execute(create_query)
@@ -64,7 +65,7 @@ class DatabaseManager:
         if record is None:
             return None
 
-        return record[0] #0 er ID´et
+        return record[1] #0 er ID´et
 
     def get_record(self, outlook_id):
         cursor = self.conn.cursor()
@@ -85,13 +86,14 @@ class DatabaseManager:
     def update_recipient_record(self,aula_id,name):
         cursor = self.conn.cursor()
         data = {
+            "db_id":None, 
             "aula_id":aula_id, 
             "name":name,
         }
 
         #Tjekker om optegnelsen allerede findes. Hvis ikke oprettes den
         if self.get_recipient_id(name) is None:
-            cursor.execute("INSERT INTO tblRecipients VALUES(:aula_id, :name)",data)
+            cursor.execute("INSERT INTO tblRecipients VALUES(:db_id, :aula_id, :name)",data)
             print("OPRETTER modtageren i DB")
         else:
             cursor.execute("UPDATE tblRecipients SET aula_id=:aula_id, name=:name",data)
