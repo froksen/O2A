@@ -18,7 +18,7 @@ from databasemanager import DatabaseManager
 #
 # create logger with 'spam_application'
 logger = logging.getLogger('O2A')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 # create file handler which logs even debug messages
 fh = logging.FileHandler('o2a.log')
 fh.setLevel(logging.DEBUG)

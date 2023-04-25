@@ -646,6 +646,41 @@ class AulaManager:
         response_profile = session.get(url, params=params).json()
         print(json.dumps(response_profile, indent=4))
 
+
+    def find_unilogin_button(self, session_response,session):
+        counter = 0
+        success = False
+        self.logger.info("Vælger UNI-LOGIN som login-mulighed")
+
+        url = 'https://login.aula.dk/auth/login.php?type=unilogin'
+
+        while success == False and counter < 10:
+            try:
+                # Parse response using BeautifulSoup
+                soup = BeautifulSoup(session_response.text, "html.parser")
+                # Get destination of form element (assumes only one)
+                url = soup.form['action']   
+                data = {}
+                data['selectedIdp'] = "uni_idp"
+                            
+                if data:
+                    print("TRYKKER SUBMIT")
+                    response = session.post(url, data=data)
+                    success = True
+                # If there's no data, just try to post to the destination without data
+                else:
+                    response = session.post(url)
+                # If the url of the response is the Aula front page, loop is exited
+
+            # If some error occurs, try to just ignore it
+            except:
+                pass
+            # One is added to counter each time the loop runs independent of outcome
+            counter += 1
+
+            return response
+
+
     def login(self, username, password):
         class LoginResponse:
             def __init__(self):
@@ -672,6 +707,9 @@ class AulaManager:
             self.logger.critical("Det var ikke muligt, at oprette forbindelse til UNI-login dialogen")
             self.logger.critical(e)
 
+        session_response = self.find_unilogin_button(response,session)
+        response = session_response
+
         # Login is handled by a loop where each page is first parsed by BeautifulSoup.
         # Then the destination of the form is saved as the next url to post to and all
         # inputs are collected with special cases for the username and password input.
@@ -686,7 +724,10 @@ class AulaManager:
                 # Parse response using BeautifulSoup
                 soup = BeautifulSoup(response.text, "html.parser")
                 # Get destination of form element (assumes only one)
+                #print(soup)
                 url = soup.form['action']   
+
+               
                 
                 # If form has a destination, inputs are collected and names and values
                 # for posting to form destination are saved to a dictionary called data
