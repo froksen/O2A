@@ -917,14 +917,14 @@ class AulaManager:
 
             #Includes institution
             self.logger.info("      I institution kalender")
-            #events = events + self.getEventsForInstitutions(self.getProfileId(),self.getProfileinstitutionCode(),startTimeFormattet,endTimeFormattet)
-            self.logger.warning("!! 2023-04-25: MIDLERTIDIGT DEAKTIVERET SØGNING I INSTITUTIONS KALENDER EFTER OPDATERING AF AULA API V16 !!")
+            events = events + self.getEventsForInstitutions(self.getProfileId(),self.getProfileinstitutionCode(),startTimeFormattet,endTimeFormattet)
+            #self.logger.warning("!! 2023-04-25: MIDLERTIDIGT DEAKTIVERET SØGNING I INSTITUTIONS KALENDER EFTER OPDATERING AF AULA API V16 !!")
 
             #Gets own events
             self.logger.info("      I personlig kalender")
             events = events + self.getEventsByProfileIdsAndResourceIds(self.getProfileId(), startTimeFormattet, endTimeFormattet)
 
-            #Seems to be god with a simple cooldown time here. 
+            #Seems to be good with a simple cooldown time here. 
             time.sleep(0.1)
 
         class appointmentitem(object):
