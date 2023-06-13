@@ -253,8 +253,6 @@ class AulaManager:
         session = self.getSession()
         url = self.getAulaApiUrl()
 
-        print("update")
-
         params = {
             'method': 'calendar.updateSimpleEvent'
             }

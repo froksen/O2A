@@ -99,7 +99,7 @@ class EventManager:
 
     def _basic_aula_event_actions(self, event):
 
-        mdbManager = dbManager()
+        #mdbManager = dbManager()
 
         #If event has been created by some one else. Set in description that its the case.
         if not str(self.outlookmanager.get_personal_calendar_username()).strip() == str(event.outlook_organizer).strip(): 
@@ -129,19 +129,19 @@ class EventManager:
 
                 #Searching for name in AULA
                 if not csv_aula_name == "IGNORE_PERSON":
-                    db_search_result = mdbManager.get_recipient_id(attendee) #Prøver først i DB
-                    search_result = db_search_result
+                    #db_search_result = mdbManager.get_recipient_id(attendee) #Prøver først i DB
+                    #search_result = db_search_result
 
-                    if db_search_result is None: #Hvis ikke fundet noget i DB, da prøver at slå op på AULA.
-                        self.logger.info("      OBS: Deltagerens %s Outlook navn blev ikke fundet i den lokale database, slår op direkte på AULA." %(attendee))
+                    #if db_search_result is None: #Hvis ikke fundet noget i DB, da prøver at slå op på AULA.
+                    self.logger.info("      OBS: Deltageren %s Outlook navn slås op direkte på AULA." %(attendee))
 
-                        search_result = self.aulamanager.findRecipient(attendee)
+                    search_result = self.aulamanager.findRecipient(attendee)
 
                 if csv_aula_name == "IGNORE_PERSON":
                     self.logger.info("      OBS: Deltagerens %s Outlook navn blev fundet i IGNORER-filen og vil derfor ikke blive tilføjet til begivenheden" %(attendee))
                 elif not search_result == None:
                     self.logger.info("      Deltager %s blev fundet i AULA!" %(attendee))
-                    mdbManager.update_recipient_record(search_result,attendee) #Tilføjer til DB. 
+                    #mdbManager.update_recipient_record(search_result,attendee) #Tilføjer til DB. 
                     event.attendee_ids.append(search_result)
                 else:
                     self.logger.info("      Deltager %s blev IKKE fundet i AULA!" %(attendee))
@@ -160,7 +160,7 @@ class EventManager:
             return
 
         #Opretter forbindelse til DB
-        mdbManager = dbManager()
+        #mdbManager = dbManager()
 
         events_with_errors = []
 
