@@ -18,7 +18,7 @@ namespace Outlook2Aula
 
             Globals.Ribbons.Ribbon1.lblO2APath.Label = getO2AFolderPath();
 
-
+            Globals.Ribbons.Ribbon1.lblBuildVersion.Label = Environment.GetEnvironmentVariable("ClickOnce_CurrentVersion");
 
             //Oprindeligt fra: https://robindotnet.wordpress.com/2010/07/11/how-do-i-programmatically-find-the-deployed-files-for-a-vsto-add-in/
             //Get the assembly information
@@ -97,18 +97,33 @@ namespace Outlook2Aula
         private void btnOpenPeopleWorkbook_Click(object sender, RibbonControlEventArgs e)
         {
             // declare the application object
-                        Excel.Application xl = new Excel.Application();
+            Excel.Application xl = new Excel.Application();
+            xl.Visible = true;
+
 
             // open a file
-                        Excel.Workbook wb = xl.Workbooks.Open(@"C:\Users\Ole Dahl Frandsen\Documents\GitHub\\O2A\personer.csv");
+            //Excel.Workbook wb = xl.Workbooks.Open(@"C:\Users\Ole Dahl Frandsen\Documents\GitHub\\O2A\personer.csv
+            Excel.Workbook wb = xl.Workbooks.Open(@getO2AFolderPath()+"\\personer.csv");
 
             // do stuff ....
 
-           //close the file
-                        //wb.Close();
+            //close the file
+            //wb.Close();
 
             // close the application and release resources
-                        //xl.Quit();
+            //xl.Quit();
+        }
+
+        private void btnOpenIgnoreFile_Click(object sender, RibbonControlEventArgs e)
+        {
+            // declare the application object
+            Excel.Application xl = new Excel.Application();
+            xl.Visible = true;
+
+
+            // open a file
+            //Excel.Workbook wb = xl.Workbooks.Open(@"C:\Users\Ole Dahl Frandsen\Documents\GitHub\\O2A\personer.csv
+            Excel.Workbook wb = xl.Workbooks.Open(@getO2AFolderPath() + "\\personer_ignorer.csv");
         }
     }
 }
