@@ -28,10 +28,10 @@
     <AssemblyName>Outlook2Aula</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <IsWebBootstrapper>True</IsWebBootstrapper>
+    <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <PublishUrl>C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2A\outlook_addin\oneclick\</PublishUrl>
-    <InstallUrl>https://github.com/froksen/O2A/raw/dev_vsto/outlook_addin/oneclick/</InstallUrl>
+    <InstallUrl />
     <TargetCulture>da</TargetCulture>
     <ApplicationVersion>1.0.0.8</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
