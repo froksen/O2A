@@ -30,7 +30,7 @@
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2A\outlook_addin\oneclick\</PublishUrl>
+    <PublishUrl>C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2AV2\outlook_addin\oneclick\</PublishUrl>
     <InstallUrl />
     <TargetCulture>da</TargetCulture>
     <ApplicationVersion>1.0.0.10</ApplicationVersion>
