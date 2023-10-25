@@ -18,7 +18,7 @@ namespace Outlook2Aula
 
             Globals.Ribbons.Ribbon1.lblO2APath.Label = getO2AFolderPath();
 
-            Globals.Ribbons.Ribbon1.lblBuildVersion.Label = Environment.GetEnvironmentVariable("ClickOnce_CurrentVersion");
+            Globals.Ribbons.Ribbon1.lblBuildVersion.Label = "2023-10-25"; //Environment.GetEnvironmentVariable("ClickOnce_CurrentVersion");
 
             //Oprindeligt fra: https://robindotnet.wordpress.com/2010/07/11/how-do-i-programmatically-find-the-deployed-files-for-a-vsto-add-in/
             //Get the assembly information

@@ -36,26 +36,26 @@
         {
             this.tabO2A = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.grpSettings = this.Factory.CreateRibbonGroup();
-            this.group3 = this.Factory.CreateRibbonGroup();
-            this.lblO2APath = this.Factory.CreateRibbonLabel();
-            this.lblBuildVersion = this.Factory.CreateRibbonLabel();
-            this.label1 = this.Factory.CreateRibbonLabel();
-            this.box1 = this.Factory.CreateRibbonBox();
-            this.box2 = this.Factory.CreateRibbonBox();
-            this.label2 = this.Factory.CreateRibbonLabel();
-            this.btnOpenIgnoreFile = this.Factory.CreateRibbonButton();
-            this.btnOpenPeopleWorkbook = this.Factory.CreateRibbonButton();
             this.btnRunO2A = this.Factory.CreateRibbonButton();
             this.btnForceUpdate = this.Factory.CreateRibbonButton();
+            this.grpSettings = this.Factory.CreateRibbonGroup();
             this.btnSelectO2AFolder = this.Factory.CreateRibbonButton();
             this.btnAllSettings = this.Factory.CreateRibbonButton();
+            this.btnOpenIgnoreFile = this.Factory.CreateRibbonButton();
+            this.btnOpenPeopleWorkbook = this.Factory.CreateRibbonButton();
+            this.group3 = this.Factory.CreateRibbonGroup();
+            this.box2 = this.Factory.CreateRibbonBox();
+            this.label2 = this.Factory.CreateRibbonLabel();
+            this.lblO2APath = this.Factory.CreateRibbonLabel();
+            this.box1 = this.Factory.CreateRibbonBox();
+            this.label1 = this.Factory.CreateRibbonLabel();
+            this.lblBuildVersion = this.Factory.CreateRibbonLabel();
             this.tabO2A.SuspendLayout();
             this.group1.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.group3.SuspendLayout();
-            this.box1.SuspendLayout();
             this.box2.SuspendLayout();
+            this.box1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabO2A
@@ -72,72 +72,6 @@
             this.group1.Items.Add(this.btnForceUpdate);
             this.group1.Label = "Afvikling";
             this.group1.Name = "group1";
-            // 
-            // grpSettings
-            // 
-            this.grpSettings.Items.Add(this.btnSelectO2AFolder);
-            this.grpSettings.Items.Add(this.btnAllSettings);
-            this.grpSettings.Items.Add(this.btnOpenIgnoreFile);
-            this.grpSettings.Items.Add(this.btnOpenPeopleWorkbook);
-            this.grpSettings.Label = "O2A Indstillinger";
-            this.grpSettings.Name = "grpSettings";
-            // 
-            // group3
-            // 
-            this.group3.Items.Add(this.box2);
-            this.group3.Items.Add(this.box1);
-            this.group3.Label = "AddIn oplysninger";
-            this.group3.Name = "group3";
-            // 
-            // lblO2APath
-            // 
-            this.lblO2APath.Label = "UKENDT STI";
-            this.lblO2APath.Name = "lblO2APath";
-            // 
-            // lblBuildVersion
-            // 
-            this.lblBuildVersion.Label = "Version";
-            this.lblBuildVersion.Name = "lblBuildVersion";
-            // 
-            // label1
-            // 
-            this.label1.Label = "Version:";
-            this.label1.Name = "label1";
-            // 
-            // box1
-            // 
-            this.box1.Items.Add(this.label1);
-            this.box1.Items.Add(this.lblBuildVersion);
-            this.box1.Name = "box1";
-            // 
-            // box2
-            // 
-            this.box2.Items.Add(this.label2);
-            this.box2.Items.Add(this.lblO2APath);
-            this.box2.Name = "box2";
-            // 
-            // label2
-            // 
-            this.label2.Label = "O2A sti:";
-            this.label2.Name = "label2";
-            // 
-            // btnOpenIgnoreFile
-            // 
-            this.btnOpenIgnoreFile.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnOpenIgnoreFile.Image = global::Outlook2Aula.Properties.Resources.ignore;
-            this.btnOpenIgnoreFile.Label = "Administer ignorede personer (Regneark)";
-            this.btnOpenIgnoreFile.Name = "btnOpenIgnoreFile";
-            this.btnOpenIgnoreFile.ShowImage = true;
-            this.btnOpenIgnoreFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenIgnoreFile_Click);
-            // 
-            // btnOpenPeopleWorkbook
-            // 
-            this.btnOpenPeopleWorkbook.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnOpenPeopleWorkbook.Image = global::Outlook2Aula.Properties.Resources._switch;
-            this.btnOpenPeopleWorkbook.Label = "Administer personer (Regneark)";
-            this.btnOpenPeopleWorkbook.Name = "btnOpenPeopleWorkbook";
-            this.btnOpenPeopleWorkbook.ShowImage = true;
-            this.btnOpenPeopleWorkbook.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenPeopleWorkbook_Click);
             // 
             // btnRunO2A
             // 
@@ -156,6 +90,15 @@
             this.btnForceUpdate.Name = "btnForceUpdate";
             this.btnForceUpdate.ShowImage = true;
             this.btnForceUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnForceUpdate_Click);
+            // 
+            // grpSettings
+            // 
+            this.grpSettings.Items.Add(this.btnSelectO2AFolder);
+            this.grpSettings.Items.Add(this.btnAllSettings);
+            this.grpSettings.Items.Add(this.btnOpenIgnoreFile);
+            this.grpSettings.Items.Add(this.btnOpenPeopleWorkbook);
+            this.grpSettings.Label = "O2A Indstillinger";
+            this.grpSettings.Name = "grpSettings";
             // 
             // btnSelectO2AFolder
             // 
@@ -177,6 +120,63 @@
             this.btnAllSettings.ShowImage = true;
             this.btnAllSettings.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnAllSettings_Click);
             // 
+            // btnOpenIgnoreFile
+            // 
+            this.btnOpenIgnoreFile.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnOpenIgnoreFile.Image = global::Outlook2Aula.Properties.Resources.ignore;
+            this.btnOpenIgnoreFile.Label = "Administer ignorede personer (Regneark)";
+            this.btnOpenIgnoreFile.Name = "btnOpenIgnoreFile";
+            this.btnOpenIgnoreFile.ShowImage = true;
+            this.btnOpenIgnoreFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenIgnoreFile_Click);
+            // 
+            // btnOpenPeopleWorkbook
+            // 
+            this.btnOpenPeopleWorkbook.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnOpenPeopleWorkbook.Image = global::Outlook2Aula.Properties.Resources._switch;
+            this.btnOpenPeopleWorkbook.Label = "Administer personer (Regneark)";
+            this.btnOpenPeopleWorkbook.Name = "btnOpenPeopleWorkbook";
+            this.btnOpenPeopleWorkbook.ShowImage = true;
+            this.btnOpenPeopleWorkbook.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenPeopleWorkbook_Click);
+            // 
+            // group3
+            // 
+            this.group3.Items.Add(this.box2);
+            this.group3.Items.Add(this.box1);
+            this.group3.Label = "AddIn oplysninger";
+            this.group3.Name = "group3";
+            // 
+            // box2
+            // 
+            this.box2.Items.Add(this.label2);
+            this.box2.Items.Add(this.lblO2APath);
+            this.box2.Name = "box2";
+            // 
+            // label2
+            // 
+            this.label2.Label = "O2A sti:";
+            this.label2.Name = "label2";
+            // 
+            // lblO2APath
+            // 
+            this.lblO2APath.Label = "UKENDT STI";
+            this.lblO2APath.Name = "lblO2APath";
+            // 
+            // box1
+            // 
+            this.box1.Items.Add(this.label1);
+            this.box1.Items.Add(this.lblBuildVersion);
+            this.box1.Name = "box1";
+            // 
+            // label1
+            // 
+            this.label1.Label = "Version:";
+            this.label1.Name = "label1";
+            // 
+            // lblBuildVersion
+            // 
+            this.lblBuildVersion.Label = "Version";
+            this.lblBuildVersion.Name = "lblBuildVersion";
+            // 
             // Ribbon1
             // 
             this.Name = "Ribbon1";
@@ -191,10 +191,10 @@
             this.grpSettings.PerformLayout();
             this.group3.ResumeLayout(false);
             this.group3.PerformLayout();
-            this.box1.ResumeLayout(false);
-            this.box1.PerformLayout();
             this.box2.ResumeLayout(false);
             this.box2.PerformLayout();
+            this.box1.ResumeLayout(false);
+            this.box1.PerformLayout();
             this.ResumeLayout(false);
 
         }
