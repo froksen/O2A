@@ -7,3 +7,4 @@ webdrivers/*
 installer.bat
 contacts_to_check.xlsx
 personer_ignorer.csv
+personer.csv
