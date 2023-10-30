@@ -55,7 +55,7 @@ namespace Outlook2Aula
         private void button2_Click(object sender, RibbonControlEventArgs e)
         {
             string strCmdText;
-            strCmdText = @"/C cd " + getO2AFolderPath() + " & python src\\main.py -r & pause";
+            strCmdText = @"/C cd " + getO2AFolderPath() + " & o2a_run.bat & pause";
             //strCmdText = @"/C cd ""C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2A\"" & python src\main.py & pause""";
             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
         }
@@ -71,7 +71,7 @@ namespace Outlook2Aula
         private void btnForceUpdate_Click(object sender, RibbonControlEventArgs e)
         {
             string strCmdText;
-            strCmdText = @"/C cd " + getO2AFolderPath() + " & python src\\main.py -f -r & pause";
+            strCmdText = @"/C cd " + getO2AFolderPath() + " & o2a_run_force.bat & pause";
             //strCmdText = @"/C cd ""C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2A\"" & python src\main.py -f -r & pause""";
             System.Diagnostics.Process.Start("CMD.exe", strCmdText);
         }
