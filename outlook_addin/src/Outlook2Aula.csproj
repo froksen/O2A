@@ -33,7 +33,7 @@
     <PublishUrl>C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2AV2\outlook_addin\oneclick\</PublishUrl>
     <InstallUrl />
     <TargetCulture>da</TargetCulture>
-    <ApplicationVersion>1.0.0.16</ApplicationVersion>
+    <ApplicationVersion>1.0.0.17</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
