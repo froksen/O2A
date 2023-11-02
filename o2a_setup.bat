@@ -1,4 +1,4 @@
 echo off
 cls
-cd /D "%~dp0\O2A"
+cd /D "%~dp0"
 python src/main.py -g
