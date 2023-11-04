@@ -33,7 +33,7 @@
     <PublishUrl>C:\Users\Ole Dahl Frandsen\Documents\GitHub\O2AV2\outlook_addin\oneclick\</PublishUrl>
     <InstallUrl />
     <TargetCulture>da</TargetCulture>
-    <ApplicationVersion>1.0.0.17</ApplicationVersion>
+    <ApplicationVersion>1.0.0.18</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
@@ -276,6 +276,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ignore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aula_logo_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Aula-logo.jpg" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
