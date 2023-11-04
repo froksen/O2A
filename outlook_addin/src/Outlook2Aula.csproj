@@ -277,6 +277,12 @@
   <ItemGroup>
     <None Include="Resources\ignore.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aula_logo_0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Aula-logo.jpg" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

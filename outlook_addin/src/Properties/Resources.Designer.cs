@@ -73,6 +73,26 @@ namespace Outlook2Aula.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Aula_logo {
+            get {
+                object obj = ResourceManager.GetObject("Aula-logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap aula_logo_0 {
+            get {
+                object obj = ResourceManager.GetObject("aula_logo_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap exchange {
             get {
                 object obj = ResourceManager.GetObject("exchange", resourceCulture);

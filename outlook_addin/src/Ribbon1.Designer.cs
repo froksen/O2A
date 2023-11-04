@@ -36,13 +36,7 @@
         {
             this.tabO2A = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.btnRunO2A = this.Factory.CreateRibbonButton();
-            this.btnForceUpdate = this.Factory.CreateRibbonButton();
             this.grpSettings = this.Factory.CreateRibbonGroup();
-            this.btnSelectO2AFolder = this.Factory.CreateRibbonButton();
-            this.btnAllSettings = this.Factory.CreateRibbonButton();
-            this.btnOpenIgnoreFile = this.Factory.CreateRibbonButton();
-            this.btnOpenPeopleWorkbook = this.Factory.CreateRibbonButton();
             this.group3 = this.Factory.CreateRibbonGroup();
             this.box2 = this.Factory.CreateRibbonBox();
             this.label2 = this.Factory.CreateRibbonLabel();
@@ -50,17 +44,27 @@
             this.box1 = this.Factory.CreateRibbonBox();
             this.label1 = this.Factory.CreateRibbonLabel();
             this.lblBuildVersion = this.Factory.CreateRibbonLabel();
+            this.group2 = this.Factory.CreateRibbonGroup();
+            this.btnRunO2A = this.Factory.CreateRibbonButton();
+            this.btnForceUpdate = this.Factory.CreateRibbonButton();
+            this.btnOpenPeopleWorkbook = this.Factory.CreateRibbonButton();
+            this.btnOpenIgnoreFile = this.Factory.CreateRibbonButton();
+            this.btnEnterAulaCredentials = this.Factory.CreateRibbonButton();
+            this.btnAllSettings = this.Factory.CreateRibbonButton();
+            this.btnSelectO2AFolder = this.Factory.CreateRibbonButton();
             this.tabO2A.SuspendLayout();
             this.group1.SuspendLayout();
             this.grpSettings.SuspendLayout();
             this.group3.SuspendLayout();
             this.box2.SuspendLayout();
             this.box1.SuspendLayout();
+            this.group2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabO2A
             // 
             this.tabO2A.Groups.Add(this.group1);
+            this.tabO2A.Groups.Add(this.group2);
             this.tabO2A.Groups.Add(this.grpSettings);
             this.tabO2A.Groups.Add(this.group3);
             this.tabO2A.Label = "Outlook2Aula";
@@ -73,70 +77,12 @@
             this.group1.Label = "Afvikling";
             this.group1.Name = "group1";
             // 
-            // btnRunO2A
-            // 
-            this.btnRunO2A.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnRunO2A.Image = global::Outlook2Aula.Properties.Resources.exchange;
-            this.btnRunO2A.Label = "Kør";
-            this.btnRunO2A.Name = "btnRunO2A";
-            this.btnRunO2A.ShowImage = true;
-            this.btnRunO2A.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button2_Click);
-            // 
-            // btnForceUpdate
-            // 
-            this.btnForceUpdate.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnForceUpdate.Image = global::Outlook2Aula.Properties.Resources.exchange;
-            this.btnForceUpdate.Label = "Kør og opdater alt (Force update)";
-            this.btnForceUpdate.Name = "btnForceUpdate";
-            this.btnForceUpdate.ShowImage = true;
-            this.btnForceUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnForceUpdate_Click);
-            // 
             // grpSettings
             // 
-            this.grpSettings.Items.Add(this.btnSelectO2AFolder);
+            this.grpSettings.Items.Add(this.btnEnterAulaCredentials);
             this.grpSettings.Items.Add(this.btnAllSettings);
-            this.grpSettings.Items.Add(this.btnOpenIgnoreFile);
-            this.grpSettings.Items.Add(this.btnOpenPeopleWorkbook);
             this.grpSettings.Label = "O2A Indstillinger";
             this.grpSettings.Name = "grpSettings";
-            // 
-            // btnSelectO2AFolder
-            // 
-            this.btnSelectO2AFolder.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnSelectO2AFolder.Image = global::Outlook2Aula.Properties.Resources.settings;
-            this.btnSelectO2AFolder.Label = "Vælg O2A mappe";
-            this.btnSelectO2AFolder.Name = "btnSelectO2AFolder";
-            this.btnSelectO2AFolder.ScreenTip = "Vælg hvor O2A mappen befinder sig. Du skal vælge mappen hvori f.eks. \"src\" mappen" +
-    ", \"personer.csv\" og \"personer_ignorer.csv\" filerne findes";
-            this.btnSelectO2AFolder.ShowImage = true;
-            this.btnSelectO2AFolder.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnSelectO2AFolder_Click);
-            // 
-            // btnAllSettings
-            // 
-            this.btnAllSettings.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnAllSettings.Image = global::Outlook2Aula.Properties.Resources.settings;
-            this.btnAllSettings.Label = "Åben O2A indstillinger";
-            this.btnAllSettings.Name = "btnAllSettings";
-            this.btnAllSettings.ShowImage = true;
-            this.btnAllSettings.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnAllSettings_Click);
-            // 
-            // btnOpenIgnoreFile
-            // 
-            this.btnOpenIgnoreFile.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnOpenIgnoreFile.Image = global::Outlook2Aula.Properties.Resources.ignore;
-            this.btnOpenIgnoreFile.Label = "Administer ignorede personer (Regneark)";
-            this.btnOpenIgnoreFile.Name = "btnOpenIgnoreFile";
-            this.btnOpenIgnoreFile.ShowImage = true;
-            this.btnOpenIgnoreFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenIgnoreFile_Click);
-            // 
-            // btnOpenPeopleWorkbook
-            // 
-            this.btnOpenPeopleWorkbook.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.btnOpenPeopleWorkbook.Image = global::Outlook2Aula.Properties.Resources._switch;
-            this.btnOpenPeopleWorkbook.Label = "Administer personer (Regneark)";
-            this.btnOpenPeopleWorkbook.Name = "btnOpenPeopleWorkbook";
-            this.btnOpenPeopleWorkbook.ShowImage = true;
-            this.btnOpenPeopleWorkbook.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenPeopleWorkbook_Click);
             // 
             // group3
             // 
@@ -149,6 +95,7 @@
             // 
             this.box2.Items.Add(this.label2);
             this.box2.Items.Add(this.lblO2APath);
+            this.box2.Items.Add(this.btnSelectO2AFolder);
             this.box2.Name = "box2";
             // 
             // label2
@@ -177,6 +124,77 @@
             this.lblBuildVersion.Label = "Version";
             this.lblBuildVersion.Name = "lblBuildVersion";
             // 
+            // group2
+            // 
+            this.group2.Items.Add(this.btnOpenPeopleWorkbook);
+            this.group2.Items.Add(this.btnOpenIgnoreFile);
+            this.group2.Label = "Regneark";
+            this.group2.Name = "group2";
+            // 
+            // btnRunO2A
+            // 
+            this.btnRunO2A.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnRunO2A.Image = global::Outlook2Aula.Properties.Resources.exchange;
+            this.btnRunO2A.Label = "Kør";
+            this.btnRunO2A.Name = "btnRunO2A";
+            this.btnRunO2A.ShowImage = true;
+            this.btnRunO2A.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button2_Click);
+            // 
+            // btnForceUpdate
+            // 
+            this.btnForceUpdate.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnForceUpdate.Image = global::Outlook2Aula.Properties.Resources.exchange;
+            this.btnForceUpdate.Label = "Kør og opdater alt (Force update)";
+            this.btnForceUpdate.Name = "btnForceUpdate";
+            this.btnForceUpdate.ShowImage = true;
+            this.btnForceUpdate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnForceUpdate_Click);
+            // 
+            // btnOpenPeopleWorkbook
+            // 
+            this.btnOpenPeopleWorkbook.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnOpenPeopleWorkbook.Image = global::Outlook2Aula.Properties.Resources._switch;
+            this.btnOpenPeopleWorkbook.Label = "Outlook navne => Aula navne";
+            this.btnOpenPeopleWorkbook.Name = "btnOpenPeopleWorkbook";
+            this.btnOpenPeopleWorkbook.ShowImage = true;
+            this.btnOpenPeopleWorkbook.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenPeopleWorkbook_Click);
+            // 
+            // btnOpenIgnoreFile
+            // 
+            this.btnOpenIgnoreFile.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnOpenIgnoreFile.Image = global::Outlook2Aula.Properties.Resources.ignore;
+            this.btnOpenIgnoreFile.Label = "Ignorede personer";
+            this.btnOpenIgnoreFile.Name = "btnOpenIgnoreFile";
+            this.btnOpenIgnoreFile.ShowImage = true;
+            this.btnOpenIgnoreFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnOpenIgnoreFile_Click);
+            // 
+            // btnEnterAulaCredentials
+            // 
+            this.btnEnterAulaCredentials.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnEnterAulaCredentials.Image = global::Outlook2Aula.Properties.Resources.Aula_logo;
+            this.btnEnterAulaCredentials.Label = "Indtast AULA brugeroplysninger";
+            this.btnEnterAulaCredentials.Name = "btnEnterAulaCredentials";
+            this.btnEnterAulaCredentials.ShowImage = true;
+            this.btnEnterAulaCredentials.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnEnterAulaCredentials_Click);
+            // 
+            // btnAllSettings
+            // 
+            this.btnAllSettings.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btnAllSettings.Image = global::Outlook2Aula.Properties.Resources.settings;
+            this.btnAllSettings.Label = "Åben O2A opsætningsdialog";
+            this.btnAllSettings.Name = "btnAllSettings";
+            this.btnAllSettings.ShowImage = true;
+            this.btnAllSettings.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnAllSettings_Click);
+            // 
+            // btnSelectO2AFolder
+            // 
+            this.btnSelectO2AFolder.Image = global::Outlook2Aula.Properties.Resources.settings;
+            this.btnSelectO2AFolder.Label = "Vælg";
+            this.btnSelectO2AFolder.Name = "btnSelectO2AFolder";
+            this.btnSelectO2AFolder.ScreenTip = "Vælg hvor O2A mappen befinder sig. Du skal vælge mappen hvori f.eks. \"src\" mappen" +
+    ", \"personer.csv\" og \"personer_ignorer.csv\" filerne findes";
+            this.btnSelectO2AFolder.ShowImage = true;
+            this.btnSelectO2AFolder.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btnSelectO2AFolder_Click);
+            // 
             // Ribbon1
             // 
             this.Name = "Ribbon1";
@@ -195,6 +213,8 @@
             this.box2.PerformLayout();
             this.box1.ResumeLayout(false);
             this.box1.PerformLayout();
+            this.group2.ResumeLayout(false);
+            this.group2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -217,6 +237,8 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonLabel label2;
         internal Microsoft.Office.Tools.Ribbon.RibbonBox box1;
         internal Microsoft.Office.Tools.Ribbon.RibbonLabel label1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btnEnterAulaCredentials;
+        internal Microsoft.Office.Tools.Ribbon.RibbonGroup group2;
     }
 
     partial class ThisRibbonCollection
