@@ -64,7 +64,7 @@ def main(argv):
 
   #If any argument is passed
   try:
-    opts, args = getopt.getopt(argv,"hsgardfc",["setup","setupgui","help","run","database","force","check","database_recipient_reset"])
+    opts, args = getopt.getopt(argv,"hsgardfcq",["setup","setupgui","help","run","database","force","check","database_recipient_reset"])
   except getopt.GetoptError:
     print('OPTIONS')
     print(' without parameter  : same as -r')
@@ -113,6 +113,9 @@ def main(argv):
     elif opt in ("-c", "--check"):
       mChecker = ContactsChecker()
       mChecker.searchForPeople()
+    elif opt in ("-q", "--aula_cretericals"):
+      setupmgr = SetupManager()
+      setupmgr.run_setup_gui()
     else:
       print('OPTIONS')
       print(' without parameter  : same as -r')

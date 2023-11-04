@@ -83,7 +83,6 @@ class SetupManager:
 
     def run_setup_gui(self):
         #messagebox.showwarning("Sikkerhed", "Alle kodeord gemmes i dit operativsystems nøglering. Hvis en anden person eller program får adgang til din brugerkonto, da har de også adgang til dine kodeord! Brug dette program på eget ansvar!")
-
         self.create_outlook_categories()
 
         mainwindow = Tk()
@@ -95,6 +94,8 @@ class SetupManager:
         #header_label.configure("center", justify='center')
         header_label.grid(column=0, row=0,columnspan=2)
 
+        mainwindow.lift()
+
         #helptext = Label( mainwindow, text="Anvendes til at kunne læse din kalender på AULA.", relief="flat", font=("Arial Bold", 12) )
         #helptext.grid(column=0, row=1,columnspan=2)
 
@@ -103,10 +104,16 @@ class SetupManager:
             answer = messagebox.askyesno("Gem oplysninger", "Sikker på, at du ønsker at gemme disse oplysninger?")
 
             if answer == True:
+                try:
+                    self.config.add_section("AULA")
+                except configparser.DuplicateSectionError:
+                    pass #If section already exists, then skip
+
                 self.config['AULA']['username'] = username_field.get()
                 keyring.set_password("o2a", "aula_password", password_field.get())
                 self.__write_config_file()
                 messagebox.showinfo("Aula oplysninger","Oplysningerne er blevet gemt!")
+                mainwindow.quit()
 
             else:
                 messagebox.showinfo("Aula oplysninger","Der blev ikke gemt nogle oplysninger.")
