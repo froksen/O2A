@@ -885,7 +885,7 @@ class AulaManager:
         clean = re.compile('<.*?>')
         return re.sub(clean, '', text)
 
-    def getEvents(self, startDatetime, endDatetime):
+    def getEvents(self, startDatetime, endDatetime,is_in_daylight):
        
         #Calculates the diffence between the dates.
         monthsDiff = abs((endDatetime.year - startDatetime.year)) * 12 + abs(endDatetime.month - startDatetime.month)
@@ -906,9 +906,15 @@ class AulaManager:
             if lookUp_end >= endDatetime:
                 lookUp_end = endDatetime
 
+            def get_daylight_timezone(is_in_daylight):
+                if is_in_daylight:
+                    return "+02:00"
+                else:
+                    return "+01:00"
+
             #outlookevents_from_aula = self.icalmanager.readAulaCalendarEvents()
-            startTimeFormattet = lookUp_begin.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
-            endTimeFormattet = lookUp_end.strftime("%Y-%m-%dT%H:%M:%ST+02:00")
+            startTimeFormattet = lookUp_begin.strftime("%Y-%m-%dT%H:%M:%ST"+get_daylight_timezone(is_in_daylight))
+            endTimeFormattet = lookUp_end.strftime("%Y-%m-%dT%H:%M:%ST"+get_daylight_timezone(is_in_daylight))
 
             step = step +1
             self.logger.info("  (%i of %i) Begivenheder fra %s til %s"%(step,monthsDiff, startTimeFormattet,endTimeFormattet))

@@ -283,10 +283,11 @@ class EventManager:
         from datetime import timedelta
         aulaevents_from_outlook = self.outlookmanager.get_aulaevents_from_outlook(begin, end)
 
+
         #Finds AULA events from ICal-calendar
-        aulabegin = dt.datetime(year=begin.year,month=begin.month,day=begin.day) + dt.timedelta(days=-1)
+        aulabegin = dt.datetime(year=begin.year,month=begin.month,day=begin.day) #+ dt.timedelta(days=-1)
         #aulaend = dt.datetime(year=end.year,month=end.month,day=end.day-1)
-        outlookevents_from_aula = self.aulamanager.getEvents(aulabegin,end)
+        outlookevents_from_aula = self.aulamanager.getEvents(aulabegin,end,is_in_daylight=self.outlookmanager.is_in_daylight(begin))
         #events = self.getEvents(None, None)
         
 
